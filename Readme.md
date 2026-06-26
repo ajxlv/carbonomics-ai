@@ -1,35 +1,35 @@
-# 🌱 Carbonomics-AI
+# Carbonomics-AI
 
-> AI-Driven Carbon Intelligence & Optimization Framework
+## AI-Driven Carbon Intelligence and Decision Support Framework
 
 Carbonomics-AI is an AI-powered decision support system designed to help institutions measure, analyze, predict, and optimize carbon emissions using machine learning and sustainability analytics.
 
-Instead of limiting carbon management to static reporting, Carbonomics-AI transforms environmental data into actionable insights through prediction, scenario simulation, and optimization.
+Unlike conventional carbon management systems that primarily focus on reporting, Carbonomics-AI combines carbon accounting, predictive analytics, scenario simulation, and optimization to support data-driven sustainability decisions.
 
 ---
 
-## 📌 Project Vision
+## Project Vision
 
-The objective of Carbonomics-AI is to build an intelligent platform that enables organizations to:
+The objective of Carbonomics-AI is to develop an intelligent platform that enables organizations to:
 
 - Measure carbon emissions accurately
 - Predict future emission trends
 - Identify major emission drivers
-- Simulate sustainability strategies
+- Evaluate sustainability strategies through simulation
 - Optimize emission reduction decisions
-- Support data-driven environmental planning
+- Support long-term environmental planning
 
 ---
 
-# 🎯 Problem Statement
+## Problem Statement
 
-Traditional carbon management systems mainly focus on emission reporting and compliance. They often lack predictive capabilities and decision-support mechanisms, making it difficult for organizations to evaluate future sustainability strategies.
+Traditional carbon management systems mainly emphasize emission reporting and regulatory compliance. While these systems provide valuable insights into current emissions, they often lack predictive capabilities and decision-support mechanisms.
 
-Carbonomics-AI aims to bridge this gap by integrating carbon accounting, machine learning, simulation, and optimization into a unified framework.
+Carbonomics-AI addresses this limitation by integrating carbon accounting, machine learning, simulation, and optimization into a unified framework that enables organizations to move from analysis to action.
 
 ---
 
-# ✨ Core Features
+## Core Features
 
 - Carbon Emission Calculation
 - GHG-Based Carbon Accounting
@@ -38,191 +38,203 @@ Carbonomics-AI aims to bridge this gap by integrating carbon accounting, machine
 - Scenario-Based Simulation
 - Optimization Engine
 - Decision Support System
-- Interactive Analytics Dashboard
+- Interactive Dashboard
 - Sustainability Reports
 - Data Visualization
 
 ---
 
-# 🏗 Planned System Architecture
+## Planned System Architecture
 
 ```
-Data Collection
-        │
-        ▼
+Raw Data
+   │
+   ▼
 Data Processing
-        │
-        ▼
+   │
+   ▼
 Carbon Accounting
-        │
-        ▼
+   │
+   ▼
 Machine Learning Prediction
-        │
-        ▼
+   │
+   ▼
 Feature Analysis
-        │
-        ▼
+   │
+   ▼
 Scenario Simulation
-        │
-        ▼
+   │
+   ▼
 Optimization
-        │
-        ▼
-Decision Support Dashboard
+   │
+   ▼
+Decision Support
 ```
 
 ---
 
-# 🛠 Tech Stack (Planned)
+## Planned Tech Stack
 
-## Programming
+### Programming Language
 
 - Python
 
-## Data Analysis
+### Data Processing
 
 - Pandas
 - NumPy
 
-## Machine Learning
+### Machine Learning
 
-- Scikit-Learn
+- Scikit-learn
 - XGBoost
 
-## Visualization
+### Data Visualization
 
 - Plotly
 - Matplotlib
 
-## Web Framework
+### Web Application
 
 - Streamlit
 
-## Database
+### Database
 
-- PostgreSQL / SQLite
+- PostgreSQL
+- SQLite
 
-## Version Control
+### Version Control
 
 - Git
 - GitHub
 
 ---
 
-# 📂 Development Roadmap
+## Development Roadmap
 
-## Phase 1 – Foundation
+### Phase 1 – Research & Planning
 
-- [x] Project planning
-- [x] Literature survey
-- [x] System architecture
-- [x] Research methodology
-- [x] Repository setup
+- [x] Literature Survey
+- [x] Problem Identification
+- [x] Research Gap Analysis
+- [x] System Architecture
+- [x] Research Methodology
+- [x] Repository Setup
 
----
+### Phase 2 – Carbon Accounting
 
-## Phase 2 – Carbon Accounting
+- [ ] Carbon Emission Calculator
+- [ ] GHG Emission Factors
+- [ ] Dataset Integration
+- [ ] Carbon Footprint Report
 
-- [ ] Carbon emission calculator
-- [ ] GHG emission factors
-- [ ] Dataset integration
-- [ ] Carbon footprint reporting
+### Phase 3 – Machine Learning
 
----
+- [ ] Data Preprocessing
+- [ ] Random Forest Model
+- [ ] XGBoost Model
+- [ ] Model Evaluation
+- [ ] Emission Forecasting
 
-## Phase 3 – Machine Learning
+### Phase 4 – Analytics
 
-- [ ] Data preprocessing
-- [ ] Random Forest model
-- [ ] XGBoost model
-- [ ] Model evaluation
-- [ ] Emission forecasting
+- [ ] Feature Importance Analysis
+- [ ] Interactive Dashboard
+- [ ] Trend Analysis
+- [ ] KPI Monitoring
 
----
+### Phase 5 – Scenario Simulation
 
-## Phase 4 – Analytics
+- [ ] What-if Analysis
+- [ ] Renewable Energy Simulation
+- [ ] Electric Vehicle Adoption
+- [ ] Energy Efficiency Simulation
 
-- [ ] Feature importance
-- [ ] Interactive charts
-- [ ] Trend analysis
-- [ ] KPI dashboard
+### Phase 6 – Optimization
 
----
+- [ ] Strategy Comparison
+- [ ] Constraint-Based Optimization
+- [ ] Cost-Benefit Analysis
+- [ ] Recommendation Engine
 
-## Phase 5 – Simulation
+### Phase 7 – Web Application
 
-- [ ] What-if scenarios
-- [ ] Renewable energy simulation
-- [ ] EV adoption simulation
-- [ ] Energy efficiency simulation
+- [ ] Streamlit Dashboard
+- [ ] CSV Upload
+- [ ] User Interaction
+- [ ] Report Generation
 
----
+### Phase 8 – Deployment
 
-## Phase 6 – Optimization
-
-- [ ] Strategy comparison
-- [ ] Constraint-based optimization
-- [ ] Cost-benefit analysis
-- [ ] Recommendation engine
-
----
-
-## Phase 7 – Web Application
-
-- [ ] Streamlit interface
-- [ ] Dashboard
-- [ ] CSV upload
-- [ ] User interaction
-- [ ] Report generation
-
----
-
-## Phase 8 – Deployment
-
-- [ ] Documentation
 - [ ] Testing
-- [ ] Deployment
-- [ ] Performance optimization
+- [ ] Documentation
+- [ ] Performance Optimization
+- [ ] Cloud Deployment
 
 ---
 
-# 📈 Project Status
+## Project Status
 
-🚧 Active Development
+**Status:** Under Active Development
 
-This repository will be updated incrementally as each module is designed, implemented, tested, and documented.
+The project is being developed incrementally. Each module will be implemented, tested, documented, and released through regular commits.
 
 ---
 
-# 📚 Research Foundation
+## Research Foundation
 
-The framework is inspired by recent research in:
+Carbonomics-AI is inspired by recent research in:
 
 - Carbon Accounting
 - Machine Learning
-- Explainable AI
+- Explainable Artificial Intelligence
 - Sustainability Analytics
-- Optimization
+- Optimization Techniques
 - Decision Support Systems
 
 ---
 
-# 🤝 Contributions
+## Repository Structure
 
-This repository is currently maintained as an academic research and portfolio project. Suggestions, discussions, and feedback are always welcome.
+```
+Carbonomics-AI/
+│── data/
+│── notebooks/
+│── models/
+│── app/
+│── docs/
+│── assets/
+│── README.md
+│── requirements.txt
+```
 
 ---
 
-# 📄 License
+## Future Scope
+
+Future versions of Carbonomics-AI will include:
+
+- Real-time IoT data integration
+- Carbon credit estimation
+- Net-Zero planning
+- Renewable energy optimization
+- Multi-institution benchmarking
+- AI-powered sustainability assistant
+
+---
+
+## License
 
 This project is licensed under the MIT License.
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 **Sanket Chaudhari**
 
-Artificial Intelligence & Data Science Student
+B.Tech Artificial Intelligence & Data Science
 
-Building AI solutions for sustainability, intelligent systems, and real-world decision support.
+GitHub: https://github.com/sanket1035
+
+LinkedIn: https://linkedin.com/in/sanketchaudhari1035
