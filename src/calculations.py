@@ -91,3 +91,22 @@ def calculate_methane_emissions(methane_kg: float) -> float:
 def calculate_nitrous_oxide_emissions(nitrous_oxide_kg: float) -> float:
     """Calculate nitrous oxide emissions."""
     return calculate_emission("nitrous_oxide", nitrous_oxide_kg)
+
+# ==========================================================
+# Total Emission Calculator
+# ==========================================================
+
+def calculate_total_emissions(scope1: float, scope2: float, scope3: float) -> float:
+    """
+    Calculate total carbon emissions.
+
+    Parameters:
+        scope1 (float): Scope 1 emissions
+        scope2 (float): Scope 2 emissions
+        scope3 (float): Scope 3 emissions
+
+    Returns:
+        float: Total carbon emissions.
+    """
+
+    return round(scope1 + scope2 + scope3, 2)
