@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { BarChart3, FlaskConical, Gauge, LineChart as LineIcon, ListChecks, Menu, Moon, ShieldCheck, Sun, X } from 'lucide-react'
+import { BarChart3, FlaskConical, Gauge, LineChart as LineIcon, ListChecks, Menu, Moon, ShieldCheck, Sun, Target, X } from 'lucide-react'
 import { Synthetic, ThemeCtx } from './ui.jsx'
 import Overview from './pages/Overview.jsx'
 import Trends from './pages/Trends.jsx'
 import Forecast from './pages/Forecast.jsx'
 import Simulation from './pages/Simulation.jsx'
+import Optimization from './pages/Optimization.jsx'
 import Factors from './pages/Factors.jsx'
 import Quality from './pages/Quality.jsx'
 
@@ -13,6 +14,7 @@ const PAGES = [
   { id: 'trends', label: 'Trends', icon: LineIcon, C: Trends },
   { id: 'forecast', label: 'Forecast', icon: BarChart3, C: Forecast },
   { id: 'simulation', label: 'Simulation', icon: FlaskConical, C: Simulation },
+  { id: 'optimization', label: 'Optimization', icon: Target, C: Optimization },
   { id: 'factors', label: 'Emission factors', icon: ListChecks, C: Factors },
   { id: 'quality', label: 'Data & QA', icon: ShieldCheck, C: Quality },
 ]

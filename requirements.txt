@@ -2,6 +2,7 @@ numpy>=2.0
 pandas>=2.2
 scikit-learn>=1.4
 xgboost>=2.0
+scipy>=1.9
 matplotlib>=3.8
 seaborn>=0.13
 openpyxl>=3.1
