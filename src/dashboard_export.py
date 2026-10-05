@@ -19,6 +19,7 @@ import pandas as pd
 
 from emission_factors import EMISSION_FACTORS, REPORT_FOOTPRINT_TCO2E, REPORT_SOURCE
 from simulation import baseline as sim_baseline, simulate
+from optimization import load_measures, optimize as opt_optimize, budget_sweep as opt_sweep
 
 OUT_FILE = "dashboard/public/data/dashboard.json"
 
@@ -130,7 +131,133 @@ def build_solar_payload(solar: pd.DataFrame, electricity_kwh_total: float) -> di
     }
 
 
+# Default illustrative budget levels for the sweep chart (₹).
+# These are round numbers for visualization only; owner should supply actual budget.
+_DEFAULT_SWEEP_BUDGETS = [
+    500_000, 1_000_000, 2_000_000, 5_000_000,
+    10_000_000, 15_000_000, 20_000_000, 25_000_000,
+]
+
+
+def _build_optimization_payload(real_df, root: str = ".") -> dict:
+    """
+    Build the optimization section for dashboard.json.
+
+    If all measures are TBD (no costs filled in yet), the payload is still
+    valid — result=null, sweep=[], needs_input lists all measures.
+    Pipeline continues without error.
+    """
+    measures_path = os.path.join(root, "data", "inputs", "optimization_measures.csv")
+    try:
+        measures = load_measures(measures_path)
+    except Exception as e:
+        return {
+            "error": f"Could not load measures file: {e}",
+            "measures": [],
+            "needs_input": [],
+            "result": None,
+            "greedy": None,
+            "budget_sweep": [],
+            "factors_used": [
+                {"name": "electricity", **EMISSION_FACTORS["electricity"]},
+                {"name": "diesel", **EMISSION_FACTORS["diesel"]},
+            ],
+            "coverage_note": {},
+            "assumptions": [],
+            "basis": "REAL monthly baseline × emission factor; MILP (scipy.optimize.milp); not ML",
+        }
+
+    ready = [m for m in measures if m["status"] == "ready"]
+    needs_input = [m for m in measures if m["status"] != "ready"]
+
+    # Per-measure summary for the dashboard table
+    measures_summary = []
+    for m in measures:
+        entry = {
+            "id": m["id"],
+            "label": m["label"],
+            "category": m["category"],
+            "acts_on": m["acts_on"],
+            "status": m["status"],
+            "missing_fields": m["missing_fields"],
+            "basis": m["basis"],
+            "source": m["source"],
+            "source_date": m["source_date"],
+            "capex_inr": m["capex_inr"],
+            "max_units": m["max_units"],
+            "saving_value": m["saving_value"],
+            "saving_unit": m["saving_unit"],
+            "notes": m["notes"],
+            "impact": None,
+        }
+        if m["status"] == "ready":
+            try:
+                from optimization import measure_impact
+                entry["impact"] = measure_impact(m, real_df)
+            except Exception:
+                pass
+        measures_summary.append(entry)
+
+    # No ready measures → skip solver
+    if not ready:
+        base_df = sim_baseline(real_df)
+        covered = float(base_df["scope2_tco2e"].sum() + base_df["scope1_tco2e"].sum())
+        return {
+            "measures": measures_summary,
+            "needs_input": [
+                {"id": m["id"], "label": m["label"],
+                 "missing_fields": m["missing_fields"], "notes": m["notes"]}
+                for m in needs_input
+            ],
+            "result": None,
+            "greedy": None,
+            "budget_sweep": [],
+            "factors_used": [
+                {"name": "electricity", **EMISSION_FACTORS["electricity"]},
+                {"name": "diesel", **EMISSION_FACTORS["diesel"]},
+            ],
+            "coverage_note": {
+                "covered_tco2e": round(covered, 4),
+                "full_footprint_tco2e": REPORT_FOOTPRINT_TCO2E,
+                "covered_share_pct": round(covered / REPORT_FOOTPRINT_TCO2E * 100, 1),
+            },
+            "assumptions": [],
+            "default_budget_inr": None,
+            "basis": "REAL monthly baseline × emission factor; MILP (scipy.optimize.milp); not ML",
+            "status_message": (
+                "All measures need input before optimization can run. "
+                "Fill in data/inputs/optimization_measures.csv and re-run the pipeline."
+            ),
+        }
+
+    # Run solver at a default budget (lowest illustrative level or None)
+    default_budget = _DEFAULT_SWEEP_BUDGETS[0]
+    result = opt_optimize(real_df, measures, budget_inr=float(default_budget))
+
+    # Budget sweep
+    sweep = opt_sweep(real_df, measures, _DEFAULT_SWEEP_BUDGETS)
+
+    return {
+        "measures": measures_summary,
+        "needs_input": [
+            {"id": m["id"], "label": m["label"],
+             "missing_fields": m["missing_fields"], "notes": m["notes"]}
+            for m in needs_input
+        ],
+        "result": result,
+        "greedy": result.get("greedy"),
+        "budget_sweep": sweep,
+        "factors_used": result.get("factors_used", []),
+        "coverage_note": result.get("coverage_note", {}),
+        "assumptions": result.get("assumptions", []),
+        "default_budget_inr": default_budget,
+        "basis": "REAL monthly baseline × emission factor; MILP (scipy.optimize.milp); not ML",
+        "status_message": None,
+    }
+
+
 def build_payload(root: str = ".") -> dict:
+
     p = lambda *a: os.path.join(root, *a)  # noqa: E731
     real = _read(p("data", "real", "real_monthly_2025.csv"))
     solar = _read(p("data", "real", "real_solar_monthly.csv"))
@@ -208,6 +335,7 @@ def build_payload(root: str = ".") -> dict:
         ],
         "solar": build_solar_payload(solar, float(real["electricity_kwh"].sum())),
         "simulation": _build_simulation_payload(real),
+        "optimization": _build_optimization_payload(real, root),
     }
 
 

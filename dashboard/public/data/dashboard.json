@@ -1504,5 +1504,266 @@
   ],
   "presets_note": "Presets are ILLUSTRATIVE ASSUMPTIONS only \u2014 not measured results. Actual savings depend on implementation details, equipment specifications, and site conditions.",
   "basis": "REAL monthly activity \u00d7 emission factor (GHG Protocol accounting, not ML)"
+ },
+ "optimization": {
+  "measures": [
+   {
+    "id": "solar_new_10kwp",
+    "label": "New rooftop solar (per 10 kWp block)",
+    "category": "solar",
+    "acts_on": "electricity",
+    "status": "needs_input",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "basis": "TBD",
+    "source": "TBD",
+    "source_date": "TBD",
+    "capex_inr": null,
+    "max_units": null,
+    "saving_value": null,
+    "saving_unit": "",
+    "notes": "Needs: yield kWh/kWp/yr (vendor/MNRE), cost per kWp (vendor quote), max kWp from roof area (facility team). max_units = floor(max_kWp / 10). All TBD.",
+    "impact": null
+   },
+   {
+    "id": "led_full",
+    "label": "LED retrofit \u2014 100% of fittings",
+    "category": "lighting",
+    "acts_on": "electricity",
+    "status": "needs_input",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units",
+     "cap_basis_value (lighting_end_use TBD \u2014 no data in Master Data)"
+    ],
+    "basis": "TBD",
+    "source": "TBD",
+    "source_date": "TBD",
+    "capex_inr": null,
+    "max_units": null,
+    "saving_value": null,
+    "saving_unit": "% of lighting_end_use",
+    "notes": "Needs: fitting count, old vs new wattage (W), daily burning hours, cost per LED fitting. lighting_end_use is TBD (no data in Master Data).",
+    "impact": null
+   },
+   {
+    "id": "led_half",
+    "label": "LED retrofit \u2014 50% of fittings",
+    "category": "lighting",
+    "acts_on": "electricity",
+    "status": "needs_input",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units",
+     "cap_basis_value (lighting_end_use TBD \u2014 no data in Master Data)"
+    ],
+    "basis": "TBD",
+    "source": "TBD",
+    "source_date": "TBD",
+    "capex_inr": null,
+    "max_units": null,
+    "saving_value": null,
+    "saving_unit": "% of lighting_end_use",
+    "notes": "Same as led_full but 50% of fittings. Exclusive with led_full. lighting_end_use TBD.",
+    "impact": null
+   },
+   {
+    "id": "ac_5star",
+    "label": "AC replacement to 5-star BEE",
+    "category": "hvac",
+    "acts_on": "electricity",
+    "status": "needs_input",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "basis": "TBD",
+    "source": "TBD",
+    "source_date": "TBD",
+    "capex_inr": null,
+    "max_units": null,
+    "saving_value": null,
+    "saving_unit": "% of ac_end_use",
+    "notes": "ac_end_use = 697296 kWh/yr (ESTIMATE; sheet 4_AC_Inventory, Master Data FY2025-26). Needs: % saving from star-rating upgrade (BEE label / vendor spec), capex per unit \u00d7 no. of units.",
+    "impact": null
+   },
+   {
+    "id": "ac_setpoint",
+    "label": "AC setpoint policy (+1 degC)",
+    "category": "hvac",
+    "acts_on": "electricity",
+    "status": "needs_input",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "basis": "TBD",
+    "source": "TBD",
+    "source_date": "TBD",
+    "capex_inr": null,
+    "max_units": null,
+    "saving_value": null,
+    "saving_unit": "% of ac_end_use",
+    "notes": "ac_end_use = 697296 kWh/yr (ESTIMATE; sheet 4_AC_Inventory, Master Data FY2025-26). Needs: % saving per 1 degC setpoint rise (ASHRAE/BEE source + date), implementation cost (if any).",
+    "impact": null
+   },
+   {
+    "id": "dg_scheduling",
+    "label": "DG run-time optimisation (scheduling)",
+    "category": "dg",
+    "acts_on": "diesel",
+    "status": "needs_input",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "basis": "TBD",
+    "source": "TBD",
+    "source_date": "TBD",
+    "capex_inr": null,
+    "max_units": null,
+    "saving_value": null,
+    "saving_unit": "",
+    "notes": "Needs: estimated L/yr saved from better scheduling, one-time implementation cost (if any). Must come from facility team or energy audit \u2014 do not invent.",
+    "impact": null
+   },
+   {
+    "id": "dg_replace",
+    "label": "DG replacement (higher-efficiency set)",
+    "category": "dg",
+    "acts_on": "diesel",
+    "status": "needs_input",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "basis": "TBD",
+    "source": "TBD",
+    "source_date": "TBD",
+    "capex_inr": null,
+    "max_units": null,
+    "saving_value": null,
+    "saving_unit": "% of total_diesel",
+    "notes": "Needs: % efficiency improvement (manufacturer spec + model), capex for new DG set, lifetime years.",
+    "impact": null
+   }
+  ],
+  "needs_input": [
+   {
+    "id": "solar_new_10kwp",
+    "label": "New rooftop solar (per 10 kWp block)",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "notes": "Needs: yield kWh/kWp/yr (vendor/MNRE), cost per kWp (vendor quote), max kWp from roof area (facility team). max_units = floor(max_kWp / 10). All TBD."
+   },
+   {
+    "id": "led_full",
+    "label": "LED retrofit \u2014 100% of fittings",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units",
+     "cap_basis_value (lighting_end_use TBD \u2014 no data in Master Data)"
+    ],
+    "notes": "Needs: fitting count, old vs new wattage (W), daily burning hours, cost per LED fitting. lighting_end_use is TBD (no data in Master Data)."
+   },
+   {
+    "id": "led_half",
+    "label": "LED retrofit \u2014 50% of fittings",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units",
+     "cap_basis_value (lighting_end_use TBD \u2014 no data in Master Data)"
+    ],
+    "notes": "Same as led_full but 50% of fittings. Exclusive with led_full. lighting_end_use TBD."
+   },
+   {
+    "id": "ac_5star",
+    "label": "AC replacement to 5-star BEE",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "notes": "ac_end_use = 697296 kWh/yr (ESTIMATE; sheet 4_AC_Inventory, Master Data FY2025-26). Needs: % saving from star-rating upgrade (BEE label / vendor spec), capex per unit \u00d7 no. of units."
+   },
+   {
+    "id": "ac_setpoint",
+    "label": "AC setpoint policy (+1 degC)",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "notes": "ac_end_use = 697296 kWh/yr (ESTIMATE; sheet 4_AC_Inventory, Master Data FY2025-26). Needs: % saving per 1 degC setpoint rise (ASHRAE/BEE source + date), implementation cost (if any)."
+   },
+   {
+    "id": "dg_scheduling",
+    "label": "DG run-time optimisation (scheduling)",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "notes": "Needs: estimated L/yr saved from better scheduling, one-time implementation cost (if any). Must come from facility team or energy audit \u2014 do not invent."
+   },
+   {
+    "id": "dg_replace",
+    "label": "DG replacement (higher-efficiency set)",
+    "missing_fields": [
+     "saving_value",
+     "capex_inr",
+     "max_units"
+    ],
+    "notes": "Needs: % efficiency improvement (manufacturer spec + model), capex for new DG set, lifetime years."
+   }
+  ],
+  "result": null,
+  "greedy": null,
+  "budget_sweep": [],
+  "factors_used": [
+   {
+    "name": "electricity",
+    "factor": 0.71,
+    "scope": "Scope 2",
+    "unit": "kWh",
+    "output": "kg CO2e/kWh",
+    "source": "CEA, CO2 Baseline Database for the Indian Power Sector, User Guide",
+    "version": "V21.0, Nov 2025",
+    "verified": true
+   },
+   {
+    "name": "diesel",
+    "factor": 2.89,
+    "scope": "Scope 1",
+    "unit": "Litre",
+    "output": "kg CO2/L",
+    "source": "CEA, CO2 Baseline Database, Appendix B (liquid fuel oil)",
+    "version": "V20.0, Dec 2024",
+    "verified": true
+   }
+  ],
+  "coverage_note": {
+   "covered_tco2e": 763.8434,
+   "full_footprint_tco2e": 3719.74,
+   "covered_share_pct": 20.5
+  },
+  "assumptions": [],
+  "default_budget_inr": null,
+  "basis": "REAL monthly baseline \u00d7 emission factor; MILP (scipy.optimize.milp); not ML",
+  "status_message": "All measures need input before optimization can run. Fill in data/inputs/optimization_measures.csv and re-run the pipeline."
  }
 }

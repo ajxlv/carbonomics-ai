@@ -62,3 +62,47 @@ def test_payload_solar_is_real_and_not_netted():
     assert "NOT netted" in s["note"]
     # Scope 2 headline stays the purchased (billed) electricity
     assert payload["kpis"]["electricity_kwh"] == 1059147
+
+
+def test_payload_optimization_key_present_and_serialisable():
+    """Optimization key must always be present and JSON-serialisable, even when all TBD."""
+    payload = de.build_payload(".")
+    assert "optimization" in payload
+    import json
+    json.dumps(payload["optimization"])  # must not raise
+
+
+def test_payload_optimization_all_tbd_shows_needs_input():
+    """With the shipped template (all TBD), result=null and needs_input lists all measures."""
+    payload = de.build_payload(".")
+    opt = payload["optimization"]
+    # All shipped measures are TBD → no solver run
+    assert opt["result"] is None, "result should be null when all measures are TBD"
+    assert len(opt["needs_input"]) > 0, "needs_input must list the TBD measures"
+    # Each needs_input entry has id, label, missing_fields
+    for ni in opt["needs_input"]:
+        assert "id" in ni and "label" in ni and "missing_fields" in ni
+
+
+def test_payload_optimization_factors_cited():
+    """Optimization payload must cite electricity and diesel factors with source+version."""
+    payload = de.build_payload(".")
+    opt = payload["optimization"]
+    names = {f["name"] for f in opt["factors_used"]}
+    assert "electricity" in names and "diesel" in names
+    for f in opt["factors_used"]:
+        assert f.get("source") and f.get("version") and f.get("unit")
+
+
+def test_payload_optimization_coverage_note():
+    payload = de.build_payload(".")
+    cn = payload["optimization"]["coverage_note"]
+    assert cn["full_footprint_tco2e"] == 3719.74
+    assert 19.0 < cn["covered_share_pct"] < 22.0
+
+
+def test_payload_optimization_basis_not_ml():
+    payload = de.build_payload(".")
+    basis = payload["optimization"]["basis"]
+    assert "not ML" in basis or "not ml" in basis.lower()
+
