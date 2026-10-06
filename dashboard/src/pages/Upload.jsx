@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { AlertTriangle, FileUp, Loader2 } from 'lucide-react'
 import { Badge, COLORS, Callout, Card, Kpi, MODEL_LABEL, fmt, shortDate, useChartTheme } from '../ui.jsx'
@@ -78,12 +78,12 @@ export default function Upload() {
       </Card>
 
       {error && <Callout title="Could not analyse this file"><div className="flex gap-2"><AlertTriangle size={18} className="mt-0.5 shrink-0" /><span>{error}</span></div></Callout>}
-      {result && <Results r={result} />}
+      {result && <Results r={result} apiUrl={apiUrl} />}
     </div>
   )
 }
 
-function Results({ r }) {
+function Results({ r, apiUrl }) {
   const t = useChartTheme()
   const { input, accounting, factors_used: factors, forecast } = r
   const tot = accounting.totals
@@ -136,6 +136,7 @@ function Results({ r }) {
         </div>
       </Card>
 
+      <Scenario r={r} apiUrl={apiUrl} t={t} />
       <Forecast forecast={forecast} t={t} />
       <p className="muted text-xs">{r.disclaimer}</p>
     </div>
@@ -218,5 +219,88 @@ function Forecast({ forecast, t }) {
         </div>
       </Card>
     </>
+  )
+}
+
+const slider = 'w-full accent-teal-700'
+
+function Scenario({ r, apiUrl }) {
+  const t = useChartTheme()
+  const { input, accounting } = r
+  const hasDiesel = 'diesel_litres' in accounting.periods[0]
+  const hasElec = 'electricity_kwh' in accounting.periods[0]
+  const unit = input.granularity_analysed === 'monthly' ? 'month' : 'week'
+  const [sc, setSc] = useState({ e: 0, d: 0, s: 0 })
+  const [sim, setSim] = useState(null)
+  const [err, setErr] = useState('')
+
+  useEffect(() => {
+    const periods = accounting.periods.map((p) => ({ period_start: p.period_start, electricity_kwh: p.electricity_kwh, diesel_litres: p.diesel_litres }))
+    const ctl = new AbortController()
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`${apiUrl.replace(/\/$/, '')}/api/simulate`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
+          body: JSON.stringify({ periods, electricity_change_pct: sc.e, diesel_change_pct: sc.d, solar_offset_kwh_per_period: sc.s }),
+        })
+        const json = await res.json().catch(() => ({}))
+        if (!res.ok) throw new Error(typeof json.detail === 'string' ? json.detail : `Server error (HTTP ${res.status}).`)
+        setSim(json); setErr('')
+      } catch (e) { if (e.name !== 'AbortError') setErr(e.message) }
+    }, 300)
+    return () => { clearTimeout(timer); ctl.abort() }
+  }, [sc, accounting, apiUrl])
+
+  const T = sim?.totals
+  const rows = sim?.periods.map((p) => ({ period: p.period_start, Baseline: p.base_total_tco2e, Scenario: p.scen_total_tco2e }))
+  const num = (k) => (e) => setSc({ ...sc, [k]: Number(e.target.value) })
+
+  return (
+    <Card title="What-if scenario" subtitle="Try a change and see the emission effect. These are numbers you choose, not predictions of what a measure will achieve." badge={<YourData />}>
+      <div className="grid gap-5 sm:grid-cols-3">
+        {hasElec && (
+          <label className="text-sm">
+            <span className="mb-1 flex justify-between"><span>Electricity change</span><b className="tabular-nums">{sc.e > 0 ? '+' : ''}{sc.e}%</b></span>
+            <input type="range" min="-100" max="100" step="1" value={sc.e} onChange={num('e')} className={slider} />
+          </label>
+        )}
+        {hasDiesel && (
+          <label className="text-sm">
+            <span className="mb-1 flex justify-between"><span>Diesel change</span><b className="tabular-nums">{sc.d > 0 ? '+' : ''}{sc.d}%</b></span>
+            <input type="range" min="-100" max="100" step="1" value={sc.d} onChange={num('d')} className={slider} />
+          </label>
+        )}
+        {hasElec && (
+          <label className="text-sm">
+            <span className="muted mb-1 block text-xs">Solar offset (kWh per {unit}, 0 or more)</span>
+            <input type="number" min="0" step="100" className={field} value={sc.s} onChange={num('s')} />
+          </label>
+        )}
+      </div>
+      {err && <p className="mt-4 text-sm text-rose-600">{err}</p>}
+      {T && (
+        <>
+          <div className="mt-5 grid gap-4 sm:grid-cols-3">
+            <Kpi label="Baseline" value={fmt(T.baseline_total_tco2e, 2)} unit="tCO₂e" sub="your file as uploaded" />
+            <Kpi label="Scenario" value={fmt(T.scenario_total_tco2e, 2)} unit="tCO₂e" sub="after your changes" />
+            <Kpi label="Saved" value={fmt(T.saved_tco2e, 2)} unit="tCO₂e" sub={`${fmt(T.saved_pct, 1)}% of baseline`} />
+          </div>
+          <div className="mt-5 h-64">
+            <ResponsiveContainer>
+              <BarChart data={rows} margin={{ left: -5 }}>
+                <CartesianGrid stroke={t.grid} vertical={false} />
+                <XAxis dataKey="period" tickFormatter={shortDate} stroke={t.axis} tickLine={false} minTickGap={24} />
+                <YAxis stroke={t.axis} tickLine={false} axisLine={false} tickFormatter={(v) => fmt(v, 1)} width={64} />
+                <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v, n) => [`${fmt(v, 2)} tCO₂e`, n]} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                <Bar isAnimationActive={false} dataKey="Baseline" fill="#64748b" />
+                <Bar isAnimationActive={false} dataKey="Scenario" fill={COLORS.electricity} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="muted mt-3 text-xs">{sim.note}</p>
+        </>
+      )}
+    </Card>
   )
 }

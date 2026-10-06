@@ -295,7 +295,9 @@ Accepted: daily, weekly or monthly rows with a date column and electricity (kWh)
 It validates the file (no imputation), computes emission = activity x factor from the factor registry, and for
 weekly or daily data with at least 26 weeks it forecasts activity. A model is used only if it beats the naive
 last-week baseline by 5% or more on a time-ordered test split; otherwise the naive forecast is returned and the
-response says so. Monthly files get accounting only. Set `ALLOWED_ORIGINS` (comma-separated) for CORS.
+response says so. Monthly files get accounting only. `POST /api/simulate` runs a what-if scenario
+(electricity %, diesel %, solar offset per period) on the periods that `/api/analyze` returned, using
+`src/simulation.py`; it is stateless. Set `ALLOWED_ORIGINS` (comma-separated) for CORS.
 
 ## Future Scope
 

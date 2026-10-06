@@ -213,3 +213,65 @@ def test_api_rejects_oversized_file():
     r = client.post("/api/analyze", files={"file": ("big.csv", b"x" * (ua.MAX_BYTES + 10), "text/csv")})
     assert r.status_code == 422
     assert "larger than" in r.json()["detail"]
+
+
+# ── what-if simulation on uploaded periods ────────────────────────────────────
+def periods_of(df):
+    return ua.analyze(to_csv(df))["accounting"]["periods"]
+
+
+def test_simulation_zero_change_equals_baseline():
+    res = ua.simulate_upload(periods_of(weekly_frame()))
+    t = res["totals"]
+    assert t["scenario_total_tco2e"] == pytest.approx(t["baseline_total_tco2e"])
+    assert t["saved_tco2e"] == 0 and t["saved_pct"] == 0
+
+
+def test_simulation_percentage_and_solar_savings_match_formula():
+    df = weekly_frame()
+    res = ua.simulate_upload(periods_of(df), electricity_change_pct=-10, diesel_change_pct=-50,
+                             solar_offset_kwh_per_period=1000)
+    kwh_saved = (df["electricity_kwh"] - (df["electricity_kwh"] * 0.9 - 1000).clip(lower=0)).sum()
+    litres_saved = (df["diesel_litres"] * 0.5).sum()
+    t = res["totals"]
+    assert t["saved_scope2_tco2e"] == pytest.approx(kwh_saved * EF_E / 1000, abs=0.05)
+    assert t["saved_scope1_tco2e"] == pytest.approx(litres_saved * EF_D / 1000, abs=0.05)
+    assert res["sources_simulated"] == ["electricity_kwh", "diesel_litres"]
+    assert "coverage_note" not in res and "presets_note" not in res  # KKWIEER-specific, not for uploads
+
+
+def test_simulation_solar_cannot_make_activity_negative():
+    res = ua.simulate_upload(periods_of(weekly_frame()), solar_offset_kwh_per_period=10**9)
+    assert all(p["scen_electricity_kwh"] == 0 for p in res["periods"])
+    assert res["totals"]["scenario_scope2_tco2e"] == 0
+
+
+def test_simulation_with_only_electricity_leaves_diesel_out():
+    res = ua.simulate_upload(periods_of(weekly_frame().drop(columns="diesel_litres")), electricity_change_pct=-20)
+    assert res["sources_simulated"] == ["electricity_kwh"]
+    assert res["totals"]["baseline_scope1_tco2e"] == 0
+    assert [f["factor_key"] for f in res["factors_used"]] == ["electricity"]
+
+
+@pytest.mark.parametrize("kwargs,match", [
+    ({"periods": []}, "No periods"),
+    ({"periods": [{"period_start": "2025-01-01"}]}, "needs electricity_kwh"),
+    ({"periods": [{"period_start": "a", "electricity_kwh": 1.0}, {"period_start": "b"}]}, "not all"),
+    ({"periods": [{"period_start": "a", "electricity_kwh": -1.0}]}, "not negative"),
+    ({"periods": [{"period_start": "a", "electricity_kwh": float("nan")}]}, "finite"),
+    ({"periods": [{"period_start": "a", "electricity_kwh": 1.0}], "electricity_change_pct": 150}, "electricity_change_pct"),
+    ({"periods": [{"period_start": "a", "electricity_kwh": 1.0}], "solar_offset_kwh_per_period": -5}, "not negative"),
+])
+def test_simulation_rejects_bad_input(kwargs, match):
+    with pytest.raises(ua.UploadError, match=match):
+        ua.simulate_upload(**kwargs)
+
+
+def test_api_simulate_ok_and_422():
+    periods = periods_of(weekly_frame())
+    r = client.post("/api/simulate", json={"periods": periods, "electricity_change_pct": -10})
+    assert r.status_code == 200
+    assert r.json()["totals"]["saved_tco2e"] > 0
+    bad = client.post("/api/simulate", json={"periods": periods, "electricity_change_pct": 500})
+    assert bad.status_code == 422 and "electricity_change_pct" in str(bad.json()["detail"])
+    assert client.post("/api/simulate", json={"periods": []}).status_code == 422
