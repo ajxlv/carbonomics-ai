@@ -626,9 +626,9 @@ export default function Optimization({ data }) {
                         formatter={(v, name) => [`${fmt(v, 2)} tCO₂e/yr`, name]}
                       />
                       <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-                      <Line isAnimationActive={false} type="monotone"
+                      <Line animationDuration={900} type="monotone"
                         dataKey="optimal" name="Optimal (knapsack)" stroke="#0f766e" strokeWidth={2} dot={false} />
-                      <Line isAnimationActive={false} type="monotone"
+                      <Line animationDuration={900} type="monotone"
                         dataKey="greedy" name="Greedy baseline" stroke="#94a3b8" strokeWidth={2} dot={false} strokeDasharray="4 4" />
                     </LineChart>
                   </ResponsiveContainer>
@@ -654,7 +654,7 @@ export default function Optimization({ data }) {
                         contentStyle={t.tip}
                         formatter={(v) => [`${fmtLakh(v)} / tCO₂e`, 'Cost effectiveness']}
                       />
-                      <Bar isAnimationActive={false} dataKey="inr_per_tco2e" name="₹/tCO₂e" radius={[0, 4, 4, 0]}>
+                      <Bar animationDuration={900} dataKey="inr_per_tco2e" name="₹/tCO₂e" radius={[0, 4, 4, 0]}>
                         {maccData.map(m => (
                           <Cell key={m.id}
                             fill={m.selected ? '#0f766e' : '#94a3b8'}

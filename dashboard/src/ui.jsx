@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 export const COLORS = {
   electricity: '#0f766e',
@@ -55,7 +55,7 @@ export const Real = () => <Badge tone="amber">FAKE DATA</Badge>
 
 export function Card({ title, subtitle, badge, children, className = '' }) {
   return (
-    <section className={`card ${className}`}>
+    <section className={`card rise ${className}`}>
       {(title || badge) && (
         <header className="mb-4 flex items-start justify-between gap-3">
           <div>
@@ -70,15 +70,38 @@ export function Card({ title, subtitle, badge, children, className = '' }) {
   )
 }
 
+// Counts a number up from 0 once, so a result "lands". Anything that is not a plain number is shown as it is.
+function CountUp({ text }) {
+  const m = /^(-?)([\d,]*\.?\d+)$/.exec(String(text))
+  const target = m ? Number(m[2].replaceAll(',', '')) : null
+  const decimals = m && m[2].includes('.') ? m[2].split('.')[1].length : 0
+  const [now, setNow] = useState(target == null ? null : 0)
+  const raf = useRef(0)
+  useEffect(() => {
+    if (target == null) return undefined
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { setNow(target); return undefined }
+    const start = performance.now()
+    const tick = (t) => {
+      const k = Math.min(1, (t - start) / 900)
+      setNow(target * (1 - Math.pow(1 - k, 3)))
+      if (k < 1) raf.current = requestAnimationFrame(tick)
+    }
+    raf.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf.current)
+  }, [target])
+  if (target == null) return text
+  return `${m[1]}${fmt(now, decimals)}`
+}
+
 export function Kpi({ label, value, unit, sub, icon: Icon, badge }) {
   return (
-    <div className="card">
+    <div className="card rise transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
       <div className="flex items-center justify-between">
         <span className="muted text-xs font-medium uppercase tracking-wide">{label}</span>
         {Icon && <span className="rounded-lg bg-brand-50 p-2 text-brand-600 dark:bg-slate-800 dark:text-brand-500"><Icon size={16} /></span>}
       </div>
       <div className="mt-3 flex items-baseline gap-1.5">
-        <span className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">{value}</span>
+        <span className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white tabular-nums"><CountUp text={value} /></span>
         {unit && <span className="muted text-sm">{unit}</span>}
       </div>
       <div className="mt-2 flex items-center justify-between gap-2">

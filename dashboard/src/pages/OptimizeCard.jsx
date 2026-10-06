@@ -200,7 +200,7 @@ export function PlanView({ r }) {
             <XAxis type="number" stroke={t.axis} tickLine={false} tickFormatter={(v) => `${v}%`} />
             <YAxis type="category" dataKey="name" stroke={t.axis} tickLine={false} width={150} />
             <Tooltip contentStyle={t.tip} formatter={(v) => [`${fmt(v, 2)}% of baseline`, 'Reduction (one unit)']} />
-            <Bar isAnimationActive={false} dataKey="pct" fill={COLORS.electricity} />
+            <Bar animationDuration={900} dataKey="pct" fill={COLORS.electricity} />
           </BarChart>
         </ResponsiveContainer>
       </div>

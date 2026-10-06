@@ -69,9 +69,9 @@ export default function Forecast({ data }) {
               <YAxis stroke={t.axis} tickLine={false} axisLine={false} tickFormatter={(v) => fmt(v)} width={64} domain={['auto', 'auto']} />
               <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v, n) => [`${fmt(v, 1)} ${cfg.unit}`, n]} />
               <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-              <Line isAnimationActive={false} dataKey="actual" name="Actual (synthetic)" stroke={t.actual} strokeWidth={3} dot={{ r: 3 }} />
+              <Line animationDuration={900} dataKey="actual" name="Actual (synthetic)" stroke={t.actual} strokeWidth={3} dot={{ r: 3 }} />
               {MODELS.map((m) => (
-                <Line isAnimationActive={false} key={m} dataKey={m} name={MODEL_LABEL[m]} stroke={COLORS.models[m]} strokeWidth={1.6} dot={false} strokeDasharray={m === 'train_mean' ? '4 4' : undefined} />
+                <Line animationDuration={900} key={m} dataKey={m} name={MODEL_LABEL[m]} stroke={COLORS.models[m]} strokeWidth={1.6} dot={false} strokeDasharray={m === 'train_mean' ? '4 4' : undefined} />
               ))}
             </LineChart>
           </ResponsiveContainer>
