@@ -4,35 +4,20 @@ const STARS = Array.from({ length: 46 }, (_, i) => ({
   x: (i * 53.7 + 11) % 100, y: (i * 29.3 + 7) % 52, r: 0.5 + (i % 4) * 0.25, d: (i % 9) * 0.5,
 }))
 
-// Faded campus-and-nature silhouette: a factory with chimneys on the left giving way to trees on the right.
-const TREES = Array.from({ length: 15 }, (_, i) => ({ x: 640 + i * 38 + (i % 3) * 9, h: 52 + ((i * 37) % 44), w: 15 + (i % 3) * 5 }))
+// Rendered backdrop (hero-bg.webp): misty ridges, pine forest and a distant factory with chimneys at dusk.
 function Scene() {
   return (
-    <svg className="absolute bottom-[17%] left-0 h-[34%] w-full" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax meet"
-      style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent, #000 40%, #000 70%, transparent)', maskImage: 'linear-gradient(to bottom, transparent, #000 40%, #000 70%, transparent)' }}>
-      <g fill="#3fb5a3" opacity=".2">
-        <rect x="70" y="190" width="150" height="110" /><rect x="230" y="215" width="120" height="85" /><rect x="360" y="170" width="90" height="130" />
-        <path d="M70 190 l25 -22 v22 l25 -22 v22 l25 -22 v22 l25 -22 v22Z" />
-        <rect x="110" y="95" width="22" height="95" /><rect x="152" y="70" width="22" height="120" /><rect x="394" y="85" width="20" height="85" />
-        <rect x="104" y="90" width="34" height="8" /><rect x="146" y="65" width="34" height="8" /><rect x="388" y="80" width="32" height="8" />
-        {TREES.map((t, i) => (
-          <g key={i}>
-            <rect x={t.x - 2} y={300 - t.h * 0.3} width="4" height={t.h * 0.3} />
-            <path d={`M${t.x} ${300 - t.h} L${t.x + t.w} ${300 - t.h * 0.25} L${t.x - t.w} ${300 - t.h * 0.25}Z`} />
-          </g>
-        ))}
-      </g>
-      <g fill="#bfe9e2" opacity=".07" className="hill-b">
-        <circle cx="121" cy="70" r="22" /><circle cx="150" cy="40" r="28" /><circle cx="190" cy="20" r="30" />
-        <circle cx="163" cy="48" r="24" /><circle cx="404" cy="62" r="20" /><circle cx="432" cy="34" r="26" />
-      </g>
-    </svg>
+    <>
+      <img src="hero-bg.webp" alt="" width="1920" height="1080" fetchpriority="high" className="absolute inset-0 h-full w-full object-cover object-bottom opacity-80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/20 to-slate-950" />
+    </>
   )
 }
 
 export default function Hills({ className = '', scene = false }) {
   return (
     <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
+      {scene ? <Scene /> : <>
       <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 70% at 50% 100%, #0f3b36 0%, #0a1f1e 38%, #060708 75%)' }} />
       <div className="absolute left-1/2 top-[18%] h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-teal-400/15 blur-[110px]" />
       {STARS.map((s, i) => (
@@ -50,7 +35,7 @@ export default function Hills({ className = '', scene = false }) {
         <defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0a2622" /><stop offset="1" stopColor="#060708" /></linearGradient></defs>
         <path d="M0 140 C 200 90 320 120 480 150 C 640 180 760 90 940 110 C 1060 124 1140 160 1200 140 L1200 300 L0 300Z" fill="url(#g3)" />
       </svg>
-      {scene && <Scene />}
+      </>}
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 to-transparent" />
     </div>
   )
