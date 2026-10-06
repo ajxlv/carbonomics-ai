@@ -1,43 +1,37 @@
 import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { AlertTriangle, FileUp, Loader2 } from 'lucide-react'
+import { AlertTriangle, Check, FileUp, Loader2 } from 'lucide-react'
 import { Badge, COLORS, Callout, Card, Kpi, MODEL_LABEL, fmt, shortDate, useChartTheme } from '../ui.jsx'
+import { api } from '../api.js'
 
-const DEFAULT_API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const MODELS = ['naive_last_week', 'train_mean', 'random_forest', 'xgboost']
 const TARGET_LABEL = { electricity_kwh: 'Electricity (kWh)', diesel_litres: 'Generator diesel (L)' }
 const TARGET_UNIT = { electricity_kwh: 'kWh', diesel_litres: 'L' }
 const YourData = () => <Badge tone="blue">YOUR DATA</Badge>
 
-async function analyze(apiUrl, file, opts) {
+function analyze(file, opts) {
   const body = new FormData()
   body.append('file', file)
-  ;['date_col', 'electricity_col', 'diesel_col'].forEach((k) => { if (opts[k]) body.append(k, opts[k]) })
+  ;['date_col', 'electricity_col', 'diesel_col', 'title'].forEach((k) => { if (opts[k]) body.append(k, opts[k]) })
   body.append('future_weeks', String(opts.future_weeks))
-  let res
-  try {
-    res = await fetch(`${apiUrl.replace(/\/$/, '')}/api/analyze`, { method: 'POST', body })
-  } catch {
-    throw new Error(`Could not reach the analysis server at ${apiUrl}. Start it from the repository root with: uvicorn api.main:app --port 8000`)
-  }
-  const json = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error(typeof json.detail === 'string' ? json.detail : `Server error (HTTP ${res.status}).`)
-  return json
+  return api('/api/analyze', { method: 'POST', form: body })
 }
 
 const field = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900'
 
-export default function Upload() {
+export default function Upload({ opened, onCloseOpened }) {
   const [file, setFile] = useState(null)
-  const [apiUrl, setApiUrl] = useState(DEFAULT_API)
-  const [opts, setOpts] = useState({ date_col: '', electricity_col: '', diesel_col: '', future_weeks: 8 })
+  const [opts, setOpts] = useState({ title: '', date_col: '', electricity_col: '', diesel_col: '', future_weeks: 8 })
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState(null)
 
+  // A run opened from History replaces whatever was on screen.
+  useEffect(() => { if (opened) { setResult({ ...opened.result, run: { saved: true, id: opened.id, error: null, title: opened.title, opened: true } }); setError('') } }, [opened])
+
   const run = async () => {
-    setBusy(true); setError(''); setResult(null)
-    try { setResult(await analyze(apiUrl, file, opts)) } catch (e) { setError(e.message) } finally { setBusy(false) }
+    setBusy(true); setError(''); setResult(null); onCloseOpened?.()
+    try { setResult(await analyze(file, opts)) } catch (e) { setError(e.message) } finally { setBusy(false) }
   }
   const set = (k) => (e) => setOpts({ ...opts, [k]: e.target.value })
 
@@ -46,8 +40,8 @@ export default function Upload() {
       <Callout tone="blue" title="Analyse your own CSV">
         Upload daily, weekly or monthly rows with a date column and electricity (kWh) and/or generator diesel (litres).
         Emission is always activity x emission factor. The forecast predicts activity only, and a model is used only if it
-        beats the naive last-week guess. The file is processed in memory and not stored. This page needs the analysis server
-        to be running; the static demo site does not include it.
+        beats the naive last-week guess. Your CSV file itself is processed in memory and is not stored; the results (totals and
+        per-period figures) are saved to your private history so you can open them later.
       </Callout>
 
       <Card title="1. Choose a file" badge={<YourData />}>
@@ -61,14 +55,17 @@ export default function Upload() {
             <span className="muted mb-1 block text-xs">Weeks to forecast (1 to 26)</span>
             <input type="number" min="1" max="26" className={field} value={opts.future_weeks} onChange={set('future_weeks')} />
           </label>
+          <label className="text-sm sm:col-span-2">
+            <span className="muted mb-1 block text-xs">Name for this run (optional, shown in History)</span>
+            <input maxLength={200} className={field} placeholder="e.g. Main building, FY 2025-26" value={opts.title} onChange={set('title')} />
+          </label>
         </div>
         <details className="mt-4 text-sm">
-          <summary className="muted cursor-pointer text-xs">Column names and server address (optional)</summary>
+          <summary className="muted cursor-pointer text-xs">Column names (optional)</summary>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <label><span className="muted mb-1 block text-xs">Date column</span><input className={field} placeholder="auto-detect" value={opts.date_col} onChange={set('date_col')} /></label>
             <label><span className="muted mb-1 block text-xs">Electricity (kWh) column</span><input className={field} placeholder="auto-detect" value={opts.electricity_col} onChange={set('electricity_col')} /></label>
             <label><span className="muted mb-1 block text-xs">Diesel (litres) column</span><input className={field} placeholder="auto-detect" value={opts.diesel_col} onChange={set('diesel_col')} /></label>
-            <label><span className="muted mb-1 block text-xs">Server address</span><input className={field} value={apiUrl} onChange={(e) => setApiUrl(e.target.value)} /></label>
           </div>
         </details>
         <button disabled={!file || busy} onClick={run}
@@ -78,28 +75,38 @@ export default function Upload() {
       </Card>
 
       {error && <Callout title="Could not analyse this file"><div className="flex gap-2"><AlertTriangle size={18} className="mt-0.5 shrink-0" /><span>{error}</span></div></Callout>}
-      {result && <Results r={result} apiUrl={apiUrl} />}
+      {result && <Results r={result} />}
     </div>
   )
 }
 
-function Results({ r, apiUrl }) {
+function SavedNote({ run }) {
+  if (!run) return null
+  if (run.saved) return <p className="flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-400"><Check size={14} /> {run.opened ? 'Opened from your history.' : 'Saved to your history.'}</p>
+  if (run.error) return <Callout title="Not saved to history">{run.error} The analysis below is still correct.</Callout>
+  return null
+}
+
+function Results({ r }) {
   const t = useChartTheme()
   const { input, accounting, factors_used: factors, forecast } = r
   const tot = accounting.totals
-  const bars = accounting.periods.map((p) => ({ period: p.period_start, 'Scope 1 (diesel)': p.scope1_kg, 'Scope 2 (electricity)': p.scope2_kg }))
+  const hasPeriods = Array.isArray(accounting.periods)
+  const bars = (accounting.periods ?? []).map((p) => ({ period: p.period_start, 'Scope 1 (diesel)': p.scope1_kg, 'Scope 2 (electricity)': p.scope2_kg }))
 
   return (
     <div className="space-y-6">
+      <SavedNote run={r.run} />
+      {r.truncated && <Callout tone="blue" title="Summary only">This run was too large to store in full, so the per-period charts, scenario and forecast detail were not saved. Upload the file again to see them.</Callout>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi label="Total emission" value={fmt(tot.total_tco2e, 2)} unit="tCO₂e" sub={`${input.period_start} to ${input.period_end}`} badge={<YourData />} />
         <Kpi label="Scope 2 (electricity)" value={fmt(tot.scope2_tco2e, 2)} unit="tCO₂e" sub="activity x grid factor" />
         <Kpi label="Scope 1 (diesel)" value={fmt(tot.scope1_tco2e, 2)} unit="tCO₂e" sub="activity x diesel factor" />
         <Kpi label="Rows analysed" value={fmt(input.rows)} sub={`${input.granularity_detected} data${input.granularity_detected !== input.granularity_analysed ? `, analysed as ${input.granularity_analysed}` : ''}`} />
       </div>
-      {input.notes.map((n) => <Callout key={n} tone="blue">{n}</Callout>)}
+      {(input.notes ?? []).map((n) => <Callout key={n} tone="blue">{n}</Callout>)}
 
-      <Card title={`Emission per ${input.granularity_analysed === 'monthly' ? 'month' : 'week'}`} subtitle="kg CO₂e, stacked by scope" badge={<YourData />}>
+      {hasPeriods && <Card title={`Emission per ${input.granularity_analysed === 'monthly' ? 'month' : 'week'}`} subtitle="kg CO₂e, stacked by scope" badge={<YourData />}>
         <div className="h-72">
           <ResponsiveContainer>
             <BarChart data={bars} margin={{ left: -5 }}>
@@ -113,7 +120,7 @@ function Results({ r, apiUrl }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </Card>
+      </Card>}
 
       <Card title="Emission factors used" subtitle="Every factor carries its source, version and unit">
         <div className="overflow-x-auto">
@@ -136,8 +143,8 @@ function Results({ r, apiUrl }) {
         </div>
       </Card>
 
-      <Scenario r={r} apiUrl={apiUrl} t={t} />
-      <Forecast forecast={forecast} t={t} />
+      {hasPeriods && <Scenario r={r} />}
+      {forecast?.targets && Object.values(forecast.targets).every((b) => b.backtest) && <Forecast forecast={forecast} t={t} />}
       <p className="muted text-xs">{r.disclaimer}</p>
     </div>
   )
@@ -224,7 +231,7 @@ function Forecast({ forecast, t }) {
 
 const slider = 'w-full accent-teal-700'
 
-function Scenario({ r, apiUrl }) {
+function Scenario({ r }) {
   const t = useChartTheme()
   const { input, accounting } = r
   const hasDiesel = 'diesel_litres' in accounting.periods[0]
@@ -233,23 +240,33 @@ function Scenario({ r, apiUrl }) {
   const [sc, setSc] = useState({ e: 0, d: 0, s: 0 })
   const [sim, setSim] = useState(null)
   const [err, setErr] = useState('')
+  const [saveState, setSaveState] = useState(null)   // null | 'saving' | { ok, message }
+
+  const periodsBody = () => accounting.periods.map((p) => ({ period_start: p.period_start, electricity_kwh: p.electricity_kwh, diesel_litres: p.diesel_litres }))
+  const save = async () => {
+    setSaveState('saving')
+    try {
+      const res = await api('/api/simulate', { method: 'POST', json: {
+        periods: periodsBody(), electricity_change_pct: sc.e, diesel_change_pct: sc.d, solar_offset_kwh_per_period: sc.s,
+        save: true, title: `Scenario: ${r.run?.title || input.period_start + ' to ' + input.period_end}`, parent_run_id: r.run?.id ?? null,
+      } })
+      setSaveState(res.run?.saved ? { ok: true, message: 'Scenario saved to your history.' } : { ok: false, message: res.run?.error || 'History is not available, so the scenario was not saved.' })
+    } catch (e) { setSaveState({ ok: false, message: e.message }) }
+  }
+  useEffect(() => { setSaveState(null) }, [sc])
 
   useEffect(() => {
-    const periods = accounting.periods.map((p) => ({ period_start: p.period_start, electricity_kwh: p.electricity_kwh, diesel_litres: p.diesel_litres }))
+    const periods = periodsBody()
     const ctl = new AbortController()
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`${apiUrl.replace(/\/$/, '')}/api/simulate`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
-          body: JSON.stringify({ periods, electricity_change_pct: sc.e, diesel_change_pct: sc.d, solar_offset_kwh_per_period: sc.s }),
-        })
-        const json = await res.json().catch(() => ({}))
-        if (!res.ok) throw new Error(typeof json.detail === 'string' ? json.detail : `Server error (HTTP ${res.status}).`)
+        const json = await api('/api/simulate', { method: 'POST', signal: ctl.signal,
+          json: { periods, electricity_change_pct: sc.e, diesel_change_pct: sc.d, solar_offset_kwh_per_period: sc.s } })
         setSim(json); setErr('')
       } catch (e) { if (e.name !== 'AbortError') setErr(e.message) }
     }, 300)
     return () => { clearTimeout(timer); ctl.abort() }
-  }, [sc, accounting, apiUrl])
+  }, [sc, accounting])
 
   const T = sim?.totals
   const rows = sim?.periods.map((p) => ({ period: p.period_start, Baseline: p.base_total_tco2e, Scenario: p.scen_total_tco2e }))
@@ -299,6 +316,13 @@ function Scenario({ r, apiUrl }) {
             </ResponsiveContainer>
           </div>
           <p className="muted mt-3 text-xs">{sim.note}</p>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button onClick={save} disabled={saveState === 'saving'}
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-700 disabled:opacity-50">
+              {saveState === 'saving' && <Loader2 size={16} className="animate-spin" />} Save this scenario
+            </button>
+            {saveState && saveState !== 'saving' && <span className={`text-xs ${saveState.ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600'}`}>{saveState.message}</span>}
+          </div>
         </>
       )}
     </Card>

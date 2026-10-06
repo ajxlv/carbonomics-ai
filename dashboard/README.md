@@ -9,10 +9,18 @@ The Simulation page runs the accounting formula (emission = activity × factor) 
 Run `node scripts/parity_check.js` (from repo root) to verify JS and Python results agree to 2 decimal places.
 
 
-The **Upload your data** page is the one exception to "no server": it sends the CSV to the Python API
-(`uvicorn api.main:app --port 8000` from the repo root; see the main README). Point it at a hosted API with
-`VITE_API_URL` at build time, or type the address in the page. The API must list the site in `ALLOWED_ORIGINS`.
-The rest of the dashboard still works as a static site without it.
+## Pages and login
+- Open to everyone: the home (landing) page, the login page and the demo pages (Overview to Data & QA).
+- Behind a login: **Upload your data** and **History**. There is no sign-up; the team creates accounts in Supabase.
+- Routes are hash based (`#home`, `#login`, `#overview`, `#upload`, `#history`, ...), so it works on any static host.
+
+**Upload your data** and **History** are the exception to "no server": they call the Python API
+(`uvicorn api.main:app --port 8000` from the repo root; see the main README) with the user's Supabase login token.
+Three build-time settings, listed in `.env.example` (all public values): `VITE_API_URL`, `VITE_SUPABASE_URL`,
+`VITE_SUPABASE_ANON_KEY`. The API address is fixed at build time on purpose, because the login token is sent to it.
+The API must list the site in `ALLOWED_ORIGINS`. If the two Supabase settings are missing (local development), the
+locked pages stay open and the API decides what it accepts (use `AUTH_DISABLED=1` locally, see `supabase/README.md`).
+The demo pages work as a static site without any of this.
 
 ## Run locally
 ```
