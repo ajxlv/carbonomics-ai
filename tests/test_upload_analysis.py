@@ -295,3 +295,53 @@ def test_xlsx_upload_is_read_like_csv():
 def test_old_xls_gets_a_clear_message():
     with pytest.raises(ua.UploadError, match="xlsx"):
         ua.read_upload(b"\xd0\xcf\x11\xe0" + b"0" * 50)
+
+
+# ── workbooks with several sheets ─────────────────────────────────────────────
+def _workbook(sheets):
+    buf = io.BytesIO()
+    with pd.ExcelWriter(buf, engine="openpyxl") as xw:
+        for name, rows in sheets.items():
+            pd.DataFrame(rows).to_excel(xw, sheet_name=name, header=False, index=False)
+    return buf.getvalue()
+
+
+MULTI = {
+    "README": [["About this file"], ["nothing to analyse here"]],
+    "Elec": [["Purchased electricity"], [], ["Month", "Consumption (kWh)", "Grid EF (kgCO2/kWh)"],
+             ["January 2025", 1000, 0.71], ["February 2025", 2000, 0.71], ["March 2025", 3000, 0.71], ["TOTAL", 6000, None]],
+    "Diesel": [["Generator"], [], ["Month", "Diesel (L)", "EF (kgCO2/L)"],
+               ["January 2025", 10, 2.89], ["February 2025", 20, 2.89], ["March 2025", 30, 2.89], ["TOTAL", 60, None]],
+    "Solar": [["Solar"], [], ["Month", "Solar Generation (kWh)"], ["January 2025", 99999], ["February 2025", 99999], ["March 2025", 99999]],
+}
+
+
+def test_multi_sheet_workbook_joins_electricity_and_diesel_and_skips_the_rest():
+    r = ua.analyze(_workbook(MULTI))
+    t = r["accounting"]["totals"]
+    assert r["input"]["rows"] == 3 and r["input"]["granularity_analysed"] == "monthly"
+    assert t["scope2_tco2e"] == pytest.approx(6000 * 0.71 / 1000)       # solar sheet and the TOTAL row are not used
+    assert t["scope1_tco2e"] == pytest.approx(60 * 2.89 / 1000)
+    assert any("Elec" in n and "Diesel" in n and "Solar" not in n for n in r["input"]["notes"])
+
+
+def test_multi_sheet_with_a_gap_between_sheets_is_rejected_not_filled():
+    sheets = dict(MULTI)
+    sheets["Diesel"] = MULTI["Diesel"][:-2] + [MULTI["Diesel"][-1]]      # March missing on the diesel sheet
+    with pytest.raises(ua.UploadError, match="missing"):
+        ua.analyze(_workbook(sheets))
+
+
+def test_workbook_without_a_recognisable_sheet_falls_back_to_first_sheet_error():
+    with pytest.raises(ua.UploadError):
+        ua.analyze(_workbook({"A": [["x"], [1]], "B": [["y"], [2]]}))
+
+
+def test_real_master_data_workbook_matches_its_own_totals():
+    path = os.path.join(os.path.dirname(__file__), "..", "data", "real", "KKWIEER_Carbon_Footprint_Master_Data_FY2025-26.xlsx")
+    if not os.path.exists(path):
+        pytest.skip("master data workbook not in this checkout")
+    r = ua.analyze(open(path, "rb").read())
+    assert r["input"]["rows"] == 12
+    assert r["accounting"]["totals"]["scope2_tco2e"] == pytest.approx(751.99, abs=0.01)
+    assert r["accounting"]["totals"]["scope1_tco2e"] == pytest.approx(11.85, abs=0.01)
