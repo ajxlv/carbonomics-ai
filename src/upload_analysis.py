@@ -21,6 +21,7 @@ Monthly files get carbon accounting only; the ML forecast needs weekly history.
 
 import io
 import math
+import warnings
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -70,8 +71,11 @@ def read_upload(raw: bytes) -> pd.DataFrame:
     if raw[:4] == b"\xd0\xcf\x11\xe0":
         raise UploadError("This looks like an old Excel (.xls) file. Please save it as .xlsx or .csv and upload again.")
     try:
-        if raw[:2] == b"PK":                      # .xlsx is a zip file; the first sheet is read
-            df = pd.read_excel(io.BytesIO(raw), sheet_name=0, engine="openpyxl")
+        if raw[:2] == b"PK":                      # .xlsx is a zip file
+            sheets = pd.read_excel(io.BytesIO(raw), sheet_name=None, header=None, engine="openpyxl")
+            df = _combine_sheets(sheets) if len(sheets) > 1 else None
+            if df is None:                        # one sheet, or no sheet we recognise: first sheet, header in row 1
+                df = pd.read_excel(io.BytesIO(raw), sheet_name=0, engine="openpyxl")
         else:
             df = pd.read_csv(io.BytesIO(raw))
     except Exception as exc:  # pandas raises several parser error types
@@ -80,8 +84,85 @@ def read_upload(raw: bytes) -> pd.DataFrame:
         raise UploadError(f"The file has more than {MAX_ROWS} rows.")
     if df.empty:
         raise UploadError("The file has no data rows.")
+    attrs = dict(df.attrs)
     df.columns = [str(c).strip().lower() for c in df.columns]
+    df.attrs.update(attrs)
     return df
+
+
+# ── workbooks with several sheets ─────────────────────────────────────────────
+# A report-style workbook can keep electricity and diesel on separate sheets, each with a title above the
+# header row and a total below the data. Each sheet is scanned for a header row that has a date column and an
+# electricity (kWh) or diesel (litres) column; the sheets found are joined on the date. Nothing is guessed:
+# a sheet without such a header row (README, inventories, solar generation, emission-factor tables) is skipped.
+_HEADER_SCAN_ROWS = 15
+_NOT_ACTIVITY = ("ef", "emission", "co2", "solar", "generation", "avoided", "old", "capacity", "annual")
+
+
+def _header_kind(cell: str) -> Optional[str]:
+    c = cell.strip().lower()
+    if c in _DATE_ALIASES:
+        return "date"
+    if c in _ELEC_ALIASES:
+        return ELECTRICITY
+    if c in _DIESEL_ALIASES:
+        return DIESEL
+    words = c.replace("(", " ").replace(")", " ").replace("/", " ").split()
+    if any(w in _NOT_ACTIVITY for w in words) or any(w in c for w in ("emission", "solar", "avoided")):
+        return None
+    if "kwh" in c:
+        return ELECTRICITY
+    if "diesel" in c and any(u in c for u in ("(l)", "litre", "liter")):
+        return DIESEL
+    return None
+
+
+def _extract_sheet(raw: pd.DataFrame) -> Optional[pd.DataFrame]:
+    for i in range(min(_HEADER_SCAN_ROWS, len(raw))):
+        kinds: Dict[str, int] = {}
+        for j, cell in enumerate(raw.iloc[i]):
+            if isinstance(cell, str):
+                kind = _header_kind(cell)
+                if kind and kind not in kinds:
+                    kinds[kind] = j
+        if "date" not in kinds or not ({ELECTRICITY, DIESEL} & set(kinds)):
+            continue
+        body = raw.iloc[i + 1:]
+        with warnings.catch_warnings():           # month names such as "January 2025" make pandas parse one by one
+            warnings.simplefilter("ignore", UserWarning)
+            dates = pd.to_datetime(body.iloc[:, kinds["date"]], errors="coerce")
+        n = 0                                     # data rows end at the first row without a valid date (e.g. TOTAL)
+        while n < len(dates) and pd.notna(dates.iloc[n]):
+            n += 1
+        if n < 2:
+            continue
+        out = pd.DataFrame({"date": dates.iloc[:n].to_numpy()})
+        for kind in (ELECTRICITY, DIESEL):
+            if kind in kinds:
+                out[kind] = body.iloc[:n, kinds[kind]].to_numpy()
+        return out
+    return None
+
+
+def _combine_sheets(sheets: Dict[str, pd.DataFrame]) -> Optional[pd.DataFrame]:
+    frames: List[Tuple[str, pd.DataFrame]] = []
+    for name, raw in sheets.items():
+        found = _extract_sheet(raw)
+        if found is not None:
+            frames.append((str(name), found))
+    if not frames:
+        return None
+    combined: Optional[pd.DataFrame] = None
+    used: List[str] = []
+    for name, f in frames:
+        new = [c for c in (ELECTRICITY, DIESEL) if c in f.columns and (combined is None or c not in combined.columns)]
+        if not new:
+            continue
+        part = f[["date"] + new]
+        combined = part if combined is None else combined.merge(part, on="date", how="outer")
+        used.append(name)
+    combined.attrs["sheets_used"] = used
+    return combined
 
 
 def _pick(columns: List[str], aliases: List[str], explicit: Optional[str], label: str) -> Optional[str]:
@@ -324,6 +405,8 @@ def analyze(raw: bytes, date_col=None, electricity_col=None, diesel_col=None,
     granularity = detect_granularity(df["date"])
 
     notes: List[str] = []
+    if raw_df.attrs.get("sheets_used"):
+        notes.append("Read from sheet(s): " + ", ".join(raw_df.attrs["sheets_used"]) + ". Other sheets were not used.")
     if granularity == "daily":
         df, note = _daily_to_weekly(df)
         if note:
