@@ -40,6 +40,15 @@ const parseHash = () => {
 }
 const goto = (hash) => { location.hash = hash }
 
+// The last analysis survives a page reload (this tab only), so the menu does not empty itself.
+const SAVED_KEY = 'carbonomics-last-analysis'
+const readSaved = () => {
+  try { return JSON.parse(sessionStorage.getItem(SAVED_KEY)) } catch { return null }
+}
+const writeSaved = (a) => {
+  try { sessionStorage.setItem(SAVED_KEY, JSON.stringify(a)) } catch { /* too big or storage blocked: fine */ }
+}
+
 export default function App() {
   const [{ route, next }, setRoute] = useState(parseHash)
   const [dark, setDark] = useState(readTheme)
@@ -76,7 +85,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
-  const [analysis, setAnalysis] = useState(null)   // { result, fileName } of the file the user analysed or opened from History
+  const [analysis, setAnalysis] = useState(readSaved)   // { result, fileName } of the file the user analysed or opened from History
   const [plan, setPlan] = useState(null)           // optimization inputs, added to the PDF report
   const mine = Boolean(session)                    // logged-in users see their own data, visitors see the fake demo
 
@@ -91,9 +100,10 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
   const current = PAGES.find((p) => p.id === page) ?? PAGES[0]
   const Page = current.C
   const needsData = current.needsData !== false && !mine
-  const showResult = (result, fileName) => { setAnalysis({ result, fileName }); setPlan(null) }
+  const showResult = (result, fileName) => { setAnalysis({ result, fileName }); setPlan(null); writeSaved({ result, fileName }) }
   const openAnalysis = (run) => {
-    showResult({ ...run.result, run: { saved: true, id: run.id, error: null, title: run.title, opened: true } }, run.title || '')
+    const fileName = run.input?.file_name || run.title || ''
+    showResult({ ...run.result, input: { ...run.result.input, file_name: fileName }, run: { saved: true, id: run.id, error: null, title: run.title, opened: true } }, fileName)
     go('overview')
   }
   const MINE = { overview: MyOverview, trends: MyTrends, forecast: MyForecast, simulation: MySimulation, optimization: MyOptimization, factorchange: FactorChange }
@@ -146,7 +156,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
                 ? (
                   <div className="flex items-center gap-2 text-xs">
                     <span className="muted hidden max-w-[14rem] truncate md:inline" title={session.email}>{profile?.full_name || session.email}{profile?.role && profile.role !== 'other' ? ` (${profile.role})` : ''}</span>
-                    <button onClick={() => signOut().then(() => { location.hash = 'home' })} className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100 dark:text-slate-300 dark:ring-slate-800 dark:hover:bg-slate-800"><LogOut size={15} /> Log out</button>
+                    <button onClick={() => signOut().then(() => { try { sessionStorage.removeItem(SAVED_KEY) } catch { /* ignore */ } location.hash = 'home' })} className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100 dark:text-slate-300 dark:ring-slate-800 dark:hover:bg-slate-800"><LogOut size={15} /> Log out</button>
                   </div>
                 )
                 : <a href="#login" className="rounded-xl bg-brand-600 px-3 py-2 text-xs font-medium text-white hover:bg-brand-700">Log in</a>)}
