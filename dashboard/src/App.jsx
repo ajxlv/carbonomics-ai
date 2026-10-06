@@ -28,7 +28,7 @@ const readTheme = () => {
     const saved = localStorage.getItem('carbonomics-theme')
     if (saved) return saved === 'dark'
   } catch { /* storage may be blocked */ }
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
+  return true   // dark is the default look; the toggle switches to light
 }
 
 // '#login?next=upload' -> { route: 'login', next: 'upload' }
