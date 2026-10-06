@@ -20,11 +20,12 @@ const STEPS = [
   { n: '3', title: 'Decide', text: 'Add your budget and costs, get the best plan and a PDF report.' },
 ]
 
+// Finished card pictures (name, role and photo are part of each image), in display order.
 const TEAM = [
-  { name: 'Sanket Chaudhari', role: 'Chief Architect & Project Lead', tag: 'Architecture, ML, backend and web, end to end' },
-  { name: 'Atharva Jadhav', role: 'Chief Research Strategist', tag: 'Research design, literature and methodology' },
-  { name: 'Rahil Shah', role: 'Head of Testing & Quality Assurance', tag: 'Testing and validation of every module' },
-  { name: 'Purva Chopade', role: 'Head of Data Pipeline & Analytics', tag: 'Data pipeline, analytics and visualization' },
+  { file: 'sanket', alt: 'Sanket Chaudhari, Chief Architect & Project Lead' },
+  { file: 'atharva', alt: 'Atharva Jadhav, Project Strategy & Research Lead' },
+  { file: 'purva', alt: 'Purva Chopade, Head of Data Pipeline & Analytics' },
+  { file: 'rahil', alt: 'Rahil Shah, Head of System Validation & Quality' },
 ]
 
 // Fades a block in once, when it scrolls into view.
@@ -264,16 +265,11 @@ export default function Landing() {
             simulation and optimization so that a campus can see where its emissions come from and what changing them would do.
           </p>
         </Reveal>
-        <h2 className="font-display mt-14 text-4xl text-white">Team Carbonomics</h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <h2 className="sr-only">Team Carbonomics</h2>
+        <div className="mt-10 grid gap-x-4 gap-y-2 md:grid-cols-2">
           {TEAM.map((m, i) => (
-            <Reveal key={m.name} delay={i * 90}>
-              <div className="h-full rounded-2xl border border-white/10 bg-white/[.03] p-5 transition hover:-translate-y-1 hover:border-teal-300/30">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-emerald-700 text-sm font-semibold text-white" aria-hidden="true">{m.name.split(' ').map((w) => w[0]).join('')}</div>
-                <div className="mt-4 font-medium text-white">{m.name}</div>
-                <div className="mt-1 text-xs text-teal-300">{m.role}</div>
-                <div className="mt-2 text-xs text-white/40">{m.tag}</div>
-              </div>
+            <Reveal key={m.file} delay={(i % 2) * 120}>
+              <img src={`team/${m.file}.webp`} alt={m.alt} width="1400" height="813" loading="lazy" className="w-full select-none [mix-blend-mode:lighten]" />
             </Reveal>
           ))}
         </div>
