@@ -281,3 +281,17 @@ def test_api_simulate_ok_and_422():
     bad = client.post("/api/simulate", json={"periods": periods, "electricity_change_pct": 500})
     assert bad.status_code == 422 and "electricity_change_pct" in str(bad.json()["detail"])
     assert client.post("/api/simulate", json={"periods": []}).status_code == 422
+
+
+def test_xlsx_upload_is_read_like_csv():
+    import io
+    df = pd.DataFrame({"date": pd.date_range("2025-01-01", periods=60, freq="D"), "electricity_kwh": range(1000, 1060)})
+    buf = io.BytesIO()
+    df.to_excel(buf, index=False)
+    r = ua.analyze(buf.getvalue())
+    assert r["input"]["rows"] > 0 and r["accounting"]["totals"]["scope2_tco2e"] > 0
+
+
+def test_old_xls_gets_a_clear_message():
+    with pytest.raises(ua.UploadError, match="xlsx"):
+        ua.read_upload(b"\xd0\xcf\x11\xe0" + b"0" * 50)

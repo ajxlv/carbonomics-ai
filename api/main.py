@@ -4,6 +4,7 @@ Carbonomics-AI web API.
 POST /api/analyze  - upload a CSV, get validation, carbon accounting and a forecast as JSON.
 POST /api/simulate - what-if scenario on the periods returned by /api/analyze.
 POST /api/optimize - best measures within a budget, from the user's own cost inputs.
+POST /api/report   - the PDF report, rebuilt on the server from the periods (and plan inputs) of the user's analysis.
 GET  /api/runs, GET /api/runs/{id}, DELETE /api/runs/{id} - the logged-in user's saved history.
 GET  /api/health   - liveness check (no login needed).
 
@@ -21,7 +22,7 @@ import sys
 from typing import List, Optional
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -162,6 +163,54 @@ def optimize(req: OptimizeRequest, user: User = Depends(current_user)) -> dict:
                                "measures": [m.model_dump() for m in req.measures], "periods": len(req.periods)},
                               result, summary, parent=req.parent_run_id)
     return result
+
+
+class ReportRequest(BaseModel):
+    periods: List[Period] = Field(min_length=1, max_length=upload_analysis.MAX_SIM_PERIODS)
+    granularity: str = Field(max_length=10)
+    file_name: str = Field("", max_length=200)
+    prepared_for: str = Field("", max_length=200)
+    budget_inr: Optional[float] = None       # with measures: adds the Optimization and Recommended steps pages
+    measures: List[MeasureIn] = Field(default_factory=list, max_length=upload_optimization.MAX_MEASURES)
+
+
+@app.post("/api/report")
+def report(req: ReportRequest, user: User = Depends(current_user)) -> Response:
+    """PDF report. Numbers are recomputed here (activity x factor), not copied from the browser."""
+    import tempfile
+    from datetime import date
+
+    import pandas as pd
+    from report_pages import build_full_report
+    periods = [p.model_dump() for p in req.periods]
+    sources = [t for t in (upload_analysis.ELECTRICITY, upload_analysis.DIESEL) if any(p.get(t) is not None for p in periods)]
+    if not sources:
+        raise HTTPException(status_code=422, detail="The data has no electricity or diesel values.")
+    try:
+        df = pd.DataFrame([{"period_start": pd.Timestamp(p["period_start"]), **{t: float(p.get(t) or 0.0) for t in sources}} for p in periods])
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=422, detail="A period date could not be read.") from exc
+    df = df.sort_values("period_start").reset_index(drop=True)
+    analysis = {
+        "input": {"rows": int(len(df)), "granularity_analysed": req.granularity,
+                  "period_start": df["period_start"].iloc[0].strftime("%Y-%m-%d"), "period_end": df["period_start"].iloc[-1].strftime("%Y-%m-%d"),
+                  "columns_used": {t: t for t in sources}},
+        "factors_used": upload_analysis.factors_used(sources),
+        "accounting": upload_analysis.account(df, "period_start", sources),
+    }
+    plan = None
+    if req.budget_inr is not None and req.measures:
+        try:
+            plan = upload_optimization.optimize_upload(periods, req.granularity, req.budget_inr, [m.model_dump() for m in req.measures])
+        except upload_analysis.UploadError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+    today = date.today()
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, "report.pdf")
+        build_full_report(path, analysis, plan, None, prepared_for=req.prepared_for, data_source=req.file_name,
+                          generated_on=f"{today.day} {today.strftime('%B %Y')}")
+        pdf = open(path, "rb").read()
+    return Response(pdf, media_type="application/pdf", headers={"Content-Disposition": 'attachment; filename="carbon-footprint-report.pdf"'})
 
 
 @app.get("/api/runs")

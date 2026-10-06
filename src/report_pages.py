@@ -421,3 +421,156 @@ def build_sections(path: str, analysis: dict, scope3: Optional[dict] = None, fir
         c.showPage()
     c.save()
     return path
+
+
+def _money(v) -> str:
+    """Rupees in the Indian way (lakh, crore) so a non-technical reader recognises the size."""
+    if v is None:
+        return "-"
+    v = float(v)
+    if v >= 1e7:
+        return f"Rs {v / 1e7:,.2f} crore"
+    if v >= 1e5:
+        return f"Rs {v / 1e5:,.2f} lakh"
+    return f"Rs {v:,.0f}"
+
+
+def draw_optimization_page(c: canvas.Canvas, opt: dict, page_no: int = 6) -> None:
+    """Page 6: the plan the optimiser picked from the measures the user entered."""
+    _fonts()
+    _page_header(c, page_no)
+    y = _title(c, "Optimization",
+               "Which of the measures you entered gives the biggest cut in emissions for your budget. "
+               "All measure figures (cost, saving) are the ones you typed in.")
+    o, base = opt["optimal"], opt["baseline"]
+    box = (("Budget", _money(opt["budget_inr"])), ("Planned spend", _money(o["total_capex_inr"])),
+           ("Cut per year", f"{_fmt(o['tco2e_saved'], 1)} tCO₂e"), ("Share of your total", f"{_fmt(o['pct_of_baseline'], 1)} %"))
+    gap = 10
+    cw = (RIGHT - LEFT - 3 * gap) / 4
+    for i, (k, v) in enumerate(box):
+        x = LEFT + i * (cw + gap)
+        c.setFillColor(GREY)
+        c.roundRect(x, y - 58, cw, 58, 8, stroke=0, fill=1)
+        c.setFillColor(MUTED)
+        c.setFont("Body", 9.5)
+        c.drawString(x + 10, y - 18, k)
+        c.setFillColor(TEAL_DARK)
+        big, _, unit = v.partition("|")
+        c.setFont("Title", 15)
+        c.drawString(x + 10, y - 40, big)
+        if unit:
+            c.setFont("Body", 10)
+            c.drawString(x + 14 + c.stringWidth(big, "Title", 15), y - 40, unit)
+    y -= 58 + 22
+    y = _h2(c, "Recommended plan", y)
+    if not o["selected"]:
+        _text_block(c, _wrap(c, "With this budget none of the measures could be chosen. Increase the budget or check the costs entered.",
+                             "Body", 10.5, RIGHT - LEFT), LEFT, y, "Body", 10.5, INK, 14)
+        y -= 34
+    else:
+        rows = [(s["label"], f"{s['units']}", _money(s["capex_inr"]), _fmt(s["tco2e_saved"], 2), f"{_fmt(s['pct_of_baseline'], 1)} %")
+                for s in o["selected"]]
+        rows.append(("Total", "", _money(o["total_capex_inr"]), _fmt(o["tco2e_saved"], 2), f"{_fmt(o['pct_of_baseline'], 1)} %"))
+        y = _table(c, y, ("Measure", "Units", "Cost", "tCO₂e saved / yr", "Share"), rows,
+                   (200, 50, 100, 90, RIGHT - LEFT - 440))
+    y = _howto(c, "the plan lists what to do, how many units, what it costs and how much yearly emission it removes. "
+                  f"Your yearly total before any measure is {_fmt(base['tco2e_per_year'], 1)} tCO₂e.", y)
+
+    y = _h2(c, "Each measure on its own (per unit)", y - 4)
+    biggest = max((r["pct_of_baseline_per_unit"] for r in opt["ranking"]), default=0) or 1.0
+    for r in opt["ranking"]:
+        c.setFillColor(INK)
+        c.setFont("Body", 9.5)
+        c.drawString(LEFT, y, (r["label"][:34] + "...") if len(r["label"]) > 36 else r["label"])
+        c.setFillColor(C_S2)
+        c.roundRect(LEFT + 200, y - 3, max(1.5, 200 * r["pct_of_baseline_per_unit"] / biggest), 10, 2, stroke=0, fill=1)
+        c.setFillColor(MUTED)
+        c.drawString(LEFT + 410, y, f"{_fmt(r['pct_of_baseline_per_unit'], 1)} % of total per unit")
+        y -= 16
+    y = _howto(c, "a longer bar means one unit of that measure removes a bigger share of your emissions.", y - 2)
+    notes = list(opt.get("notes", [])) + [opt["disclaimer"]]
+    c.setFillColor(MUTED)
+    _text_block(c, [ln for n in notes for ln in _wrap(c, n, "Body", 9, RIGHT - LEFT)], LEFT, max(y - 4, 150), "Body", 9, MUTED, 12)
+
+
+def draw_steps_page(c: canvas.Canvas, opt: dict, page_no: int = 7) -> None:
+    """Page 7: recommended steps over 5 and 10 years, built only from the user's plan."""
+    _fonts()
+    _page_header(c, page_no)
+    y = _title(c, "Recommended steps",
+               "What to do, in order, based on the measures and costs you entered. "
+               "These are suggestions from your own inputs, not a guarantee.")
+    o, base = opt["optimal"], opt["baseline"]
+    if not o["selected"]:
+        _text_block(c, _wrap(c, "No measure fits the budget entered, so no steps are suggested. Enter a larger budget or lower costs and run the optimization again.",
+                             "Body", 10.5, RIGHT - LEFT), LEFT, y, "Body", 10.5, INK, 14)
+        return
+    rank = {r["id"]: r for r in opt["ranking"]}
+    steps = sorted(o["selected"], key=lambda s: (rank.get(s["id"], {}).get("inr_per_tco2e") is None, rank.get(s["id"], {}).get("inr_per_tco2e") or 0))
+    y = _h2(c, "Steps, cheapest cut first", y)
+    for i, s in enumerate(steps, 1):
+        r = rank.get(s["id"], {})
+        c.setFillColor(TEAL)
+        c.circle(LEFT + 10, y + 3, 9, stroke=0, fill=1)
+        c.setFillColor(HexColor("#ffffff"))
+        c.setFont("BodyBold", 10)
+        c.drawCentredString(LEFT + 10, y, str(i))
+        c.setFillColor(INK)
+        c.setFont("BodyBold", 11)
+        c.drawString(LEFT + 28, y + 3, f"{s['label']} ({s['units']} unit{'s' if s['units'] != 1 else ''})")
+        c.setFillColor(MUTED)
+        c.setFont("Body", 9.5)
+        extra = f", about {_money(r['inr_per_tco2e'])} per tCO₂e saved per year" if r.get("inr_per_tco2e") else ""
+        c.drawString(LEFT + 28, y - 11, f"Cost {_money(s['capex_inr'])}; removes {_fmt(s['tco2e_saved'], 2)} tCO₂e a year{extra}.")
+        y -= 34
+    y -= 6
+    y = _h2(c, "What this means over 5 and 10 years", y)
+    saved, total = o["tco2e_saved"], base["tco2e_per_year"]
+    rows = [("After the plan, per year", f"{_fmt(total - saved, 1)} tCO₂e (now {_fmt(total, 1)})"),
+            ("Emission avoided in 5 years", f"{_fmt(saved * 5, 1)} tCO₂e"),
+            ("Emission avoided in 10 years", f"{_fmt(saved * 10, 1)} tCO₂e")]
+    if o.get("annual_saving_inr") is not None:
+        rows.append(("Money saved per year", _money(o["annual_saving_inr"])))
+    if o.get("payback_years"):
+        rows.append(("Cost paid back in", f"about {_fmt(o['payback_years'], 1)} years"))
+    y = _table(c, y, ("", "Result"), rows, (230, RIGHT - LEFT - 230))
+    lines = _wrap(c, "How these were worked out: yearly saving of the plan x 5 or x 10. It assumes the measures stay in use, "
+                     "your usage and the electricity emission factor stay as they are today, and the plan is carried out in full. "
+                     "Usage growth, a cleaner grid and Scope 3 are not included.", "Body", 9.5, RIGHT - LEFT)
+    _text_block(c, lines, LEFT, y - 2, "Body", 9.5, MUTED, 13)
+
+
+def _factor_text(analysis: dict) -> str:
+    return "; ".join(f"{f['activity'].replace('_', ' ')} {f['factor']} {f['output']} ({f['version']})" for f in analysis["factors_used"])
+
+
+def build_full_report(path: str, analysis: dict, optimization: Optional[dict] = None, scope3: Optional[dict] = None,
+                      prepared_for: str = "", data_source: str = "", generated_on: str = "") -> str:
+    """Cover, About, At a glance, Method, Results, plus Optimization and Recommended steps when a plan is given."""
+    from report_cover import CoverInfo, ReportDetails, draw_cover, draw_details_page
+    inp = analysis["input"]
+    sources = [k for k in ("electricity_kwh", "diesel_litres") if k in inp["columns_used"]]
+    boundary = " and ".join({"electricity_kwh": "Scope 2 (purchased electricity)", "diesel_litres": "Scope 1 (generator diesel)"}[k] for k in sources[::-1])
+    info = CoverInfo(period=f"{inp['period_start']} to {inp['period_end']}", boundary=boundary)
+    details = ReportDetails(generated_on=generated_on, prepared_for=prepared_for,
+                            data_period=f"{inp['period_start']} to {inp['period_end']} ({inp['rows']} {inp['granularity_analysed']} rows)",
+                            data_source=data_source, boundary=boundary, factors=_factor_text(analysis), version="1.0")
+    c = canvas.Canvas(path, pagesize=(W, H))
+    c.setTitle("Carbon Footprint Report")
+    c.setAuthor("Carbonomics-AI")
+    draw_cover(c, info, "classic")
+    c.showPage()
+    draw_details_page(c, info, details)
+    c.showPage()
+    n = 3
+    for draw in (draw_glance_page, draw_method_page, draw_results_page):
+        draw(c, analysis, scope3, n)
+        c.showPage()
+        n += 1
+    if optimization:
+        draw_optimization_page(c, optimization, n)
+        c.showPage()
+        draw_steps_page(c, optimization, n + 1)
+        c.showPage()
+    c.save()
+    return path
