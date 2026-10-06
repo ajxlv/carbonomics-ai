@@ -269,7 +269,7 @@ export default function Landing() {
         <div className="mt-10 grid gap-x-4 gap-y-2 md:grid-cols-2">
           {TEAM.map((m, i) => (
             <Reveal key={m.file} delay={(i % 2) * 120}>
-              <img src={`team/${m.file}.webp`} alt={m.alt} width="1400" height="740" loading="lazy" className="w-full select-none [mix-blend-mode:lighten]" />
+              <img src={`team/${m.file}.webp`} alt={m.alt} width="1400" height="720" loading="lazy" className="w-full select-none [mix-blend-mode:lighten]" />
             </Reveal>
           ))}
         </div>
