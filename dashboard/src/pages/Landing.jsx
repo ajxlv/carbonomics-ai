@@ -98,7 +98,7 @@ export default function Landing() {
         <div className="mx-auto max-w-6xl space-y-2 px-4 text-xs leading-relaxed text-slate-500 sm:px-8 dark:text-slate-400">
           <p>Carbonomics-AI is a project of the Department of AI &amp; DS, K. K. Wagh Institute of Engineering Education and Research (KKWIEER), Nashik, built by Team Carbonomics.</p>
           <p>© 2026 Team Carbonomics. All rights reserved. The content, design, data and code of this site may not be copied, reproduced, scraped or reused without written permission.</p>
-          <p>Contact: <a className="underline" href={`mailto:${CONTACT}`}>{CONTACT}</a></p>
+          <p>Contact: <a className="underline" href={`mailto:${CONTACT}`}>{CONTACT}</a> · <a className="underline" href="#privacy">Privacy Policy</a> · <a className="underline" href="#terms">Terms of Use</a></p>
         </div>
       </footer>
     </div>

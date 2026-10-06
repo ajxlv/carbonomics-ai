@@ -49,6 +49,10 @@ export default function Login({ next, onDone }) {
             </button>
           </form>
           <p className="muted mt-5 text-xs leading-relaxed">
+            By logging in you agree to the <a className="underline" href="#terms">Terms of Use</a> and the <a className="underline" href="#privacy">Privacy Policy</a>.
+            Your email, name and the results of your analyses are saved to your private history; your CSV file itself is not stored.
+          </p>
+          <p className="muted mt-3 text-xs leading-relaxed">
             Accounts are created by the Carbonomics team; there is no sign-up. Need access or forgot your password? Write to{' '}
             <a className="underline" href="mailto:carbonomics.app@gmail.com">carbonomics.app@gmail.com</a>.
           </p>
