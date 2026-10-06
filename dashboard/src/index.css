@@ -50,13 +50,19 @@ h1, h2 { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01
 .anim-float { animation: float-y 6s ease-in-out infinite; }
 .anim-float-slow { animation: float-y 8s ease-in-out infinite reverse; }
 .anim-drift { animation: drift 14s ease-in-out infinite; }
+@keyframes grow-x { from { transform: scaleX(0.05); } to { transform: scaleX(1); } }
+@keyframes draw { from { stroke-dashoffset: 400; } to { stroke-dashoffset: 0; } }
+.bar-grow-x { transform-origin: left; animation: grow-x 1.2s cubic-bezier(.2, .8, .2, 1) both; }
+.bar-grow-x-l { transform-origin: right; animation: grow-x 1.2s .3s cubic-bezier(.2, .8, .2, 1) both; }
+.reveal-row { animation: rise .7s both; }
+.line-draw { stroke-dasharray: 5 5; }
 .bar-grow { transform-origin: bottom; animation: grow-y 1.1s cubic-bezier(.2, .8, .2, 1) both; }
 .text-shine { background-size: 200% auto; animation: shine 6s linear infinite; }
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.in { opacity: 1; transform: none; }
 .grid-bg { background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 44px 44px; }
 @media (prefers-reduced-motion: reduce) {
-  .anim-float, .anim-float-slow, .anim-drift, .bar-grow, .text-shine { animation: none; }
+  .bar-grow-x, .bar-grow-x-l, .reveal-row, .anim-float, .anim-float-slow, .anim-drift, .bar-grow, .text-shine { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
 }
 
