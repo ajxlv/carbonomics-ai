@@ -21,19 +21,14 @@ function analyze(file, opts) {
 
 const field = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900'
 
-export default function Upload({ opened, onCloseOpened }) {
+export default function Upload({ analysis, onResult }) {
   const [file, setFile] = useState(null)
   const [opts, setOpts] = useState({ title: '', date_col: '', electricity_col: '', diesel_col: '', future_weeks: 8 })
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [result, setResult] = useState(null)
-
-  // A run opened from History replaces whatever was on screen.
-  useEffect(() => { if (opened) { setResult({ ...opened.result, run: { saved: true, id: opened.id, error: null, title: opened.title, opened: true } }); setError('') } }, [opened])
-
   const run = async () => {
-    setBusy(true); setError(''); setResult(null); onCloseOpened?.()
-    try { setResult(await analyze(file, opts)) } catch (e) { setError(e.message) } finally { setBusy(false) }
+    setBusy(true); setError('')
+    try { onResult(await analyze(file, opts), file.name) } catch (e) { setError(e.message) } finally { setBusy(false) }
   }
   const set = (k) => (e) => setOpts({ ...opts, [k]: e.target.value })
 
@@ -51,7 +46,7 @@ export default function Upload({ opened, onCloseOpened }) {
           <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-slate-300 p-4 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/50">
             <FileUp size={22} className="shrink-0 text-brand-600" />
             <span className="min-w-0 truncate">{file ? file.name : 'Click to choose a .csv or .xlsx file (max 5 MB)'}</span>
-            <input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" onChange={(e) => { setFile(e.target.files?.[0] ?? null); setResult(null); setError('') }} />
+            <input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" onChange={(e) => { setFile(e.target.files?.[0] ?? null); setError('') }} />
           </label>
           <label className="text-sm">
             <span className="muted mb-1 block text-xs">Weeks to forecast (1 to 26)</span>
@@ -77,29 +72,47 @@ export default function Upload({ opened, onCloseOpened }) {
       </Card>
 
       {error && <Callout title="Could not analyse this file"><div className="flex gap-2"><AlertTriangle size={18} className="mt-0.5 shrink-0" /><span>{error}</span></div></Callout>}
-      {result && <Results r={result} fileName={file?.name} />}
+      {analysis && <Done a={analysis} />}
     </div>
   )
 }
 
-function SavedNote({ run }) {
+export function SavedNote({ run }) {
   if (!run) return null
   if (run.saved) return <p className="flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-400"><Check size={14} /> {run.opened ? 'Opened from your history.' : 'Saved to your history.'}</p>
   if (run.error) return <Callout title="Not saved to history">{run.error} The analysis below is still correct.</Callout>
   return null
 }
 
-function Results({ r, fileName }) {
-  const t = useChartTheme()
+const PAGE_LINKS = [['overview', 'Overview'], ['trends', 'Trends'], ['forecast', 'Forecast'], ['simulation', 'Simulation'], ['optimization', 'Optimization']]
+
+// Shown on the Upload page after a run: a short receipt and links to the pages that hold the results.
+function Done({ a }) {
+  const { input } = a.result
+  return (
+    <Card title="Your file is analysed" badge={<YourData />}>
+      <SavedNote run={a.result.run} />
+      <p className="muted mt-2 text-sm">
+        {a.fileName ? `${a.fileName}: ` : ''}{fmt(input.rows)} {input.granularity_analysed} rows, {input.period_start} to {input.period_end}.
+        The results are now in the menu on the left. Open any page:
+      </p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {PAGE_LINKS.map(([id, label]) => (
+          <a key={id} href={`#${id}`} className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-700">{label}</a>
+        ))}
+      </div>
+    </Card>
+  )
+}
+
+function ReportButton({ r, fileName, plan }) {
   const { profile, session } = useAuth()
-  const [plan, setPlan] = useState(null)
-  const [pdfBusy, setPdfBusy] = useState(false)
-  const [pdfError, setPdfError] = useState('')
-  const { input, accounting, factors_used: factors, forecast } = r
-  const tot = accounting.totals
-  const hasPeriods = Array.isArray(accounting.periods)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const { input, accounting } = r
+  if (!Array.isArray(accounting.periods)) return null
   const download = async () => {
-    setPdfBusy(true); setPdfError('')
+    setBusy(true); setError('')
     try {
       const who = [profile?.full_name || session?.email, profile?.role && profile.role !== 'other' ? profile.role : ''].filter(Boolean).join(', ')
       const file = await api('/api/report', { method: 'POST', blob: true, json: {
@@ -109,23 +122,29 @@ function Results({ r, fileName }) {
       const a = document.createElement('a')
       a.href = URL.createObjectURL(file); a.download = 'carbon-footprint-report.pdf'; a.click()
       setTimeout(() => URL.revokeObjectURL(a.href), 1000)
-    } catch (e) { setPdfError(e.message) } finally { setPdfBusy(false) }
+    } catch (e) { setError(e.message) } finally { setBusy(false) }
   }
-  const bars = (accounting.periods ?? []).map((p) => ({ period: p.period_start, 'Scope 1 (diesel)': p.scope1_kg, 'Scope 2 (electricity)': p.scope2_kg }))
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <button disabled={busy} onClick={download} className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-700 disabled:opacity-50">
+        {busy ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />} Download report (PDF)
+      </button>
+      <span className="muted text-xs">{plan ? 'Includes your optimization plan and recommended steps.' : 'Run "Find best plan" on the Optimization page to add the plan and recommended steps.'}</span>
+      {error && <span className="text-xs text-rose-600">{error}</span>}
+    </div>
+  )
+}
 
+const needPeriods = (what) => <Callout tone="blue" title="Per-period detail not available">This run was opened from your history as a summary only, so {what} is not available. Upload the file again to see it.</Callout>
+
+export function MyOverview({ a, plan }) {
+  const r = a.result
+  const { input, accounting, factors_used: factors } = r
+  const tot = accounting.totals
   return (
     <div className="space-y-6">
       <SavedNote run={r.run} />
-      {hasPeriods && (
-        <div className="flex flex-wrap items-center gap-3">
-          <button disabled={pdfBusy} onClick={download} className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-700 disabled:opacity-50">
-            {pdfBusy ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />} Download report (PDF)
-          </button>
-          <span className="muted text-xs">{plan ? 'Includes your optimization plan and recommended steps.' : 'Run the optimization below first to add the plan and recommended steps.'}</span>
-          {pdfError && <span className="text-xs text-rose-600">{pdfError}</span>}
-        </div>
-      )}
-      {r.truncated && <Callout tone="blue" title="Summary only">This run was too large to store in full, so the per-period charts, scenario and forecast detail were not saved. Upload the file again to see them.</Callout>}
+      <ReportButton r={r} fileName={a.fileName} plan={plan} />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi label="Total emission" value={fmt(tot.total_tco2e, 2)} unit="tCO₂e" sub={`${input.period_start} to ${input.period_end}`} badge={<YourData />} />
         <Kpi label="Scope 2 (electricity)" value={fmt(tot.scope2_tco2e, 2)} unit="tCO₂e" sub="activity x grid factor" />
@@ -133,23 +152,6 @@ function Results({ r, fileName }) {
         <Kpi label="Rows analysed" value={fmt(input.rows)} sub={`${input.granularity_detected} data${input.granularity_detected !== input.granularity_analysed ? `, analysed as ${input.granularity_analysed}` : ''}`} />
       </div>
       {(input.notes ?? []).map((n) => <Callout key={n} tone="blue">{n}</Callout>)}
-
-      {hasPeriods && <Card title={`Emission per ${input.granularity_analysed === 'monthly' ? 'month' : 'week'}`} subtitle="kg CO₂e, stacked by scope" badge={<YourData />}>
-        <div className="h-72">
-          <ResponsiveContainer>
-            <BarChart data={bars} margin={{ left: -5 }}>
-              <CartesianGrid stroke={t.grid} vertical={false} />
-              <XAxis dataKey="period" tickFormatter={shortDate} stroke={t.axis} tickLine={false} minTickGap={24} />
-              <YAxis stroke={t.axis} tickLine={false} axisLine={false} tickFormatter={(v) => fmt(v)} width={64} />
-              <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v, n) => [`${fmt(v, 1)} kg CO₂e`, n]} />
-              <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-              <Bar isAnimationActive={false} dataKey="Scope 2 (electricity)" stackId="e" fill={COLORS.electricity} />
-              <Bar isAnimationActive={false} dataKey="Scope 1 (diesel)" stackId="e" fill={COLORS.diesel} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>}
-
       <Card title="Emission factors used" subtitle="Every factor carries its source, version and unit">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -170,11 +172,57 @@ function Results({ r, fileName }) {
           </table>
         </div>
       </Card>
-
-      {hasPeriods && <Scenario r={r} />}
-      {hasPeriods && <OptimizeCard r={r} onPlan={setPlan} />}
-      {forecast?.targets && Object.values(forecast.targets).every((b) => b.backtest) && <Forecast forecast={forecast} t={t} />}
       <p className="muted text-xs">{r.disclaimer}</p>
+    </div>
+  )
+}
+
+export function MyTrends({ a }) {
+  const t = useChartTheme()
+  const { input, accounting } = a.result
+  if (!Array.isArray(accounting.periods)) return needPeriods('the emission chart')
+  const bars = accounting.periods.map((p) => ({ period: p.period_start, 'Scope 1 (diesel)': p.scope1_kg, 'Scope 2 (electricity)': p.scope2_kg }))
+  return (
+    <Card title={`Emission per ${input.granularity_analysed === 'monthly' ? 'month' : 'week'}`} subtitle="kg CO₂e, stacked by scope" badge={<YourData />}>
+      <div className="h-72">
+        <ResponsiveContainer>
+          <BarChart data={bars} margin={{ left: -5 }}>
+            <CartesianGrid stroke={t.grid} vertical={false} />
+            <XAxis dataKey="period" tickFormatter={shortDate} stroke={t.axis} tickLine={false} minTickGap={24} />
+            <YAxis stroke={t.axis} tickLine={false} axisLine={false} tickFormatter={(v) => fmt(v)} width={64} />
+            <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v, n) => [`${fmt(v, 1)} kg CO₂e`, n]} />
+            <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+            <Bar isAnimationActive={false} dataKey="Scope 2 (electricity)" stackId="e" fill={COLORS.electricity} />
+            <Bar isAnimationActive={false} dataKey="Scope 1 (diesel)" stackId="e" fill={COLORS.diesel} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </Card>
+  )
+}
+
+export function MyForecast({ a }) {
+  const t = useChartTheme()
+  const { forecast } = a.result
+  if (!forecast?.targets || !Object.values(forecast.targets).every((b) => b.backtest)) {
+    return forecast?.reason
+      ? <Callout title="No forecast for this file">{forecast.reason}</Callout>
+      : needPeriods('the forecast')
+  }
+  return <Forecast forecast={forecast} t={t} />
+}
+
+export function MySimulation({ a }) {
+  return Array.isArray(a.result.accounting.periods) ? <Scenario r={a.result} /> : needPeriods('the what-if scenario')
+}
+
+export function MyOptimization({ a, plan, onPlan }) {
+  const r = a.result
+  if (!Array.isArray(r.accounting.periods)) return needPeriods('the optimization')
+  return (
+    <div className="space-y-6">
+      <OptimizeCard r={r} onPlan={onPlan} />
+      <ReportButton r={r} fileName={a.fileName} plan={plan} />
     </div>
   )
 }

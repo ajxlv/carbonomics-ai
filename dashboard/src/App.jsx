@@ -6,7 +6,7 @@ import Trends from './pages/Trends.jsx'
 import Forecast from './pages/Forecast.jsx'
 import Simulation from './pages/Simulation.jsx'
 import Optimization from './pages/Optimization.jsx'
-import Upload from './pages/Upload.jsx'
+import Upload, { MyForecast, MyOptimization, MyOverview, MySimulation, MyTrends } from './pages/Upload.jsx'
 import HistoryPage from './pages/History.jsx'
 import Landing from './pages/Landing.jsx'
 import Login from './pages/Login.jsx'
@@ -56,20 +56,16 @@ export default function App() {
   // Without Supabase settings (local development) the locked pages stay open; the API still decides what it accepts.
   const loggedIn = Boolean(session) || !authConfigured
   const isDash = PAGES.some((p) => p.id === route)
-  const demoPage = PAGES.find((p) => p.id === route)?.demo
   const locked = PAGES.find((p) => p.id === route)?.locked
 
   useEffect(() => { if (locked && !loggedIn) goto(`login?next=${route}`) }, [locked, loggedIn, route])
   useEffect(() => { if (route === 'login' && session) goto(next) }, [route, session, next])
-  // Logged-in users work with their own data; the fake-data demo pages are only for visitors.
-  useEffect(() => { if (session && demoPage) goto('upload') }, [session, demoPage])
 
   if (route === 'login') return session ? null : <Login next={next} onDone={(n) => goto(n)} />
   if (route === 'privacy') return <Privacy />
   if (route === 'terms') return <Terms />
   if (!isDash) return <Landing />
   if (locked && !loggedIn) return null
-  if (session && demoPage) return null
   return <Dashboard page={route} dark={dark} setDark={setDark} session={session} profile={profile} loggedIn={loggedIn} />
 }
 
@@ -77,7 +73,9 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
-  const [opened, setOpened] = useState(null)   // a saved analysis opened from History
+  const [analysis, setAnalysis] = useState(null)   // { result, fileName } of the file the user analysed or opened from History
+  const [plan, setPlan] = useState(null)           // optimization inputs, added to the PDF report
+  const mine = Boolean(session)                    // logged-in users see their own data, visitors see the fake demo
 
   useEffect(() => {
     fetch('./data/dashboard.json')
@@ -89,12 +87,22 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
   const go = (id) => { setOpen(false); location.hash = PAGES.find((p) => p.id === id)?.locked && !loggedIn ? `login?next=${id}` : id }
   const current = PAGES.find((p) => p.id === page) ?? PAGES[0]
   const Page = current.C
-  const needsData = current.needsData !== false
-  const openAnalysis = (run) => { setOpened(run); go('upload') }
+  const needsData = current.needsData !== false && !mine
+  const showResult = (result, fileName) => { setAnalysis({ result, fileName }); setPlan(null) }
+  const openAnalysis = (run) => {
+    showResult({ ...run.result, run: { saved: true, id: run.id, error: null, title: run.title, opened: true } }, run.title || '')
+    go('overview')
+  }
+  const MINE = { overview: MyOverview, trends: MyTrends, forecast: MyForecast, simulation: MySimulation, optimization: MyOptimization }
+  const MyPage = mine ? MINE[current.id] : null
 
+  // Logged-in users get the result pages only once they have a file analysed; visitors get the fake-data demo.
+  const visiblePages = mine
+    ? [PAGES.find((p) => p.id === 'upload'), ...(analysis ? PAGES.filter((p) => p.demo) : []), PAGES.find((p) => p.id === 'history')]
+    : PAGES
   const nav = (
     <nav className="flex flex-col gap-1">
-      {PAGES.filter((p) => !(session && p.demo)).map(({ id, label, icon: Icon, locked }) => (
+      {visiblePages.map(({ id, label, icon: Icon, locked }) => (
         <button key={id} onClick={() => go(id)}
           className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${current.id === id ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`}>
           <Icon size={18} /> <span className="flex-1 text-left">{label}</span>
@@ -120,7 +128,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
           </div>
           {nav}
           <a href="#home" className="muted mt-4 flex items-center gap-3 px-3 py-2 text-sm hover:underline"><Home size={16} /> Home</a>
-          <p className="muted mt-8 text-xs leading-relaxed">Demo campus · FAKE data<br />Random numbers, not a real campus</p>
+          {!mine && <p className="muted mt-8 text-xs leading-relaxed">Demo campus · FAKE data<br />Random numbers, not a real campus</p>}
         </aside>
 
         <div className="min-w-0">
@@ -151,9 +159,12 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
             {needsData && error && <div className="card text-sm text-rose-600">{error}</div>}
             {needsData && !error && !data && <div className="muted text-sm">Loading…</div>}
             {needsData && data && <Page data={data} />}
-            {!needsData && <Page opened={opened} onCloseOpened={() => setOpened(null)} onOpenAnalysis={openAnalysis} />}
+            {mine && current.demo && !analysis && <div className="card text-sm">Upload a file first, then the results appear here. <a className="underline" href="#upload">Go to Upload</a></div>}
+            {mine && current.demo && analysis && <MyPage a={analysis} plan={plan} onPlan={setPlan} />}
+            {!mine && !needsData && <Page />}
+            {mine && !current.demo && <Page analysis={analysis} onResult={showResult} onOpenAnalysis={openAnalysis} />}
           </main>
-          <footer className="muted px-4 pb-8 text-center text-xs sm:px-8">Carbonomics-AI · final-year project, KKWIEER Nashik · © 2026 Team Carbonomics, all rights reserved · <a className="underline" href="#privacy">Privacy</a> · <a className="underline" href="#terms">Terms</a> · all numbers in this demo are FAKE, made up for illustration.</footer>
+          <footer className="muted px-4 pb-8 text-center text-xs sm:px-8">Carbonomics-AI · final-year project, KKWIEER Nashik · © 2026 Team Carbonomics, all rights reserved · <a className="underline" href="#privacy">Privacy</a> · <a className="underline" href="#terms">Terms</a> {!mine && ' · all numbers in this demo are FAKE, made up for illustration.'}</footer>
         </div>
       </div>
     </ThemeCtx.Provider>
