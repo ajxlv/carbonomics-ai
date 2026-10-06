@@ -1,8 +1,8 @@
 """
 dashboard_export.py
 
-Export everything the web dashboard needs into ONE static JSON file:
-    dashboard/public/data/dashboard.json
+Export everything the web dashboard needs into ONE static JSON file (REAL data, kept out of the public site):
+    outputs/dashboard_real.json   (the public demo file is made by scripts/make_demo_data.py)
 
 The dashboard (React, see dashboard/) is a static site: it only reads this file,
 so it can be hosted anywhere (Vercel, Netlify, GitHub Pages) without Python.
@@ -21,7 +21,7 @@ from emission_factors import EMISSION_FACTORS, REPORT_FOOTPRINT_TCO2E, REPORT_SO
 from simulation import baseline as sim_baseline, simulate
 from optimization import load_measures, optimize as opt_optimize, budget_sweep as opt_sweep
 
-OUT_FILE = "dashboard/public/data/dashboard.json"
+OUT_FILE = "outputs/dashboard_real.json"   # real data: NOT in the public site; the public demo uses scripts/make_demo_data.py
 
 
 def _read(path):

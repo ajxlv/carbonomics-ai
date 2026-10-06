@@ -1,9 +1,9 @@
 {
  "meta": {
   "title": "Carbonomics-AI",
-  "campus": "K. K. Wagh Panchvati Campus, Nashik",
-  "period": "Calendar year 2025",
-  "weekly_label": "SYNTHETIC - calibrated to real monthly totals, NOT measured weekly data",
+  "campus": "Demo campus (FAKE data)",
+  "period": "Demo year (fake)",
+  "weekly_label": "FAKE demo data (random numbers, not a real campus)",
   "weekly_assumptions": {
    "electricity_weekday_weight": {
     "Mon-Fri": 1.0,
@@ -15,533 +15,534 @@
    "diesel_weekday_effect": "none"
   },
   "weekly_left_out": "31 Dec 2025 (365th day does not fit in 52 full weeks)",
-  "seed": 42
+  "seed": 42,
+  "demo": true
  },
  "kpis": {
-  "electricity_kwh": 1059147,
-  "diesel_litres": 4100,
-  "electricity_tco2e": 751.99,
-  "diesel_tco2e": 11.85,
-  "covered_tco2e": 763.84,
-  "report_footprint_tco2e": 3719.74,
-  "report_source": "KKWIEER Carbon Footprint and Sustainability Report FY2025-26 (revised), Table 1",
-  "covered_share_of_footprint": 0.2053,
-  "basis": "REAL monthly totals x emission factor"
+  "electricity_kwh": 500840,
+  "diesel_litres": 604,
+  "electricity_tco2e": 355.6,
+  "diesel_tco2e": 1.75,
+  "covered_tco2e": 357.34,
+  "report_footprint_tco2e": 1786.7,
+  "report_source": "FAKE demo figure",
+  "covered_share_of_footprint": 0.2,
+  "basis": "FAKE monthly totals x emission factor"
  },
  "real_monthly": [
   {
    "month": "2025-01",
-   "electricity_kwh": 85611,
-   "dg_diesel_litres": 70,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 60.784,
-   "diesel_tco2e": 0.202
+   "electricity_kwh": 34325,
+   "dg_diesel_litres": 63,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 24.371,
+   "diesel_tco2e": 0.182
   },
   {
    "month": "2025-02",
-   "electricity_kwh": 82814,
-   "dg_diesel_litres": 105,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 58.798,
-   "diesel_tco2e": 0.303
+   "electricity_kwh": 38435,
+   "dg_diesel_litres": 71,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 27.289,
+   "diesel_tco2e": 0.205
   },
   {
    "month": "2025-03",
-   "electricity_kwh": 102400,
-   "dg_diesel_litres": 185,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 72.704,
-   "diesel_tco2e": 0.535
+   "electricity_kwh": 43927,
+   "dg_diesel_litres": 54,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 31.188,
+   "diesel_tco2e": 0.156
   },
   {
    "month": "2025-04",
-   "electricity_kwh": 104759,
-   "dg_diesel_litres": 385,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 74.379,
-   "diesel_tco2e": 1.113
+   "electricity_kwh": 47549,
+   "dg_diesel_litres": 77,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 33.76,
+   "diesel_tco2e": 0.223
   },
   {
    "month": "2025-05",
-   "electricity_kwh": 94016,
-   "dg_diesel_litres": 980,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 66.751,
-   "diesel_tco2e": 2.832
+   "electricity_kwh": 49523,
+   "dg_diesel_litres": 49,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 35.161,
+   "diesel_tco2e": 0.142
   },
   {
    "month": "2025-06",
-   "electricity_kwh": 74496,
-   "dg_diesel_litres": 595,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 52.892,
-   "diesel_tco2e": 1.72
+   "electricity_kwh": 43464,
+   "dg_diesel_litres": 40,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 30.859,
+   "diesel_tco2e": 0.116
   },
   {
    "month": "2025-07",
-   "electricity_kwh": 87258,
-   "dg_diesel_litres": 490,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 61.953,
-   "diesel_tco2e": 1.416
+   "electricity_kwh": 39638,
+   "dg_diesel_litres": 36,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 28.143,
+   "diesel_tco2e": 0.104
   },
   {
    "month": "2025-08",
-   "electricity_kwh": 89306,
-   "dg_diesel_litres": 140,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 63.407,
-   "diesel_tco2e": 0.405
+   "electricity_kwh": 36336,
+   "dg_diesel_litres": 32,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 25.799,
+   "diesel_tco2e": 0.092
   },
   {
    "month": "2025-09",
-   "electricity_kwh": 95050,
-   "dg_diesel_litres": 280,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 67.486,
-   "diesel_tco2e": 0.809
+   "electricity_kwh": 42770,
+   "dg_diesel_litres": 54,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 30.367,
+   "diesel_tco2e": 0.156
   },
   {
    "month": "2025-10",
-   "electricity_kwh": 87074,
-   "dg_diesel_litres": 336,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 61.823,
-   "diesel_tco2e": 0.971
+   "electricity_kwh": 43033,
+   "dg_diesel_litres": 47,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 30.553,
+   "diesel_tco2e": 0.136
   },
   {
    "month": "2025-11",
-   "electricity_kwh": 80577,
-   "dg_diesel_litres": 240,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 57.21,
-   "diesel_tco2e": 0.694
+   "electricity_kwh": 42136,
+   "dg_diesel_litres": 65,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 29.917,
+   "diesel_tco2e": 0.188
   },
   {
    "month": "2025-12",
-   "electricity_kwh": 75786,
-   "dg_diesel_litres": 294,
-   "source": "KKWIEER Master Data FY2025-26 xlsx, sheets 2_Electricity_Monthly and 3_Diesel_Generator (Energy team log)",
-   "electricity_tco2e": 53.808,
-   "diesel_tco2e": 0.85
+   "electricity_kwh": 39704,
+   "dg_diesel_litres": 16,
+   "source": "FAKE demo data (random numbers, not a real campus)",
+   "electricity_tco2e": 28.19,
+   "diesel_tco2e": 0.046
   }
  ],
  "weekly": [
   {
    "week_start": "2025-01-01",
-   "electricity_kwh": 18594.55,
-   "diesel_litres": 17.68,
-   "scope1_kg": 51.1,
-   "scope2_kg": 13202.13,
-   "total_kg": 13253.23
+   "electricity_kwh": 7455.32,
+   "diesel_litres": 15.92,
+   "scope1_kg": 46.01,
+   "scope2_kg": 5293.28,
+   "total_kg": 5339.29
   },
   {
    "week_start": "2025-01-08",
-   "electricity_kwh": 19173.61,
-   "diesel_litres": 22.92,
-   "scope1_kg": 66.24,
-   "scope2_kg": 13613.26,
-   "total_kg": 13679.5
+   "electricity_kwh": 7687.49,
+   "diesel_litres": 20.63,
+   "scope1_kg": 59.62,
+   "scope2_kg": 5458.12,
+   "total_kg": 5517.74
   },
   {
    "week_start": "2025-01-15",
-   "electricity_kwh": 18799.21,
-   "diesel_litres": 10.72,
-   "scope1_kg": 30.98,
-   "scope2_kg": 13347.44,
-   "total_kg": 13378.42
+   "electricity_kwh": 7537.38,
+   "diesel_litres": 9.65,
+   "scope1_kg": 27.89,
+   "scope2_kg": 5351.54,
+   "total_kg": 5379.43
   },
   {
    "week_start": "2025-01-22",
-   "electricity_kwh": 19120.72,
-   "diesel_litres": 11.52,
-   "scope1_kg": 33.29,
-   "scope2_kg": 13575.71,
-   "total_kg": 13609.0
+   "electricity_kwh": 7666.29,
+   "diesel_litres": 10.37,
+   "scope1_kg": 29.97,
+   "scope2_kg": 5443.07,
+   "total_kg": 5473.04
   },
   {
    "week_start": "2025-01-29",
-   "electricity_kwh": 20385.2,
-   "diesel_litres": 23.95,
-   "scope1_kg": 69.22,
-   "scope2_kg": 14473.49,
-   "total_kg": 14542.71
+   "electricity_kwh": 8834.18,
+   "diesel_litres": 17.79,
+   "scope1_kg": 51.41,
+   "scope2_kg": 6272.27,
+   "total_kg": 6323.68
   },
   {
    "week_start": "2025-02-05",
-   "electricity_kwh": 20984.83,
-   "diesel_litres": 26.83,
-   "scope1_kg": 77.54,
-   "scope2_kg": 14899.23,
-   "total_kg": 14976.77
+   "electricity_kwh": 9739.32,
+   "diesel_litres": 18.14,
+   "scope1_kg": 52.42,
+   "scope2_kg": 6914.92,
+   "total_kg": 6967.34
   },
   {
    "week_start": "2025-02-12",
-   "electricity_kwh": 20953.05,
-   "diesel_litres": 18.7,
-   "scope1_kg": 54.04,
-   "scope2_kg": 14876.67,
-   "total_kg": 14930.71
+   "electricity_kwh": 9724.57,
+   "diesel_litres": 12.64,
+   "scope1_kg": 36.53,
+   "scope2_kg": 6904.44,
+   "total_kg": 6940.97
   },
   {
    "week_start": "2025-02-19",
-   "electricity_kwh": 20306.41,
-   "diesel_litres": 36.63,
-   "scope1_kg": 105.86,
-   "scope2_kg": 14417.55,
-   "total_kg": 14523.41
+   "electricity_kwh": 9424.46,
+   "diesel_litres": 24.77,
+   "scope1_kg": 71.59,
+   "scope2_kg": 6691.37,
+   "total_kg": 6762.96
   },
   {
    "week_start": "2025-02-26",
-   "electricity_kwh": 22202.71,
-   "diesel_litres": 33.73,
-   "scope1_kg": 97.48,
-   "scope2_kg": 15763.92,
-   "total_kg": 15861.4
+   "electricity_kwh": 9879.55,
+   "diesel_litres": 12.17,
+   "scope1_kg": 35.17,
+   "scope2_kg": 7014.48,
+   "total_kg": 7049.65
   },
   {
    "week_start": "2025-03-05",
-   "electricity_kwh": 24306.17,
-   "diesel_litres": 31.23,
-   "scope1_kg": 90.25,
-   "scope2_kg": 17257.38,
-   "total_kg": 17347.63
+   "electricity_kwh": 10426.73,
+   "diesel_litres": 9.12,
+   "scope1_kg": 26.36,
+   "scope2_kg": 7402.98,
+   "total_kg": 7429.34
   },
   {
    "week_start": "2025-03-12",
-   "electricity_kwh": 22831.1,
-   "diesel_litres": 28.64,
-   "scope1_kg": 82.77,
-   "scope2_kg": 16210.08,
-   "total_kg": 16292.85
+   "electricity_kwh": 9793.96,
+   "diesel_litres": 8.36,
+   "scope1_kg": 24.16,
+   "scope2_kg": 6953.71,
+   "total_kg": 6977.87
   },
   {
    "week_start": "2025-03-19",
-   "electricity_kwh": 23509.98,
-   "diesel_litres": 44.42,
-   "scope1_kg": 128.37,
-   "scope2_kg": 16692.09,
-   "total_kg": 16820.46
+   "electricity_kwh": 10085.18,
+   "diesel_litres": 12.97,
+   "scope1_kg": 37.48,
+   "scope2_kg": 7160.48,
+   "total_kg": 7197.96
   },
   {
    "week_start": "2025-03-26",
-   "electricity_kwh": 23851.51,
-   "diesel_litres": 64.36,
-   "scope1_kg": 186.0,
-   "scope2_kg": 16934.57,
-   "total_kg": 17120.57
+   "electricity_kwh": 10336.19,
+   "diesel_litres": 17.74,
+   "scope1_kg": 51.27,
+   "scope2_kg": 7338.69,
+   "total_kg": 7389.96
   },
   {
    "week_start": "2025-04-02",
-   "electricity_kwh": 23193.07,
-   "diesel_litres": 71.07,
-   "scope1_kg": 205.39,
-   "scope2_kg": 16467.08,
-   "total_kg": 16672.47
+   "electricity_kwh": 10527.09,
+   "diesel_litres": 14.21,
+   "scope1_kg": 41.07,
+   "scope2_kg": 7474.23,
+   "total_kg": 7515.3
   },
   {
    "week_start": "2025-04-09",
-   "electricity_kwh": 24592.42,
-   "diesel_litres": 83.24,
-   "scope1_kg": 240.56,
-   "scope2_kg": 17460.62,
-   "total_kg": 17701.18
+   "electricity_kwh": 11162.24,
+   "diesel_litres": 16.65,
+   "scope1_kg": 48.12,
+   "scope2_kg": 7925.19,
+   "total_kg": 7973.31
   },
   {
    "week_start": "2025-04-16",
-   "electricity_kwh": 24346.71,
-   "diesel_litres": 83.62,
-   "scope1_kg": 241.66,
-   "scope2_kg": 17286.16,
-   "total_kg": 17527.82
+   "electricity_kwh": 11050.72,
+   "diesel_litres": 16.72,
+   "scope1_kg": 48.32,
+   "scope2_kg": 7846.01,
+   "total_kg": 7894.33
   },
   {
    "week_start": "2025-04-23",
-   "electricity_kwh": 24531.56,
-   "diesel_litres": 125.81,
-   "scope1_kg": 363.59,
-   "scope2_kg": 17417.41,
-   "total_kg": 17781.0
+   "electricity_kwh": 11134.62,
+   "diesel_litres": 25.16,
+   "scope1_kg": 72.71,
+   "scope2_kg": 7905.58,
+   "total_kg": 7978.29
   },
   {
    "week_start": "2025-04-30",
-   "electricity_kwh": 22009.12,
-   "diesel_litres": 205.22,
-   "scope1_kg": 593.09,
-   "scope2_kg": 15626.48,
-   "total_kg": 16219.57
+   "electricity_kwh": 11309.07,
+   "diesel_litres": 11.75,
+   "scope1_kg": 33.96,
+   "scope2_kg": 8029.44,
+   "total_kg": 8063.4
   },
   {
    "week_start": "2025-05-07",
-   "electricity_kwh": 20710.59,
-   "diesel_litres": 203.96,
-   "scope1_kg": 589.44,
-   "scope2_kg": 14704.52,
-   "total_kg": 15293.96
+   "electricity_kwh": 10909.32,
+   "diesel_litres": 10.2,
+   "scope1_kg": 29.48,
+   "scope2_kg": 7745.62,
+   "total_kg": 7775.1
   },
   {
    "week_start": "2025-05-14",
-   "electricity_kwh": 22129.05,
-   "diesel_litres": 169.0,
-   "scope1_kg": 488.41,
-   "scope2_kg": 15711.63,
-   "total_kg": 16200.04
+   "electricity_kwh": 11656.49,
+   "diesel_litres": 8.45,
+   "scope1_kg": 24.42,
+   "scope2_kg": 8276.11,
+   "total_kg": 8300.53
   },
   {
    "week_start": "2025-05-21",
-   "electricity_kwh": 20157.26,
-   "diesel_litres": 273.18,
-   "scope1_kg": 789.49,
-   "scope2_kg": 14311.65,
-   "total_kg": 15101.14
+   "electricity_kwh": 10617.85,
+   "diesel_litres": 13.66,
+   "scope1_kg": 39.48,
+   "scope2_kg": 7538.67,
+   "total_kg": 7578.15
   },
   {
    "week_start": "2025-05-28",
-   "electricity_kwh": 19406.18,
-   "diesel_litres": 204.79,
-   "scope1_kg": 591.84,
-   "scope2_kg": 13778.39,
-   "total_kg": 14370.23
+   "electricity_kwh": 10590.42,
+   "diesel_litres": 11.38,
+   "scope1_kg": 32.89,
+   "scope2_kg": 7519.2,
+   "total_kg": 7552.09
   },
   {
    "week_start": "2025-06-04",
-   "electricity_kwh": 17621.21,
-   "diesel_litres": 171.37,
-   "scope1_kg": 495.26,
-   "scope2_kg": 12511.06,
-   "total_kg": 13006.32
+   "electricity_kwh": 10280.93,
+   "diesel_litres": 11.52,
+   "scope1_kg": 33.29,
+   "scope2_kg": 7299.46,
+   "total_kg": 7332.75
   },
   {
    "week_start": "2025-06-11",
-   "electricity_kwh": 18065.21,
-   "diesel_litres": 159.83,
-   "scope1_kg": 461.91,
-   "scope2_kg": 12826.3,
-   "total_kg": 13288.21
+   "electricity_kwh": 10539.98,
+   "diesel_litres": 10.75,
+   "scope1_kg": 31.07,
+   "scope2_kg": 7483.39,
+   "total_kg": 7514.46
   },
   {
    "week_start": "2025-06-18",
-   "electricity_kwh": 16827.12,
-   "diesel_litres": 115.45,
-   "scope1_kg": 333.65,
-   "scope2_kg": 11947.26,
-   "total_kg": 12280.91
+   "electricity_kwh": 9817.62,
+   "diesel_litres": 7.76,
+   "scope1_kg": 22.43,
+   "scope2_kg": 6970.51,
+   "total_kg": 6992.94
   },
   {
    "week_start": "2025-06-25",
-   "electricity_kwh": 18680.02,
-   "diesel_litres": 98.39,
-   "scope1_kg": 284.35,
-   "scope2_kg": 13262.81,
-   "total_kg": 13547.16
+   "electricity_kwh": 10486.27,
+   "diesel_litres": 6.72,
+   "scope1_kg": 19.42,
+   "scope2_kg": 7445.25,
+   "total_kg": 7464.67
   },
   {
    "week_start": "2025-07-02",
-   "electricity_kwh": 19440.06,
-   "diesel_litres": 155.42,
-   "scope1_kg": 449.16,
-   "scope2_kg": 13802.44,
-   "total_kg": 14251.6
+   "electricity_kwh": 8830.88,
+   "diesel_litres": 11.42,
+   "scope1_kg": 33.0,
+   "scope2_kg": 6269.92,
+   "total_kg": 6302.92
   },
   {
    "week_start": "2025-07-09",
-   "electricity_kwh": 19957.15,
-   "diesel_litres": 71.56,
-   "scope1_kg": 206.81,
-   "scope2_kg": 14169.58,
-   "total_kg": 14376.39
+   "electricity_kwh": 9065.78,
+   "diesel_litres": 5.26,
+   "scope1_kg": 15.2,
+   "scope2_kg": 6436.7,
+   "total_kg": 6451.9
   },
   {
    "week_start": "2025-07-16",
-   "electricity_kwh": 19927.49,
-   "diesel_litres": 111.4,
-   "scope1_kg": 321.95,
-   "scope2_kg": 14148.52,
-   "total_kg": 14470.47
+   "electricity_kwh": 9052.3,
+   "diesel_litres": 8.18,
+   "scope1_kg": 23.64,
+   "scope2_kg": 6427.13,
+   "total_kg": 6450.77
   },
   {
    "week_start": "2025-07-23",
-   "electricity_kwh": 18544.05,
-   "diesel_litres": 97.28,
-   "scope1_kg": 281.14,
-   "scope2_kg": 13166.28,
-   "total_kg": 13447.42
+   "electricity_kwh": 8423.86,
+   "diesel_litres": 7.15,
+   "scope1_kg": 20.66,
+   "scope2_kg": 5980.94,
+   "total_kg": 6001.6
   },
   {
    "week_start": "2025-07-30",
-   "electricity_kwh": 20469.99,
-   "diesel_litres": 57.34,
-   "scope1_kg": 165.71,
-   "scope2_kg": 14533.69,
-   "total_kg": 14699.4
+   "electricity_kwh": 8622.31,
+   "diesel_litres": 7.2,
+   "scope1_kg": 20.81,
+   "scope2_kg": 6121.84,
+   "total_kg": 6142.65
   },
   {
    "week_start": "2025-08-06",
-   "electricity_kwh": 20542.77,
-   "diesel_litres": 32.92,
-   "scope1_kg": 95.14,
-   "scope2_kg": 14585.37,
-   "total_kg": 14680.51
+   "electricity_kwh": 8358.25,
+   "diesel_litres": 7.52,
+   "scope1_kg": 21.73,
+   "scope2_kg": 5934.36,
+   "total_kg": 5956.09
   },
   {
    "week_start": "2025-08-13",
-   "electricity_kwh": 21278.04,
-   "diesel_litres": 34.47,
-   "scope1_kg": 99.62,
-   "scope2_kg": 15107.41,
-   "total_kg": 15207.03
+   "electricity_kwh": 8657.41,
+   "diesel_litres": 7.88,
+   "scope1_kg": 22.77,
+   "scope2_kg": 6146.76,
+   "total_kg": 6169.53
   },
   {
    "week_start": "2025-08-20",
-   "electricity_kwh": 20109.55,
-   "diesel_litres": 31.42,
-   "scope1_kg": 90.8,
-   "scope2_kg": 14277.78,
-   "total_kg": 14368.58
+   "electricity_kwh": 8181.99,
+   "diesel_litres": 7.18,
+   "scope1_kg": 20.75,
+   "scope2_kg": 5809.21,
+   "total_kg": 5829.96
   },
   {
    "week_start": "2025-08-27",
-   "electricity_kwh": 20388.36,
-   "diesel_litres": 36.76,
-   "scope1_kg": 106.24,
-   "scope2_kg": 14475.74,
-   "total_kg": 14581.98
+   "electricity_kwh": 8609.48,
+   "diesel_litres": 7.87,
+   "scope1_kg": 22.74,
+   "scope2_kg": 6112.73,
+   "total_kg": 6135.47
   },
   {
    "week_start": "2025-09-03",
-   "electricity_kwh": 22169.2,
-   "diesel_litres": 51.28,
-   "scope1_kg": 148.2,
-   "scope2_kg": 15740.13,
-   "total_kg": 15888.33
+   "electricity_kwh": 9975.56,
+   "diesel_litres": 9.89,
+   "scope1_kg": 28.58,
+   "scope2_kg": 7082.65,
+   "total_kg": 7111.23
   },
   {
    "week_start": "2025-09-10",
-   "electricity_kwh": 22034.99,
-   "diesel_litres": 67.02,
-   "scope1_kg": 193.69,
-   "scope2_kg": 15644.84,
-   "total_kg": 15838.53
+   "electricity_kwh": 9915.17,
+   "diesel_litres": 12.92,
+   "scope1_kg": 37.34,
+   "scope2_kg": 7039.77,
+   "total_kg": 7077.11
   },
   {
    "week_start": "2025-09-17",
-   "electricity_kwh": 21665.68,
-   "diesel_litres": 72.2,
-   "scope1_kg": 208.66,
-   "scope2_kg": 15382.63,
-   "total_kg": 15591.29
+   "electricity_kwh": 9748.99,
+   "diesel_litres": 13.92,
+   "scope1_kg": 40.23,
+   "scope2_kg": 6921.78,
+   "total_kg": 6962.01
   },
   {
    "week_start": "2025-09-24",
-   "electricity_kwh": 21894.1,
-   "diesel_litres": 74.68,
-   "scope1_kg": 215.83,
-   "scope2_kg": 15544.81,
-   "total_kg": 15760.64
+   "electricity_kwh": 9851.77,
+   "diesel_litres": 14.4,
+   "scope1_kg": 41.62,
+   "scope2_kg": 6994.76,
+   "total_kg": 7036.38
   },
   {
    "week_start": "2025-10-01",
-   "electricity_kwh": 20418.64,
-   "diesel_litres": 95.05,
-   "scope1_kg": 274.69,
-   "scope2_kg": 14497.23,
-   "total_kg": 14771.92
+   "electricity_kwh": 10091.13,
+   "diesel_litres": 13.3,
+   "scope1_kg": 38.44,
+   "scope2_kg": 7164.7,
+   "total_kg": 7203.14
   },
   {
    "week_start": "2025-10-08",
-   "electricity_kwh": 19081.14,
-   "diesel_litres": 80.68,
-   "scope1_kg": 233.17,
-   "scope2_kg": 13547.61,
-   "total_kg": 13780.78
+   "electricity_kwh": 9430.13,
+   "diesel_litres": 11.29,
+   "scope1_kg": 32.63,
+   "scope2_kg": 6695.39,
+   "total_kg": 6728.02
   },
   {
    "week_start": "2025-10-15",
-   "electricity_kwh": 18928.29,
-   "diesel_litres": 91.07,
-   "scope1_kg": 263.19,
-   "scope2_kg": 13439.09,
-   "total_kg": 13702.28
+   "electricity_kwh": 9354.59,
+   "diesel_litres": 12.74,
+   "scope1_kg": 36.82,
+   "scope2_kg": 6641.76,
+   "total_kg": 6678.58
   },
   {
    "week_start": "2025-10-22",
-   "electricity_kwh": 19560.18,
-   "diesel_litres": 46.11,
-   "scope1_kg": 133.26,
-   "scope2_kg": 13887.73,
-   "total_kg": 14020.99
+   "electricity_kwh": 9666.87,
+   "diesel_litres": 6.45,
+   "scope1_kg": 18.64,
+   "scope2_kg": 6863.48,
+   "total_kg": 6882.12
   },
   {
    "week_start": "2025-10-29",
-   "electricity_kwh": 18826.47,
-   "diesel_litres": 48.53,
-   "scope1_kg": 140.25,
-   "scope2_kg": 13366.79,
-   "total_kg": 13507.04
+   "electricity_kwh": 9583.99,
+   "diesel_litres": 10.12,
+   "scope1_kg": 29.25,
+   "scope2_kg": 6804.63,
+   "total_kg": 6833.88
   },
   {
    "week_start": "2025-11-05",
-   "electricity_kwh": 20144.42,
-   "diesel_litres": 76.54,
-   "scope1_kg": 221.2,
-   "scope2_kg": 14302.54,
-   "total_kg": 14523.74
+   "electricity_kwh": 10534.09,
+   "diesel_litres": 20.73,
+   "scope1_kg": 59.91,
+   "scope2_kg": 7479.2,
+   "total_kg": 7539.11
   },
   {
    "week_start": "2025-11-12",
-   "electricity_kwh": 18612.44,
-   "diesel_litres": 63.26,
-   "scope1_kg": 182.82,
-   "scope2_kg": 13214.83,
-   "total_kg": 13397.65
+   "electricity_kwh": 9732.97,
+   "diesel_litres": 17.13,
+   "scope1_kg": 49.51,
+   "scope2_kg": 6910.41,
+   "total_kg": 6959.92
   },
   {
    "week_start": "2025-11-19",
-   "electricity_kwh": 19260.08,
-   "diesel_litres": 56.46,
-   "scope1_kg": 163.17,
-   "scope2_kg": 13674.66,
-   "total_kg": 13837.83
+   "electricity_kwh": 10071.64,
+   "diesel_litres": 15.29,
+   "scope1_kg": 44.19,
+   "scope2_kg": 7150.86,
+   "total_kg": 7195.05
   },
   {
    "week_start": "2025-11-26",
-   "electricity_kwh": 18006.02,
-   "diesel_litres": 45.22,
-   "scope1_kg": 130.69,
-   "scope2_kg": 12784.27,
-   "total_kg": 12914.96
+   "electricity_kwh": 9420.88,
+   "diesel_litres": 6.42,
+   "scope1_kg": 18.55,
+   "scope2_kg": 6688.82,
+   "total_kg": 6707.37
   },
   {
    "week_start": "2025-12-03",
-   "electricity_kwh": 16977.07,
-   "diesel_litres": 64.37,
-   "scope1_kg": 186.03,
-   "scope2_kg": 12053.72,
-   "total_kg": 12239.75
+   "electricity_kwh": 8894.23,
+   "diesel_litres": 3.5,
+   "scope1_kg": 10.12,
+   "scope2_kg": 6314.9,
+   "total_kg": 6325.02
   },
   {
    "week_start": "2025-12-10",
-   "electricity_kwh": 16885.93,
-   "diesel_litres": 69.1,
-   "scope1_kg": 199.7,
-   "scope2_kg": 11989.01,
-   "total_kg": 12188.71
+   "electricity_kwh": 8846.48,
+   "diesel_litres": 3.76,
+   "scope1_kg": 10.87,
+   "scope2_kg": 6281.0,
+   "total_kg": 6291.87
   },
   {
    "week_start": "2025-12-17",
-   "electricity_kwh": 17339.13,
-   "diesel_litres": 63.1,
-   "scope1_kg": 182.36,
-   "scope2_kg": 12310.78,
-   "total_kg": 12493.14
+   "electricity_kwh": 9083.91,
+   "diesel_litres": 3.43,
+   "scope1_kg": 9.91,
+   "scope2_kg": 6449.58,
+   "total_kg": 6459.49
   },
   {
    "week_start": "2025-12-24",
-   "electricity_kwh": 16708.5,
-   "diesel_litres": 65.65,
-   "scope1_kg": 189.73,
-   "scope2_kg": 11863.03,
-   "total_kg": 12052.76
+   "electricity_kwh": 8753.52,
+   "diesel_litres": 3.57,
+   "scope1_kg": 10.32,
+   "scope2_kg": 6215.0,
+   "total_kg": 6225.32
   }
  ],
  "forecast": {
@@ -549,204 +550,204 @@
    "electricity_kwh": [
     {
      "week_start": "2025-10-22",
-     "actual_electricity_kwh": 19560.18,
-     "pred_naive_last_week": 18928.29,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 19042.91,
-     "pred_xgboost": 18847.0,
-     "actual_emission_kgco2e": 13887.73,
+     "actual_electricity_kwh": 9666.87,
+     "pred_naive_last_week": 9354.59,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9486.83,
+     "pred_xgboost": 9406.66,
+     "actual_emission_kgco2e": 6863.48,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-10-29",
-     "actual_electricity_kwh": 18826.47,
-     "pred_naive_last_week": 19560.18,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 19312.06,
-     "pred_xgboost": 19440.0,
-     "actual_emission_kgco2e": 13366.79,
+     "actual_electricity_kwh": 9583.99,
+     "pred_naive_last_week": 9666.87,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9600.69,
+     "pred_xgboost": 9462.38,
+     "actual_emission_kgco2e": 6804.63,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-11-05",
-     "actual_electricity_kwh": 20144.42,
-     "pred_naive_last_week": 18826.47,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 19778.18,
-     "pred_xgboost": 20048.66,
-     "actual_emission_kgco2e": 14302.54,
+     "actual_electricity_kwh": 10534.09,
+     "pred_naive_last_week": 9583.99,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9557.25,
+     "pred_xgboost": 9509.87,
+     "actual_emission_kgco2e": 7479.2,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-11-12",
-     "actual_electricity_kwh": 18612.44,
-     "pred_naive_last_week": 20144.42,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 19999.13,
-     "pred_xgboost": 19849.07,
-     "actual_emission_kgco2e": 13214.83,
+     "actual_electricity_kwh": 9732.97,
+     "pred_naive_last_week": 10534.09,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9667.61,
+     "pred_xgboost": 9358.84,
+     "actual_emission_kgco2e": 6910.41,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-11-19",
-     "actual_electricity_kwh": 19260.08,
-     "pred_naive_last_week": 18612.44,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 19678.83,
-     "pred_xgboost": 20396.4,
-     "actual_emission_kgco2e": 13674.66,
+     "actual_electricity_kwh": 10071.64,
+     "pred_naive_last_week": 9732.97,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9835.32,
+     "pred_xgboost": 9442.21,
+     "actual_emission_kgco2e": 7150.86,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-11-26",
-     "actual_electricity_kwh": 18006.02,
-     "pred_naive_last_week": 19260.08,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 19804.23,
-     "pred_xgboost": 19802.54,
-     "actual_emission_kgco2e": 12784.27,
+     "actual_electricity_kwh": 9420.88,
+     "pred_naive_last_week": 10071.64,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9773.63,
+     "pred_xgboost": 9692.24,
+     "actual_emission_kgco2e": 6688.82,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-12-03",
-     "actual_electricity_kwh": 16977.07,
-     "pred_naive_last_week": 18006.02,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 18706.54,
-     "pred_xgboost": 19593.47,
-     "actual_emission_kgco2e": 12053.72,
+     "actual_electricity_kwh": 8894.23,
+     "pred_naive_last_week": 9420.88,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9462.07,
+     "pred_xgboost": 9257.87,
+     "actual_emission_kgco2e": 6314.9,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-12-10",
-     "actual_electricity_kwh": 16885.93,
-     "pred_naive_last_week": 16977.07,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 18979.9,
-     "pred_xgboost": 20105.36,
-     "actual_emission_kgco2e": 11989.01,
+     "actual_electricity_kwh": 8846.48,
+     "pred_naive_last_week": 8894.23,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9214.49,
+     "pred_xgboost": 9323.7,
+     "actual_emission_kgco2e": 6281.0,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-12-17",
-     "actual_electricity_kwh": 17339.13,
-     "pred_naive_last_week": 16885.93,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 18604.7,
-     "pred_xgboost": 19846.86,
-     "actual_emission_kgco2e": 12310.78,
+     "actual_electricity_kwh": 9083.91,
+     "pred_naive_last_week": 8846.48,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9117.67,
+     "pred_xgboost": 9197.72,
+     "actual_emission_kgco2e": 6449.58,
      "emission_factor": 0.71
     },
     {
      "week_start": "2025-12-24",
-     "actual_electricity_kwh": 16708.5,
-     "pred_naive_last_week": 17339.13,
-     "pred_train_mean": 21011.84,
-     "pred_random_forest": 18746.63,
-     "pred_xgboost": 20181.69,
-     "actual_emission_kgco2e": 11863.04,
+     "actual_electricity_kwh": 8753.52,
+     "pred_naive_last_week": 9083.91,
+     "pred_train_mean": 9855.17,
+     "pred_random_forest": 9177.56,
+     "pred_xgboost": 9223.6,
+     "actual_emission_kgco2e": 6215.0,
      "emission_factor": 0.71
     }
    ],
    "diesel_litres": [
     {
      "week_start": "2025-10-22",
-     "actual_diesel_litres": 46.11,
-     "pred_naive_last_week": 91.07,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 89.13,
-     "pred_xgboost": 88.42,
-     "actual_emission_kgco2e": 133.26,
+     "actual_diesel_litres": 6.45,
+     "pred_naive_last_week": 12.74,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 13.11,
+     "pred_xgboost": 13.03,
+     "actual_emission_kgco2e": 18.64,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-10-29",
-     "actual_diesel_litres": 48.53,
-     "pred_naive_last_week": 46.11,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 61.82,
-     "pred_xgboost": 66.97,
-     "actual_emission_kgco2e": 140.25,
+     "actual_diesel_litres": 10.12,
+     "pred_naive_last_week": 6.45,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 11.33,
+     "pred_xgboost": 11.35,
+     "actual_emission_kgco2e": 29.25,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-11-05",
-     "actual_diesel_litres": 76.54,
-     "pred_naive_last_week": 48.53,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 61.53,
-     "pred_xgboost": 63.41,
-     "actual_emission_kgco2e": 221.2,
+     "actual_diesel_litres": 20.73,
+     "pred_naive_last_week": 10.12,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 10.89,
+     "pred_xgboost": 9.81,
+     "actual_emission_kgco2e": 59.91,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-11-12",
-     "actual_diesel_litres": 63.26,
-     "pred_naive_last_week": 76.54,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 86.28,
-     "pred_xgboost": 82.82,
-     "actual_emission_kgco2e": 182.82,
+     "actual_diesel_litres": 17.13,
+     "pred_naive_last_week": 20.73,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 12.88,
+     "pred_xgboost": 12.53,
+     "actual_emission_kgco2e": 49.51,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-11-19",
-     "actual_diesel_litres": 56.46,
-     "pred_naive_last_week": 63.26,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 79.62,
-     "pred_xgboost": 69.72,
-     "actual_emission_kgco2e": 163.17,
+     "actual_diesel_litres": 15.29,
+     "pred_naive_last_week": 17.13,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 14.88,
+     "pred_xgboost": 15.02,
+     "actual_emission_kgco2e": 44.19,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-11-26",
-     "actual_diesel_litres": 45.22,
-     "pred_naive_last_week": 56.46,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 64.57,
-     "pred_xgboost": 64.99,
-     "actual_emission_kgco2e": 130.69,
+     "actual_diesel_litres": 6.42,
+     "pred_naive_last_week": 15.29,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 14.3,
+     "pred_xgboost": 16.96,
+     "actual_emission_kgco2e": 18.55,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-12-03",
-     "actual_diesel_litres": 64.37,
-     "pred_naive_last_week": 45.22,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 61.63,
-     "pred_xgboost": 63.41,
-     "actual_emission_kgco2e": 186.03,
+     "actual_diesel_litres": 3.5,
+     "pred_naive_last_week": 6.42,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 11.49,
+     "pred_xgboost": 12.5,
+     "actual_emission_kgco2e": 10.12,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-12-10",
-     "actual_diesel_litres": 69.1,
-     "pred_naive_last_week": 64.37,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 78.6,
-     "pred_xgboost": 68.07,
-     "actual_emission_kgco2e": 199.7,
+     "actual_diesel_litres": 3.76,
+     "pred_naive_last_week": 3.5,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 11.17,
+     "pred_xgboost": 12.6,
+     "actual_emission_kgco2e": 10.87,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-12-17",
-     "actual_diesel_litres": 63.1,
-     "pred_naive_last_week": 69.1,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 83.56,
-     "pred_xgboost": 72.28,
-     "actual_emission_kgco2e": 182.36,
+     "actual_diesel_litres": 3.43,
+     "pred_naive_last_week": 3.76,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 10.71,
+     "pred_xgboost": 12.37,
+     "actual_emission_kgco2e": 9.91,
      "emission_factor": 2.89
     },
     {
      "week_start": "2025-12-24",
-     "actual_diesel_litres": 65.65,
-     "pred_naive_last_week": 63.1,
-     "pred_train_mean": 90.37,
-     "pred_random_forest": 79.77,
-     "pred_xgboost": 64.99,
-     "actual_emission_kgco2e": 189.73,
+     "actual_diesel_litres": 3.57,
+     "pred_naive_last_week": 3.43,
+     "pred_train_mean": 12.02,
+     "pred_random_forest": 10.41,
+     "pred_xgboost": 11.4,
+     "actual_emission_kgco2e": 10.32,
      "emission_factor": 2.89
     }
    ]
@@ -757,482 +758,302 @@
     "model": "naive_last_week",
     "train_weeks": 38,
     "test_weeks": 10,
-    "MAE": 832.115,
-    "RMSE": 931.8693,
-    "R2": 0.3583
+    "MAE": 427.803,
+    "RMSE": 513.0524,
+    "R2": 0.1223
    },
    {
     "target": "electricity_kwh",
     "model": "train_mean",
     "train_weeks": 38,
     "test_weeks": 10,
-    "MAE": 2779.8176,
-    "RMSE": 3013.4107,
-    "R2": -5.7102
+    "MAE": 575.3884,
+    "RMSE": 675.9913,
+    "R2": -0.5237
    },
    {
     "target": "electricity_kwh",
     "model": "random_forest",
     "train_weeks": 38,
     "test_weeks": 10,
-    "MAE": 1209.9882,
-    "RMSE": 1382.0531,
-    "R2": -0.4115
+    "MAE": 322.1651,
+    "RMSE": 425.4749,
+    "R2": 0.3964
    },
    {
     "target": "electricity_kwh",
     "model": "xgboost",
     "train_weeks": 38,
     "test_weeks": 10,
-    "MAE": 1740.8689,
-    "RMSE": 2061.6541,
-    "R2": -2.1409
+    "MAE": 410.5706,
+    "RMSE": 483.2404,
+    "R2": 0.2213
    },
    {
     "target": "diesel_litres",
     "model": "naive_last_week",
     "train_weeks": 38,
     "test_weeks": 10,
-    "MAE": 13.914,
-    "RMSE": 18.9535,
-    "R2": -2.6551
+    "MAE": 3.853,
+    "RMSE": 5.1899,
+    "R2": 0.2834
    },
    {
     "target": "diesel_litres",
     "model": "train_mean",
     "train_weeks": 38,
     "test_weeks": 10,
-    "MAE": 30.5336,
-    "RMSE": 32.1027,
-    "R2": -9.4858
+    "MAE": 6.3979,
+    "RMSE": 6.8166,
+    "R2": -0.2362
    },
    {
     "target": "diesel_litres",
     "model": "random_forest",
     "train_weeks": 38,
     "test_weeks": 10,
-    "MAE": 18.3658,
-    "RMSE": 20.9962,
-    "R2": -3.4854
+    "MAE": 5.9783,
+    "RMSE": 6.6453,
+    "R2": -0.1749
    },
    {
     "target": "diesel_litres",
     "model": "xgboost",
     "train_weeks": 38,
     "test_weeks": 10,
-    "MAE": 13.8296,
-    "RMSE": 18.2726,
-    "R2": -2.3972
+    "MAE": 6.8754,
+    "RMSE": 7.7255,
+    "R2": -0.5879
    }
   ],
   "emission": [
    {
     "week_start": "2025-10-22",
-    "actual_scope2_kg": 13887.73,
-    "actual_scope1_kg": 133.26,
-    "actual_total_kg": 14020.99,
-    "emission_pred_naive_last_week": 13702.28,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 13778.05,
-    "emission_pred_xgboost": 13636.92
+    "actual_scope2_kg": 6863.48,
+    "actual_scope1_kg": 18.64,
+    "actual_total_kg": 6882.12,
+    "emission_pred_naive_last_week": 6678.58,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6773.55,
+    "emission_pred_xgboost": 6716.4
    },
    {
     "week_start": "2025-10-29",
-    "actual_scope2_kg": 13366.79,
-    "actual_scope1_kg": 140.25,
-    "actual_total_kg": 13507.05,
-    "emission_pred_naive_last_week": 14020.99,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 13890.21,
-    "emission_pred_xgboost": 13995.96
+    "actual_scope2_kg": 6804.63,
+    "actual_scope1_kg": 29.25,
+    "actual_total_kg": 6833.88,
+    "emission_pred_naive_last_week": 6882.12,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6849.24,
+    "emission_pred_xgboost": 6751.09
    },
    {
     "week_start": "2025-11-05",
-    "actual_scope2_kg": 14302.54,
-    "actual_scope1_kg": 221.2,
-    "actual_total_kg": 14523.74,
-    "emission_pred_naive_last_week": 13507.05,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 14220.34,
-    "emission_pred_xgboost": 14417.8
+    "actual_scope2_kg": 7479.2,
+    "actual_scope1_kg": 59.91,
+    "actual_total_kg": 7539.11,
+    "emission_pred_naive_last_week": 6833.88,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6817.11,
+    "emission_pred_xgboost": 6780.36
    },
    {
     "week_start": "2025-11-12",
-    "actual_scope2_kg": 13214.83,
-    "actual_scope1_kg": 182.82,
-    "actual_total_kg": 13397.65,
-    "emission_pred_naive_last_week": 14523.74,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 14448.73,
-    "emission_pred_xgboost": 14332.18
+    "actual_scope2_kg": 6910.41,
+    "actual_scope1_kg": 49.51,
+    "actual_total_kg": 6959.91,
+    "emission_pred_naive_last_week": 7539.11,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6901.24,
+    "emission_pred_xgboost": 6680.98
    },
    {
     "week_start": "2025-11-19",
-    "actual_scope2_kg": 13674.66,
-    "actual_scope1_kg": 163.17,
-    "actual_total_kg": 13837.83,
-    "emission_pred_naive_last_week": 13397.65,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 14202.06,
-    "emission_pred_xgboost": 14682.92
+    "actual_scope2_kg": 7150.86,
+    "actual_scope1_kg": 44.19,
+    "actual_total_kg": 7195.05,
+    "emission_pred_naive_last_week": 6959.91,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 7026.07,
+    "emission_pred_xgboost": 6747.38
    },
    {
     "week_start": "2025-11-26",
-    "actual_scope2_kg": 12784.27,
-    "actual_scope1_kg": 130.69,
-    "actual_total_kg": 12914.96,
-    "emission_pred_naive_last_week": 13837.83,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 14247.61,
-    "emission_pred_xgboost": 14247.62
+    "actual_scope2_kg": 6688.82,
+    "actual_scope1_kg": 18.55,
+    "actual_total_kg": 6707.38,
+    "emission_pred_naive_last_week": 7195.05,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6980.61,
+    "emission_pred_xgboost": 6930.52
    },
    {
     "week_start": "2025-12-03",
-    "actual_scope2_kg": 12053.72,
-    "actual_scope1_kg": 186.03,
-    "actual_total_kg": 12239.75,
-    "emission_pred_naive_last_week": 12914.96,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 13459.74,
-    "emission_pred_xgboost": 14094.62
+    "actual_scope2_kg": 6314.9,
+    "actual_scope1_kg": 10.12,
+    "actual_total_kg": 6325.02,
+    "emission_pred_naive_last_week": 6707.38,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6751.27,
+    "emission_pred_xgboost": 6609.22
    },
    {
     "week_start": "2025-12-10",
-    "actual_scope2_kg": 11989.01,
-    "actual_scope1_kg": 199.7,
-    "actual_total_kg": 12188.71,
-    "emission_pred_naive_last_week": 12239.75,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 13702.9,
-    "emission_pred_xgboost": 14471.54
+    "actual_scope2_kg": 6281.0,
+    "actual_scope1_kg": 10.87,
+    "actual_total_kg": 6291.87,
+    "emission_pred_naive_last_week": 6325.02,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6574.56,
+    "emission_pred_xgboost": 6656.23
    },
    {
     "week_start": "2025-12-17",
-    "actual_scope2_kg": 12310.78,
-    "actual_scope1_kg": 182.36,
-    "actual_total_kg": 12493.14,
-    "emission_pred_naive_last_week": 12188.71,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 13450.82,
-    "emission_pred_xgboost": 14300.15
+    "actual_scope2_kg": 6449.58,
+    "actual_scope1_kg": 9.91,
+    "actual_total_kg": 6459.49,
+    "emission_pred_naive_last_week": 6291.87,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6504.49,
+    "emission_pred_xgboost": 6566.13
    },
    {
     "week_start": "2025-12-24",
-    "actual_scope2_kg": 11863.04,
-    "actual_scope1_kg": 189.73,
-    "actual_total_kg": 12052.76,
-    "emission_pred_naive_last_week": 12493.14,
-    "emission_pred_train_mean": 15179.57,
-    "emission_pred_random_forest": 13540.64,
-    "emission_pred_xgboost": 14516.82
+    "actual_scope2_kg": 6215.0,
+    "actual_scope1_kg": 10.32,
+    "actual_total_kg": 6225.32,
+    "emission_pred_naive_last_week": 6459.49,
+    "emission_pred_train_mean": 7031.91,
+    "emission_pred_random_forest": 6546.16,
+    "emission_pred_xgboost": 6581.69
    }
   ],
   "emission_metrics": [
    {
     "model": "naive_last_week",
     "test_weeks": 10,
-    "MAE": 580.9525,
-    "RMSE": 667.6827,
-    "R2": 0.3386,
-    "test_total_actual_kg": 131176.573,
-    "test_total_predicted_kg": 132826.0877
+    "MAE": 307.633,
+    "RMSE": 374.1564,
+    "R2": 0.1467,
+    "test_total_actual_kg": 67419.1478,
+    "test_total_predicted_kg": 67872.4088
    },
    {
     "model": "train_mean",
     "test_weeks": 10,
-    "MAE": 2061.9127,
-    "RMSE": 2219.3545,
-    "R2": -6.3074,
-    "test_total_actual_kg": 131176.573,
-    "test_total_predicted_kg": 151795.6998
+    "MAE": 424.062,
+    "RMSE": 498.1589,
+    "R2": -0.5126,
+    "test_total_actual_kg": 67419.1478,
+    "test_total_predicted_kg": 70319.0587
    },
    {
     "model": "random_forest",
     "test_weeks": 10,
-    "MAE": 885.7194,
-    "RMSE": 1011.1047,
-    "R2": -0.5167,
-    "test_total_actual_kg": 131176.573,
-    "test_total_predicted_kg": 138941.0886
+    "MAE": 242.163,
+    "RMSE": 317.2614,
+    "R2": 0.3865,
+    "test_total_actual_kg": 67419.1478,
+    "test_total_predicted_kg": 67724.3035
    },
    {
     "model": "xgboost",
     "test_weeks": 10,
-    "MAE": 1249.9977,
-    "RMSE": 1474.7886,
-    "R2": -2.2268,
-    "test_total_actual_kg": 131176.573,
-    "test_total_predicted_kg": 142696.5312
+    "MAE": 306.8586,
+    "RMSE": 359.1565,
+    "R2": 0.2138,
+    "test_total_actual_kg": 67419.1478,
+    "test_total_predicted_kg": 67019.9844
    }
   ],
   "beats_naive": {
    "electricity_kwh": {
-    "random_forest": false,
-    "xgboost": false
+    "random_forest": true,
+    "xgboost": true
    },
    "diesel_litres": {
     "random_forest": false,
-    "xgboost": true
+    "xgboost": false
    }
   }
  },
- "factors": [
-  {
-   "name": "electricity",
-   "factor": 0.71,
-   "unit": "kWh",
-   "output": "kg CO2e/kWh",
-   "scope": "Scope 2",
-   "source": "CEA, CO2 Baseline Database for the Indian Power Sector, User Guide",
-   "version": "V21.0, Nov 2025",
-   "verified": true
-  },
-  {
-   "name": "diesel",
-   "factor": 2.89,
-   "unit": "Litre",
-   "output": "kg CO2/L",
-   "scope": "Scope 1",
-   "source": "CEA, CO2 Baseline Database, Appendix B (liquid fuel oil)",
-   "version": "V20.0, Dec 2024",
-   "verified": true
-  },
-  {
-   "name": "diesel_mobile",
-   "factor": 2.68,
-   "unit": "Litre",
-   "output": "kg CO2e/L",
-   "scope": "Scope 1",
-   "source": "Derived: IPCC 2006 74,100 kgCO2/TJ x NCV 43.0 MJ/kg x 0.84 kg/L (IS 1460)",
-   "version": "IPCC 2006 Guidelines",
-   "verified": true
-  },
-  {
-   "name": "petrol_vehicle",
-   "factor": 0.192,
-   "unit": "km",
-   "output": "kg CO2e/km",
-   "scope": "Scope 3",
-   "source": "DEFRA (label from earlier code base; not in Master Data)",
-   "version": "2024",
-   "verified": false
-  },
-  {
-   "name": "diesel_vehicle",
-   "factor": 0.171,
-   "unit": "km",
-   "output": "kg CO2e/km",
-   "scope": "Scope 3",
-   "source": "DEFRA",
-   "version": "2024",
-   "verified": true
-  },
-  {
-   "name": "ev",
-   "factor": 0.71,
-   "unit": "kWh",
-   "output": "kg CO2e/kWh",
-   "scope": "Scope 3",
-   "source": "CEA, CO2 Baseline Database (same grid factor as 'electricity')",
-   "version": "V21.0, Nov 2025",
-   "verified": true
-  },
-  {
-   "name": "college_bus",
-   "factor": 0.536,
-   "unit": "km",
-   "output": "kg CO2e/km",
-   "scope": "Scope 1",
-   "source": "KKWIEER Transport records: 56,000 L/yr x 2.68 / 280,000 km/yr",
-   "version": "AY 2025-26",
-   "verified": true
-  },
-  {
-   "name": "public_bus",
-   "factor": 0.105,
-   "unit": "passenger-km",
-   "output": "kg CO2e/passenger-km",
-   "scope": "Scope 3",
-   "source": "DEFRA (label from earlier code base; not in Master Data)",
-   "version": "2024",
-   "verified": false
-  },
-  {
-   "name": "motorcycle",
-   "factor": 0.103,
-   "unit": "passenger-km",
-   "output": "kg CO2e/passenger-km",
-   "scope": "Scope 3",
-   "source": "DEFRA (label from earlier code base; Master Data lists India GHG Program 0.03743 per vehicle-km)",
-   "version": "2024",
-   "verified": false
-  },
-  {
-   "name": "auto_rickshaw",
-   "factor": 0.11,
-   "unit": "passenger-km",
-   "output": "kg CO2e/passenger-km",
-   "scope": "Scope 3",
-   "source": "DEFRA (label from earlier code base; Master Data lists India GHG Program 0.11779 per vehicle-km)",
-   "version": "2024",
-   "verified": false
-  },
-  {
-   "name": "bicycle",
-   "factor": 0.0,
-   "unit": "passenger-km",
-   "output": "kg CO2e/passenger-km",
-   "scope": "Scope 3",
-   "source": "Zero direct emission",
-   "version": "n/a",
-   "verified": true
-  },
-  {
-   "name": "walking",
-   "factor": 0.0,
-   "unit": "passenger-km",
-   "output": "kg CO2e/passenger-km",
-   "scope": "Scope 3",
-   "source": "Zero direct emission",
-   "version": "n/a",
-   "verified": true
-  },
-  {
-   "name": "waste_landfill",
-   "factor": 1.9,
-   "unit": "kg",
-   "output": "kg CO2e/kg",
-   "scope": "Scope 3",
-   "source": "IPCC 2006 Guidelines, Vol. 5",
-   "version": "2006",
-   "verified": true
-  },
-  {
-   "name": "compost_waste",
-   "factor": 0.1,
-   "unit": "kg",
-   "output": "kg CO2e/kg",
-   "scope": "Scope 3",
-   "source": "IPCC 2006 Guidelines, Vol. 5",
-   "version": "2006",
-   "verified": true
-  },
-  {
-   "name": "methane",
-   "factor": 27.0,
-   "unit": "kg CH4",
-   "output": "kg CO2e/kg CH4",
-   "scope": "Scope 3",
-   "source": "IPCC AR6 GWP-100, CH4 non-fossil (GHG Protocol GWP table)",
-   "version": "AR6, GHG Protocol table Aug 2024",
-   "verified": true
-  },
-  {
-   "name": "nitrous_oxide",
-   "factor": 273,
-   "unit": "kg N2O",
-   "output": "kg CO2e/kg N2O",
-   "scope": "Scope 3",
-   "source": "IPCC AR6 GWP-100, N2O (GHG Protocol GWP table)",
-   "version": "AR6, GHG Protocol table Aug 2024",
-   "verified": true
-  }
- ],
+ "factors": [],
  "qa": {
-  "overall": "PASS",
-  "sections": [
-   {
-    "title": "Weekly dataset",
-    "status": "PASS"
-   },
-   {
-    "title": "Calibration to real monthly totals",
-    "status": "PASS"
-   },
-   {
-    "title": "Carbon accounting",
-    "status": "PASS"
-   },
-   {
-    "title": "Forecast",
-    "status": "PASS"
-   }
-  ],
-  "markdown": "# Carbonomics-AI QA Report\n\nAll statuses below are computed from the pipeline outputs. Data is SYNTHETIC (calibrated to real monthly totals).\n\n**Overall: PASS**\n\n## 1. Weekly dataset: PASS\n\n- Rows: 52 | missing: 0 | duplicates: 0 | negatives: 0\n- Exact 7-day week steps: True | labelled synthetic: True\n\n## 2. Calibration to real monthly totals: PASS\n\n- Tolerance 1% (31 Dec is not in the 52 weeks)\n- electricity_kwh: weekly sum 1056458.31 vs real 1059147.0 (gap 0.254%)\n- diesel_litres: weekly sum 4095.15 vs real 4100.0 (gap 0.118%)\n\n## 3. Carbon accounting: PASS\n\n- Max difference emission vs activity x factor: 0.01 kg\n- Max difference total vs scope1+scope2+scope3: 0.0 kg\n- Edge cases (zero, known sample, negative rejected): True\n- Factors not yet verified against Master Data: petrol_vehicle, public_bus, motorcycle, auto_rickshaw\n- Scope 3 and bus/refrigerant are not measured weekly and are excluded.\n\n## 4. Forecast: PASS\n\n- Naive and mean baselines present: True\n- Test weeks are chronologically after training weeks: True\n- Non-negative predictions: True\n- Emission forecast equals predicted activity x factor: True\n- Beats naive-last-week MAE (information only): {'electricity_kwh': {'random_forest': False, 'xgboost': False}, 'diesel_litres': {'random_forest': False, 'xgboost': True}}\n"
+  "overall": "n/a",
+  "sections": [],
+  "markdown": ""
  },
  "not_covered": [
-  "Student commuting (1,896.90 tCO2e in the report) - survey based, no time series",
-  "Domestic wastewater (804.17 tCO2e) - population based estimate",
-  "College bus fleet, solid waste, refrigerant - annual figures only"
+  "Other sources of a campus footprint (commuting, waste, wastewater, buses) are not in this demo."
  ],
  "solar": {
   "monthly": [
    {
+    "month": "2025-01",
+    "solar_kwh": 1094,
+    "avoided_tco2e": 0.777
+   },
+   {
+    "month": "2025-02",
+    "solar_kwh": 1139,
+    "avoided_tco2e": 0.809
+   },
+   {
     "month": "2025-03",
-    "solar_kwh": 1740,
-    "avoided_tco2e": 1.235
+    "solar_kwh": 1280,
+    "avoided_tco2e": 0.909
    },
    {
     "month": "2025-04",
-    "solar_kwh": 1736,
-    "avoided_tco2e": 1.233
+    "solar_kwh": 1388,
+    "avoided_tco2e": 0.985
    },
    {
     "month": "2025-05",
-    "solar_kwh": 2201,
-    "avoided_tco2e": 1.563
+    "solar_kwh": 1311,
+    "avoided_tco2e": 0.931
    },
    {
     "month": "2025-06",
-    "solar_kwh": 2232,
-    "avoided_tco2e": 1.585
+    "solar_kwh": 862,
+    "avoided_tco2e": 0.612
    },
    {
     "month": "2025-07",
-    "solar_kwh": 2139,
-    "avoided_tco2e": 1.519
+    "solar_kwh": 748,
+    "avoided_tco2e": 0.531
    },
    {
     "month": "2025-08",
-    "solar_kwh": 1770,
-    "avoided_tco2e": 1.257
+    "solar_kwh": 856,
+    "avoided_tco2e": 0.608
    },
    {
     "month": "2025-09",
-    "solar_kwh": 1612,
-    "avoided_tco2e": 1.145
+    "solar_kwh": 1076,
+    "avoided_tco2e": 0.764
    },
    {
     "month": "2025-10",
-    "solar_kwh": 1579,
-    "avoided_tco2e": 1.121
+    "solar_kwh": 1167,
+    "avoided_tco2e": 0.829
    },
    {
     "month": "2025-11",
-    "solar_kwh": 1680,
-    "avoided_tco2e": 1.193
+    "solar_kwh": 1083,
+    "avoided_tco2e": 0.769
    },
    {
     "month": "2025-12",
-    "solar_kwh": 1705,
-    "avoided_tco2e": 1.211
-   },
-   {
-    "month": "2026-01",
-    "solar_kwh": 1590,
-    "avoided_tco2e": 1.129
-   },
-   {
-    "month": "2026-02",
-    "solar_kwh": 1736,
-    "avoided_tco2e": 1.233
+    "solar_kwh": 1092,
+    "avoided_tco2e": 0.775
    }
   ],
-  "annual_kwh": 21720,
-  "avg_kwh_per_month": 1810.0,
-  "annual_avoided_tco2e": 15.42,
-  "share_of_purchased_electricity": 0.0205,
-  "period": "2025-03 to 2026-02",
+  "annual_kwh": 13096,
+  "avg_kwh_per_month": 1091.3,
+  "annual_avoided_tco2e": 9.3,
+  "share_of_purchased_electricity": 0.0261,
+  "period": "2025-01 to 2025-12 (fake)",
   "factor": {
    "name": "electricity",
    "factor": 0.71,
@@ -1240,166 +1061,166 @@
    "source": "CEA, CO2 Baseline Database for the Indian Power Sector, User Guide",
    "version": "V21.0, Nov 2025"
   },
-  "note": "Rooftop solar is self-consumed on campus and reported separately, NOT netted: purchased grid electricity (Scope 2) stays as billed. Avoided emission = solar kWh x grid factor. Solar period is Mar 2025 - Feb 2026; electricity and diesel are Jan - Dec 2025.",
-  "basis": "REAL monthly generation (Master Data sheet 6_Solar_Monthly)"
+  "note": "Fake rooftop solar numbers. Solar is self-consumed and reported separately, not netted from purchased electricity.",
+  "basis": "FAKE monthly generation"
  },
  "simulation": {
   "baseline_monthly": [
    {
     "month": "2025-01",
-    "base_electricity_kwh": 85611,
-    "base_diesel_litres": 70,
-    "base_scope2_tco2e": 60.7838,
-    "base_scope1_tco2e": 0.2023,
-    "base_total_tco2e": 60.9861,
-    "scen_electricity_kwh": 85611.0,
-    "scen_diesel_litres": 70.0,
-    "scen_scope2_tco2e": 60.7838,
-    "scen_scope1_tco2e": 0.2023,
-    "scen_total_tco2e": 60.9861
+    "base_electricity_kwh": 34325,
+    "base_diesel_litres": 63,
+    "base_scope2_tco2e": 24.3708,
+    "base_scope1_tco2e": 0.1821,
+    "base_total_tco2e": 24.5528,
+    "scen_electricity_kwh": 34325.0,
+    "scen_diesel_litres": 63.0,
+    "scen_scope2_tco2e": 24.3708,
+    "scen_scope1_tco2e": 0.1821,
+    "scen_total_tco2e": 24.5528
    },
    {
     "month": "2025-02",
-    "base_electricity_kwh": 82814,
-    "base_diesel_litres": 105,
-    "base_scope2_tco2e": 58.7979,
-    "base_scope1_tco2e": 0.3034,
-    "base_total_tco2e": 59.1014,
-    "scen_electricity_kwh": 82814.0,
-    "scen_diesel_litres": 105.0,
-    "scen_scope2_tco2e": 58.7979,
-    "scen_scope1_tco2e": 0.3034,
-    "scen_total_tco2e": 59.1014
+    "base_electricity_kwh": 38435,
+    "base_diesel_litres": 71,
+    "base_scope2_tco2e": 27.2889,
+    "base_scope1_tco2e": 0.2052,
+    "base_total_tco2e": 27.494,
+    "scen_electricity_kwh": 38435.0,
+    "scen_diesel_litres": 71.0,
+    "scen_scope2_tco2e": 27.2889,
+    "scen_scope1_tco2e": 0.2052,
+    "scen_total_tco2e": 27.494
    },
    {
     "month": "2025-03",
-    "base_electricity_kwh": 102400,
-    "base_diesel_litres": 185,
-    "base_scope2_tco2e": 72.704,
-    "base_scope1_tco2e": 0.5346,
-    "base_total_tco2e": 73.2386,
-    "scen_electricity_kwh": 102400.0,
-    "scen_diesel_litres": 185.0,
-    "scen_scope2_tco2e": 72.704,
-    "scen_scope1_tco2e": 0.5346,
-    "scen_total_tco2e": 73.2386
+    "base_electricity_kwh": 43927,
+    "base_diesel_litres": 54,
+    "base_scope2_tco2e": 31.1882,
+    "base_scope1_tco2e": 0.1561,
+    "base_total_tco2e": 31.3442,
+    "scen_electricity_kwh": 43927.0,
+    "scen_diesel_litres": 54.0,
+    "scen_scope2_tco2e": 31.1882,
+    "scen_scope1_tco2e": 0.1561,
+    "scen_total_tco2e": 31.3442
    },
    {
     "month": "2025-04",
-    "base_electricity_kwh": 104759,
-    "base_diesel_litres": 385,
-    "base_scope2_tco2e": 74.3789,
-    "base_scope1_tco2e": 1.1127,
-    "base_total_tco2e": 75.4915,
-    "scen_electricity_kwh": 104759.0,
-    "scen_diesel_litres": 385.0,
-    "scen_scope2_tco2e": 74.3789,
-    "scen_scope1_tco2e": 1.1127,
-    "scen_total_tco2e": 75.4915
+    "base_electricity_kwh": 47549,
+    "base_diesel_litres": 77,
+    "base_scope2_tco2e": 33.7598,
+    "base_scope1_tco2e": 0.2225,
+    "base_total_tco2e": 33.9823,
+    "scen_electricity_kwh": 47549.0,
+    "scen_diesel_litres": 77.0,
+    "scen_scope2_tco2e": 33.7598,
+    "scen_scope1_tco2e": 0.2225,
+    "scen_total_tco2e": 33.9823
    },
    {
     "month": "2025-05",
-    "base_electricity_kwh": 94016,
-    "base_diesel_litres": 980,
-    "base_scope2_tco2e": 66.7514,
-    "base_scope1_tco2e": 2.8322,
-    "base_total_tco2e": 69.5836,
-    "scen_electricity_kwh": 94016.0,
-    "scen_diesel_litres": 980.0,
-    "scen_scope2_tco2e": 66.7514,
-    "scen_scope1_tco2e": 2.8322,
-    "scen_total_tco2e": 69.5836
+    "base_electricity_kwh": 49523,
+    "base_diesel_litres": 49,
+    "base_scope2_tco2e": 35.1613,
+    "base_scope1_tco2e": 0.1416,
+    "base_total_tco2e": 35.3029,
+    "scen_electricity_kwh": 49523.0,
+    "scen_diesel_litres": 49.0,
+    "scen_scope2_tco2e": 35.1613,
+    "scen_scope1_tco2e": 0.1416,
+    "scen_total_tco2e": 35.3029
    },
    {
     "month": "2025-06",
-    "base_electricity_kwh": 74496,
-    "base_diesel_litres": 595,
-    "base_scope2_tco2e": 52.8922,
-    "base_scope1_tco2e": 1.7196,
-    "base_total_tco2e": 54.6117,
-    "scen_electricity_kwh": 74496.0,
-    "scen_diesel_litres": 595.0,
-    "scen_scope2_tco2e": 52.8922,
-    "scen_scope1_tco2e": 1.7196,
-    "scen_total_tco2e": 54.6117
+    "base_electricity_kwh": 43464,
+    "base_diesel_litres": 40,
+    "base_scope2_tco2e": 30.8594,
+    "base_scope1_tco2e": 0.1156,
+    "base_total_tco2e": 30.975,
+    "scen_electricity_kwh": 43464.0,
+    "scen_diesel_litres": 40.0,
+    "scen_scope2_tco2e": 30.8594,
+    "scen_scope1_tco2e": 0.1156,
+    "scen_total_tco2e": 30.975
    },
    {
     "month": "2025-07",
-    "base_electricity_kwh": 87258,
-    "base_diesel_litres": 490,
-    "base_scope2_tco2e": 61.9532,
-    "base_scope1_tco2e": 1.4161,
-    "base_total_tco2e": 63.3693,
-    "scen_electricity_kwh": 87258.0,
-    "scen_diesel_litres": 490.0,
-    "scen_scope2_tco2e": 61.9532,
-    "scen_scope1_tco2e": 1.4161,
-    "scen_total_tco2e": 63.3693
+    "base_electricity_kwh": 39638,
+    "base_diesel_litres": 36,
+    "base_scope2_tco2e": 28.143,
+    "base_scope1_tco2e": 0.104,
+    "base_total_tco2e": 28.247,
+    "scen_electricity_kwh": 39638.0,
+    "scen_diesel_litres": 36.0,
+    "scen_scope2_tco2e": 28.143,
+    "scen_scope1_tco2e": 0.104,
+    "scen_total_tco2e": 28.247
    },
    {
     "month": "2025-08",
-    "base_electricity_kwh": 89306,
-    "base_diesel_litres": 140,
-    "base_scope2_tco2e": 63.4073,
-    "base_scope1_tco2e": 0.4046,
-    "base_total_tco2e": 63.8119,
-    "scen_electricity_kwh": 89306.0,
-    "scen_diesel_litres": 140.0,
-    "scen_scope2_tco2e": 63.4073,
-    "scen_scope1_tco2e": 0.4046,
-    "scen_total_tco2e": 63.8119
+    "base_electricity_kwh": 36336,
+    "base_diesel_litres": 32,
+    "base_scope2_tco2e": 25.7986,
+    "base_scope1_tco2e": 0.0925,
+    "base_total_tco2e": 25.891,
+    "scen_electricity_kwh": 36336.0,
+    "scen_diesel_litres": 32.0,
+    "scen_scope2_tco2e": 25.7986,
+    "scen_scope1_tco2e": 0.0925,
+    "scen_total_tco2e": 25.891
    },
    {
     "month": "2025-09",
-    "base_electricity_kwh": 95050,
-    "base_diesel_litres": 280,
-    "base_scope2_tco2e": 67.4855,
-    "base_scope1_tco2e": 0.8092,
-    "base_total_tco2e": 68.2947,
-    "scen_electricity_kwh": 95050.0,
-    "scen_diesel_litres": 280.0,
-    "scen_scope2_tco2e": 67.4855,
-    "scen_scope1_tco2e": 0.8092,
-    "scen_total_tco2e": 68.2947
+    "base_electricity_kwh": 42770,
+    "base_diesel_litres": 54,
+    "base_scope2_tco2e": 30.3667,
+    "base_scope1_tco2e": 0.1561,
+    "base_total_tco2e": 30.5228,
+    "scen_electricity_kwh": 42770.0,
+    "scen_diesel_litres": 54.0,
+    "scen_scope2_tco2e": 30.3667,
+    "scen_scope1_tco2e": 0.1561,
+    "scen_total_tco2e": 30.5228
    },
    {
     "month": "2025-10",
-    "base_electricity_kwh": 87074,
-    "base_diesel_litres": 336,
-    "base_scope2_tco2e": 61.8225,
-    "base_scope1_tco2e": 0.971,
-    "base_total_tco2e": 62.7936,
-    "scen_electricity_kwh": 87074.0,
-    "scen_diesel_litres": 336.0,
-    "scen_scope2_tco2e": 61.8225,
-    "scen_scope1_tco2e": 0.971,
-    "scen_total_tco2e": 62.7936
+    "base_electricity_kwh": 43033,
+    "base_diesel_litres": 47,
+    "base_scope2_tco2e": 30.5534,
+    "base_scope1_tco2e": 0.1358,
+    "base_total_tco2e": 30.6893,
+    "scen_electricity_kwh": 43033.0,
+    "scen_diesel_litres": 47.0,
+    "scen_scope2_tco2e": 30.5534,
+    "scen_scope1_tco2e": 0.1358,
+    "scen_total_tco2e": 30.6893
    },
    {
     "month": "2025-11",
-    "base_electricity_kwh": 80577,
-    "base_diesel_litres": 240,
-    "base_scope2_tco2e": 57.2097,
-    "base_scope1_tco2e": 0.6936,
-    "base_total_tco2e": 57.9033,
-    "scen_electricity_kwh": 80577.0,
-    "scen_diesel_litres": 240.0,
-    "scen_scope2_tco2e": 57.2097,
-    "scen_scope1_tco2e": 0.6936,
-    "scen_total_tco2e": 57.9033
+    "base_electricity_kwh": 42136,
+    "base_diesel_litres": 65,
+    "base_scope2_tco2e": 29.9166,
+    "base_scope1_tco2e": 0.1878,
+    "base_total_tco2e": 30.1044,
+    "scen_electricity_kwh": 42136.0,
+    "scen_diesel_litres": 65.0,
+    "scen_scope2_tco2e": 29.9166,
+    "scen_scope1_tco2e": 0.1878,
+    "scen_total_tco2e": 30.1044
    },
    {
     "month": "2025-12",
-    "base_electricity_kwh": 75786,
-    "base_diesel_litres": 294,
-    "base_scope2_tco2e": 53.8081,
-    "base_scope1_tco2e": 0.8497,
-    "base_total_tco2e": 54.6577,
-    "scen_electricity_kwh": 75786.0,
-    "scen_diesel_litres": 294.0,
-    "scen_scope2_tco2e": 53.8081,
-    "scen_scope1_tco2e": 0.8497,
-    "scen_total_tco2e": 54.6577
+    "base_electricity_kwh": 39704,
+    "base_diesel_litres": 16,
+    "base_scope2_tco2e": 28.1898,
+    "base_scope1_tco2e": 0.0462,
+    "base_total_tco2e": 28.2361,
+    "scen_electricity_kwh": 39704.0,
+    "scen_diesel_litres": 16.0,
+    "scen_scope2_tco2e": 28.1898,
+    "scen_scope1_tco2e": 0.0462,
+    "scen_total_tco2e": 28.2361
    }
   ],
   "factors_used": [
@@ -1425,20 +1246,18 @@
    }
   ],
   "coverage_note": {
-   "covered_tco2e": 763.84,
-   "full_footprint_tco2e": 3719.74,
-   "full_footprint_source": "KKWIEER Carbon Footprint and Sustainability Report FY2025-26 (revised), Table 1",
-   "covered_share_pct": 20.5,
+   "covered_tco2e": 357.34,
+   "full_footprint_tco2e": 1786.7,
+   "full_footprint_source": "FAKE demo figure",
+   "covered_share_pct": 20.0,
    "covered_sources": [
     "electricity_kwh   \u00d7 electricity emission factor \u2192 Scope 2",
     "dg_diesel_litres  \u00d7 diesel emission factor       \u2192 Scope 1"
    ],
    "not_covered": [
-    "Student commuting (\u22481 896.90 tCO\u2082e in the report) \u2014 survey-based, no time series",
-    "Domestic wastewater (\u2248804.17 tCO\u2082e) \u2014 population-based estimate",
-    "College bus fleet, solid waste, refrigerant \u2014 annual figures only"
+    "Other sources of a campus footprint (commuting, waste, wastewater, buses) are not in this demo."
    ],
-   "note": "This simulation covers ~20.5 % of the full 3719.74 tCO\u2082e campus footprint. Commuting and wastewater are not simulated (no time series)."
+   "note": "Demo only: this covers about 20.0 % of a made-up 1786.7 tCO\u2082e campus footprint."
   },
   "presets": [
    {
@@ -1449,15 +1268,15 @@
     "diesel_change_pct": 0.0,
     "solar_offset_kwh_per_month": 0.0,
     "annual": {
-     "baseline_scope2_tco2e": 751.9944,
-     "baseline_scope1_tco2e": 11.849,
-     "baseline_total_tco2e": 763.8434,
-     "scenario_scope2_tco2e": 639.1952,
-     "scenario_scope1_tco2e": 11.849,
-     "scenario_total_tco2e": 651.0442,
-     "saved_tco2e": 112.7992,
-     "saved_pct": 14.77,
-     "saved_scope2_tco2e": 112.7992,
+     "baseline_scope2_tco2e": 355.5964,
+     "baseline_scope1_tco2e": 1.7456,
+     "baseline_total_tco2e": 357.342,
+     "scenario_scope2_tco2e": 302.2569,
+     "scenario_scope1_tco2e": 1.7456,
+     "scenario_total_tco2e": 304.0025,
+     "saved_tco2e": 53.3395,
+     "saved_pct": 14.93,
+     "saved_scope2_tco2e": 53.3395,
      "saved_scope1_tco2e": 0.0
     }
    },
@@ -1469,14 +1288,14 @@
     "diesel_change_pct": 0.0,
     "solar_offset_kwh_per_month": 13500.0,
     "annual": {
-     "baseline_scope2_tco2e": 751.9944,
-     "baseline_scope1_tco2e": 11.849,
-     "baseline_total_tco2e": 763.8434,
-     "scenario_scope2_tco2e": 636.9744,
-     "scenario_scope1_tco2e": 11.849,
-     "scenario_total_tco2e": 648.8234,
+     "baseline_scope2_tco2e": 355.5964,
+     "baseline_scope1_tco2e": 1.7456,
+     "baseline_total_tco2e": 357.342,
+     "scenario_scope2_tco2e": 240.5764,
+     "scenario_scope1_tco2e": 1.7456,
+     "scenario_total_tco2e": 242.322,
      "saved_tco2e": 115.02,
-     "saved_pct": 15.06,
+     "saved_pct": 32.19,
      "saved_scope2_tco2e": 115.02,
      "saved_scope1_tco2e": 0.0
     }
@@ -1489,21 +1308,21 @@
     "diesel_change_pct": -30.0,
     "solar_offset_kwh_per_month": 0.0,
     "annual": {
-     "baseline_scope2_tco2e": 751.9944,
-     "baseline_scope1_tco2e": 11.849,
-     "baseline_total_tco2e": 763.8434,
-     "scenario_scope2_tco2e": 751.9944,
-     "scenario_scope1_tco2e": 8.2943,
-     "scenario_total_tco2e": 760.2887,
-     "saved_tco2e": 3.5547,
-     "saved_pct": 0.47,
+     "baseline_scope2_tco2e": 355.5964,
+     "baseline_scope1_tco2e": 1.7456,
+     "baseline_total_tco2e": 357.342,
+     "scenario_scope2_tco2e": 355.5964,
+     "scenario_scope1_tco2e": 1.2219,
+     "scenario_total_tco2e": 356.8183,
+     "saved_tco2e": 0.5237,
+     "saved_pct": 0.15,
      "saved_scope2_tco2e": 0.0,
-     "saved_scope1_tco2e": 3.5547
+     "saved_scope1_tco2e": 0.5237
     }
    }
   ],
   "presets_note": "Presets are ILLUSTRATIVE ASSUMPTIONS only \u2014 not measured results. Actual savings depend on implementation details, equipment specifications, and site conditions.",
-  "basis": "REAL monthly activity \u00d7 emission factor (GHG Protocol accounting, not ML)"
+  "basis": "FAKE monthly activity \u00d7 emission factor (GHG Protocol accounting, not ML)"
  },
  "optimization": {
   "measures": [
@@ -1512,228 +1331,353 @@
     "label": "New rooftop solar (per 10 kWp block)",
     "category": "solar",
     "acts_on": "electricity",
-    "status": "needs_input",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
-    ],
-    "basis": "TBD",
-    "source": "TBD",
-    "source_date": "TBD",
-    "capex_inr": null,
-    "max_units": null,
-    "saving_value": null,
-    "saving_unit": "",
-    "notes": "Needs: yield kWh/kWp/yr (vendor/MNRE), cost per kWp (vendor quote), max kWp from roof area (facility team). max_units = floor(max_kWp / 10). All TBD.",
-    "impact": null
-   },
-   {
-    "id": "led_full",
-    "label": "LED retrofit \u2014 100% of fittings",
-    "category": "lighting",
-    "acts_on": "electricity",
-    "status": "needs_input",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units",
-     "cap_basis_value (lighting_end_use TBD \u2014 no data in Master Data)"
-    ],
-    "basis": "TBD",
-    "source": "TBD",
-    "source_date": "TBD",
-    "capex_inr": null,
-    "max_units": null,
-    "saving_value": null,
-    "saving_unit": "% of lighting_end_use",
-    "notes": "Needs: fitting count, old vs new wattage (W), daily burning hours, cost per LED fitting. lighting_end_use is TBD (no data in Master Data).",
-    "impact": null
-   },
-   {
-    "id": "led_half",
-    "label": "LED retrofit \u2014 50% of fittings",
-    "category": "lighting",
-    "acts_on": "electricity",
-    "status": "needs_input",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units",
-     "cap_basis_value (lighting_end_use TBD \u2014 no data in Master Data)"
-    ],
-    "basis": "TBD",
-    "source": "TBD",
-    "source_date": "TBD",
-    "capex_inr": null,
-    "max_units": null,
-    "saving_value": null,
-    "saving_unit": "% of lighting_end_use",
-    "notes": "Same as led_full but 50% of fittings. Exclusive with led_full. lighting_end_use TBD.",
-    "impact": null
-   },
-   {
-    "id": "ac_5star",
-    "label": "AC replacement to 5-star BEE",
-    "category": "hvac",
-    "acts_on": "electricity",
-    "status": "needs_input",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
-    ],
-    "basis": "TBD",
-    "source": "TBD",
-    "source_date": "TBD",
-    "capex_inr": null,
-    "max_units": null,
-    "saving_value": null,
-    "saving_unit": "% of ac_end_use",
-    "notes": "ac_end_use = 697296 kWh/yr (ESTIMATE; sheet 4_AC_Inventory, Master Data FY2025-26). Needs: % saving from star-rating upgrade (BEE label / vendor spec), capex per unit \u00d7 no. of units.",
-    "impact": null
-   },
-   {
-    "id": "ac_setpoint",
-    "label": "AC setpoint policy (+1 degC)",
-    "category": "hvac",
-    "acts_on": "electricity",
-    "status": "needs_input",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
-    ],
-    "basis": "TBD",
-    "source": "TBD",
-    "source_date": "TBD",
-    "capex_inr": null,
-    "max_units": null,
-    "saving_value": null,
-    "saving_unit": "% of ac_end_use",
-    "notes": "ac_end_use = 697296 kWh/yr (ESTIMATE; sheet 4_AC_Inventory, Master Data FY2025-26). Needs: % saving per 1 degC setpoint rise (ASHRAE/BEE source + date), implementation cost (if any).",
-    "impact": null
+    "status": "ready",
+    "missing_fields": [],
+    "basis": "demo",
+    "source": "FAKE demo value",
+    "source_date": "demo",
+    "capex_inr": 500000.0,
+    "max_units": 5,
+    "saving_value": 14000.0,
+    "saving_unit": "kWh/yr per block",
+    "notes": "Made-up numbers for the demo only.",
+    "impact": {
+     "kwh_saved_per_unit": 14000.0,
+     "litres_saved_per_unit": 0.0,
+     "tco2e_saved_per_unit": 9.94,
+     "capex_per_unit": 500000.0,
+     "inr_per_tco2e": 50301.81,
+     "cap_applied": false,
+     "cap_basis": "total_electricity",
+     "cap_value": 500840.0,
+     "factor_used": {
+      "name": "electricity",
+      "factor": 0.71,
+      "scope": "Scope 2",
+      "unit": "kWh",
+      "output": "kg CO2e/kWh",
+      "source": "CEA, CO2 Baseline Database for the Indian Power Sector, User Guide",
+      "version": "V21.0, Nov 2025",
+      "verified": true
+     },
+     "scope": "Scope 2"
+    }
    },
    {
     "id": "dg_scheduling",
-    "label": "DG run-time optimisation (scheduling)",
-    "category": "dg",
+    "label": "Generator scheduling",
+    "category": "diesel",
     "acts_on": "diesel",
-    "status": "needs_input",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
-    ],
-    "basis": "TBD",
-    "source": "TBD",
-    "source_date": "TBD",
-    "capex_inr": null,
-    "max_units": null,
-    "saving_value": null,
-    "saving_unit": "",
-    "notes": "Needs: estimated L/yr saved from better scheduling, one-time implementation cost (if any). Must come from facility team or energy audit \u2014 do not invent.",
-    "impact": null
+    "status": "ready",
+    "missing_fields": [],
+    "basis": "demo",
+    "source": "FAKE demo value",
+    "source_date": "demo",
+    "capex_inr": 60000.0,
+    "max_units": 1,
+    "saving_value": 150.0,
+    "saving_unit": "L/yr",
+    "notes": "Made-up numbers for the demo only.",
+    "impact": {
+     "kwh_saved_per_unit": 0.0,
+     "litres_saved_per_unit": 150.0,
+     "tco2e_saved_per_unit": 0.4335,
+     "capex_per_unit": 60000.0,
+     "inr_per_tco2e": 138408.3,
+     "cap_applied": false,
+     "cap_basis": "total_diesel",
+     "cap_value": 604.0,
+     "factor_used": {
+      "name": "diesel",
+      "factor": 2.89,
+      "scope": "Scope 1",
+      "unit": "Litre",
+      "output": "kg CO2/L",
+      "source": "CEA, CO2 Baseline Database, Appendix B (liquid fuel oil)",
+      "version": "V20.0, Dec 2024",
+      "verified": true
+     },
+     "scope": "Scope 1"
+    }
    },
    {
     "id": "dg_replace",
-    "label": "DG replacement (higher-efficiency set)",
-    "category": "dg",
+    "label": "Generator replaced by battery backup (30% of diesel)",
+    "category": "diesel",
     "acts_on": "diesel",
-    "status": "needs_input",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
-    ],
-    "basis": "TBD",
-    "source": "TBD",
-    "source_date": "TBD",
-    "capex_inr": null,
-    "max_units": null,
-    "saving_value": null,
+    "status": "ready",
+    "missing_fields": [],
+    "basis": "demo",
+    "source": "FAKE demo value",
+    "source_date": "demo",
+    "capex_inr": 400000.0,
+    "max_units": 1,
+    "saving_value": 0.3,
     "saving_unit": "% of total_diesel",
-    "notes": "Needs: % efficiency improvement (manufacturer spec + model), capex for new DG set, lifetime years.",
-    "impact": null
+    "notes": "Made-up numbers for the demo only.",
+    "impact": {
+     "kwh_saved_per_unit": 0.0,
+     "litres_saved_per_unit": 1.812,
+     "tco2e_saved_per_unit": 0.005237,
+     "capex_per_unit": 400000.0,
+     "inr_per_tco2e": 76384274.01,
+     "cap_applied": false,
+     "cap_basis": "total_diesel",
+     "cap_value": 604.0,
+     "factor_used": {
+      "name": "diesel",
+      "factor": 2.89,
+      "scope": "Scope 1",
+      "unit": "Litre",
+      "output": "kg CO2/L",
+      "source": "CEA, CO2 Baseline Database, Appendix B (liquid fuel oil)",
+      "version": "V20.0, Dec 2024",
+      "verified": true
+     },
+     "scope": "Scope 1"
+    }
    }
   ],
-  "needs_input": [
-   {
-    "id": "solar_new_10kwp",
-    "label": "New rooftop solar (per 10 kWp block)",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
+  "needs_input": [],
+  "result": {
+   "method": "milp",
+   "solver_status": "OPTIMAL",
+   "budget_inr": 500000.0,
+   "selected": [
+    {
+     "id": "solar_new_10kwp",
+     "label": "New rooftop solar (per 10 kWp block)",
+     "category": "solar",
+     "acts_on": "electricity",
+     "units": 1,
+     "capex_inr": 500000.0,
+     "kwh_saved": 14000.0,
+     "litres_saved": 0.0,
+     "tco2e_saved": 9.94,
+     "scope": "Scope 2",
+     "basis": "demo",
+     "source": "FAKE demo value",
+     "source_date": "demo",
+     "inr_per_tco2e": 50301.81
+    }
+   ],
+   "total_capex_inr": 500000.0,
+   "annual_tco2e_saved": 9.94,
+   "annual_scope2_tco2e_saved": 9.94,
+   "annual_scope1_tco2e_saved": 0,
+   "pct_of_covered_baseline": 2.78,
+   "pct_of_full_footprint": 0.27,
+   "covered_baseline_tco2e": 357.342,
+   "payback_years": null,
+   "payback_note": "Electricity tariff and diesel price not provided; payback not computed.",
+   "greedy": {
+    "method": "greedy",
+    "solver_status": "GREEDY",
+    "budget_inr": 500000.0,
+    "selected": [
+     {
+      "id": "solar_new_10kwp",
+      "label": "New rooftop solar (per 10 kWp block)",
+      "category": "solar",
+      "acts_on": "electricity",
+      "units": 1,
+      "capex_inr": 500000.0,
+      "kwh_saved": 14000.0,
+      "litres_saved": 0.0,
+      "tco2e_saved": 9.94,
+      "scope": "Scope 2",
+      "basis": "demo",
+      "source": "FAKE demo value",
+      "source_date": "demo",
+      "inr_per_tco2e": 50301.81
+     }
     ],
-    "notes": "Needs: yield kWh/kWp/yr (vendor/MNRE), cost per kWp (vendor quote), max kWp from roof area (facility team). max_units = floor(max_kWp / 10). All TBD."
+    "total_capex_inr": 500000.0,
+    "annual_tco2e_saved": 9.94,
+    "annual_scope2_tco2e_saved": 9.94,
+    "annual_scope1_tco2e_saved": 0,
+    "pct_of_covered_baseline": 2.78,
+    "pct_of_full_footprint": 0.27,
+    "covered_baseline_tco2e": 357.342,
+    "payback_years": null,
+    "payback_note": "Electricity tariff and diesel price not provided; payback not computed."
+   },
+   "consistency_check": {
+    "optimizer_tco2e_saved": 9.94,
+    "simulation_tco2e_saved": 9.94,
+    "difference": 0.0,
+    "passed": "True",
+    "note": "Optimizer result cross-checked against simulation.simulate() \u2014 must agree within 0.01 tCO\u2082e."
+   },
+   "needs_input": [],
+   "factors_used": [
+    {
+     "name": "electricity",
+     "factor": 0.71,
+     "scope": "Scope 2",
+     "unit": "kWh",
+     "output": "kg CO2e/kWh",
+     "source": "CEA, CO2 Baseline Database for the Indian Power Sector, User Guide",
+     "version": "V21.0, Nov 2025",
+     "verified": true
+    },
+    {
+     "name": "diesel",
+     "factor": 2.89,
+     "scope": "Scope 1",
+     "unit": "Litre",
+     "output": "kg CO2/L",
+     "source": "CEA, CO2 Baseline Database, Appendix B (liquid fuel oil)",
+     "version": "V20.0, Dec 2024",
+     "verified": true
+    }
+   ],
+   "coverage_note": {
+    "covered_tco2e": 357.342,
+    "full_footprint_tco2e": 1786.7,
+    "full_footprint_source": "FAKE demo figure",
+    "covered_share_pct": 20.0,
+    "not_covered": [
+     "Other sources of a campus footprint (commuting, waste, wastewater, buses) are not in this demo."
+    ],
+    "note": "Demo only: this covers about 20.0 % of a made-up 1786.7 tCO\u2082e campus footprint."
+   },
+   "assumptions": [
+    {
+     "id": "solar_new_10kwp",
+     "label": "New rooftop solar (per 10 kWp block)",
+     "basis": "demo",
+     "source": "FAKE demo value",
+     "source_date": "demo"
+    },
+    {
+     "id": "dg_scheduling",
+     "label": "Generator scheduling",
+     "basis": "demo",
+     "source": "FAKE demo value",
+     "source_date": "demo"
+    },
+    {
+     "id": "dg_replace",
+     "label": "Generator replaced by battery backup (30% of diesel)",
+     "basis": "demo",
+     "source": "FAKE demo value",
+     "source_date": "demo"
+    }
+   ],
+   "basis": "FAKE monthly baseline \u00d7 emission factor; MILP (scipy.optimize.milp) for selection; not ML"
+  },
+  "greedy": {
+   "method": "greedy",
+   "solver_status": "GREEDY",
+   "budget_inr": 500000.0,
+   "selected": [
+    {
+     "id": "solar_new_10kwp",
+     "label": "New rooftop solar (per 10 kWp block)",
+     "category": "solar",
+     "acts_on": "electricity",
+     "units": 1,
+     "capex_inr": 500000.0,
+     "kwh_saved": 14000.0,
+     "litres_saved": 0.0,
+     "tco2e_saved": 9.94,
+     "scope": "Scope 2",
+     "basis": "demo",
+     "source": "FAKE demo value",
+     "source_date": "demo",
+     "inr_per_tco2e": 50301.81
+    }
+   ],
+   "total_capex_inr": 500000.0,
+   "annual_tco2e_saved": 9.94,
+   "annual_scope2_tco2e_saved": 9.94,
+   "annual_scope1_tco2e_saved": 0,
+   "pct_of_covered_baseline": 2.78,
+   "pct_of_full_footprint": 0.27,
+   "covered_baseline_tco2e": 357.342,
+   "payback_years": null,
+   "payback_note": "Electricity tariff and diesel price not provided; payback not computed."
+  },
+  "budget_sweep": [
+   {
+    "budget_inr": 500000,
+    "optimal_tco2e_saved": 9.94,
+    "greedy_tco2e_saved": 9.94,
+    "optimal_selected_ids": [
+     "solar_new_10kwp"
+    ],
+    "optimal_total_capex": 500000.0
    },
    {
-    "id": "led_full",
-    "label": "LED retrofit \u2014 100% of fittings",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units",
-     "cap_basis_value (lighting_end_use TBD \u2014 no data in Master Data)"
+    "budget_inr": 1000000,
+    "optimal_tco2e_saved": 19.88,
+    "greedy_tco2e_saved": 19.88,
+    "optimal_selected_ids": [
+     "solar_new_10kwp"
     ],
-    "notes": "Needs: fitting count, old vs new wattage (W), daily burning hours, cost per LED fitting. lighting_end_use is TBD (no data in Master Data)."
+    "optimal_total_capex": 1000000.0
    },
    {
-    "id": "led_half",
-    "label": "LED retrofit \u2014 50% of fittings",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units",
-     "cap_basis_value (lighting_end_use TBD \u2014 no data in Master Data)"
+    "budget_inr": 2000000,
+    "optimal_tco2e_saved": 39.76,
+    "greedy_tco2e_saved": 39.76,
+    "optimal_selected_ids": [
+     "solar_new_10kwp"
     ],
-    "notes": "Same as led_full but 50% of fittings. Exclusive with led_full. lighting_end_use TBD."
+    "optimal_total_capex": 2000000.0
    },
    {
-    "id": "ac_5star",
-    "label": "AC replacement to 5-star BEE",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
+    "budget_inr": 5000000,
+    "optimal_tco2e_saved": 50.1335,
+    "greedy_tco2e_saved": 50.1335,
+    "optimal_selected_ids": [
+     "solar_new_10kwp",
+     "dg_scheduling"
     ],
-    "notes": "ac_end_use = 697296 kWh/yr (ESTIMATE; sheet 4_AC_Inventory, Master Data FY2025-26). Needs: % saving from star-rating upgrade (BEE label / vendor spec), capex per unit \u00d7 no. of units."
+    "optimal_total_capex": 2560000.0
    },
    {
-    "id": "ac_setpoint",
-    "label": "AC setpoint policy (+1 degC)",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
+    "budget_inr": 10000000,
+    "optimal_tco2e_saved": 50.1335,
+    "greedy_tco2e_saved": 50.1335,
+    "optimal_selected_ids": [
+     "solar_new_10kwp",
+     "dg_scheduling"
     ],
-    "notes": "ac_end_use = 697296 kWh/yr (ESTIMATE; sheet 4_AC_Inventory, Master Data FY2025-26). Needs: % saving per 1 degC setpoint rise (ASHRAE/BEE source + date), implementation cost (if any)."
+    "optimal_total_capex": 2560000.0
    },
    {
-    "id": "dg_scheduling",
-    "label": "DG run-time optimisation (scheduling)",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
+    "budget_inr": 15000000,
+    "optimal_tco2e_saved": 50.1335,
+    "greedy_tco2e_saved": 50.1335,
+    "optimal_selected_ids": [
+     "solar_new_10kwp",
+     "dg_scheduling"
     ],
-    "notes": "Needs: estimated L/yr saved from better scheduling, one-time implementation cost (if any). Must come from facility team or energy audit \u2014 do not invent."
+    "optimal_total_capex": 2560000.0
    },
    {
-    "id": "dg_replace",
-    "label": "DG replacement (higher-efficiency set)",
-    "missing_fields": [
-     "saving_value",
-     "capex_inr",
-     "max_units"
+    "budget_inr": 20000000,
+    "optimal_tco2e_saved": 50.1335,
+    "greedy_tco2e_saved": 50.1335,
+    "optimal_selected_ids": [
+     "solar_new_10kwp",
+     "dg_scheduling"
     ],
-    "notes": "Needs: % efficiency improvement (manufacturer spec + model), capex for new DG set, lifetime years."
+    "optimal_total_capex": 2560000.0
+   },
+   {
+    "budget_inr": 25000000,
+    "optimal_tco2e_saved": 50.1335,
+    "greedy_tco2e_saved": 50.1335,
+    "optimal_selected_ids": [
+     "solar_new_10kwp",
+     "dg_scheduling"
+    ],
+    "optimal_total_capex": 2560000.0
    }
   ],
-  "result": null,
-  "greedy": null,
-  "budget_sweep": [],
   "factors_used": [
    {
     "name": "electricity",
@@ -1757,13 +1701,40 @@
    }
   ],
   "coverage_note": {
-   "covered_tco2e": 763.8434,
-   "full_footprint_tco2e": 3719.74,
-   "covered_share_pct": 20.5
+   "covered_tco2e": 357.342,
+   "full_footprint_tco2e": 1786.7,
+   "full_footprint_source": "FAKE demo figure",
+   "covered_share_pct": 20.0,
+   "not_covered": [
+    "Other sources of a campus footprint (commuting, waste, wastewater, buses) are not in this demo."
+   ],
+   "note": "Demo only: this covers about 20.0 % of a made-up 1786.7 tCO\u2082e campus footprint."
   },
-  "assumptions": [],
-  "default_budget_inr": null,
-  "basis": "REAL monthly baseline \u00d7 emission factor; MILP (scipy.optimize.milp); not ML",
-  "status_message": "All measures need input before optimization can run. Fill in data/inputs/optimization_measures.csv and re-run the pipeline."
+  "assumptions": [
+   {
+    "id": "solar_new_10kwp",
+    "label": "New rooftop solar (per 10 kWp block)",
+    "basis": "demo",
+    "source": "FAKE demo value",
+    "source_date": "demo"
+   },
+   {
+    "id": "dg_scheduling",
+    "label": "Generator scheduling",
+    "basis": "demo",
+    "source": "FAKE demo value",
+    "source_date": "demo"
+   },
+   {
+    "id": "dg_replace",
+    "label": "Generator replaced by battery backup (30% of diesel)",
+    "basis": "demo",
+    "source": "FAKE demo value",
+    "source_date": "demo"
+   }
+  ],
+  "default_budget_inr": 500000,
+  "basis": "FAKE monthly baseline \u00d7 emission factor; MILP (scipy.optimize.milp); not ML",
+  "status_message": null
  }
 }

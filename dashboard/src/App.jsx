@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import { BarChart3, FlaskConical, Gauge, History as HistoryIcon, Home, LineChart as LineIcon, ListChecks, LogOut, Lock, Menu, Moon, ShieldCheck, Sun, Target, Upload as UploadIcon, X } from 'lucide-react'
+import { BarChart3, FlaskConical, Gauge, History as HistoryIcon, Home, LineChart as LineIcon, LogOut, Lock, Menu, Moon, Sun, Target, Upload as UploadIcon, X } from 'lucide-react'
 import { Synthetic, ThemeCtx } from './ui.jsx'
 import Overview from './pages/Overview.jsx'
 import Trends from './pages/Trends.jsx'
 import Forecast from './pages/Forecast.jsx'
 import Simulation from './pages/Simulation.jsx'
 import Optimization from './pages/Optimization.jsx'
-import Factors from './pages/Factors.jsx'
-import Quality from './pages/Quality.jsx'
 import Upload from './pages/Upload.jsx'
 import HistoryPage from './pages/History.jsx'
 import Landing from './pages/Landing.jsx'
@@ -23,8 +21,6 @@ const PAGES = [
   { id: 'optimization', label: 'Optimization', icon: Target, C: Optimization },
   { id: 'upload', label: 'Upload your data', icon: UploadIcon, C: Upload, locked: true, needsData: false },
   { id: 'history', label: 'History', icon: HistoryIcon, C: HistoryPage, locked: true, needsData: false },
-  { id: 'factors', label: 'Emission factors', icon: ListChecks, C: Factors },
-  { id: 'quality', label: 'Data & QA', icon: ShieldCheck, C: Quality },
 ]
 
 const readTheme = () => {
@@ -120,7 +116,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
           </div>
           {nav}
           <a href="#home" className="muted mt-4 flex items-center gap-3 px-3 py-2 text-sm hover:underline"><Home size={16} /> Home</a>
-          <p className="muted mt-8 text-xs leading-relaxed">K. K. Wagh Panchvati Campus, Nashik<br />Calendar year 2025</p>
+          <p className="muted mt-8 text-xs leading-relaxed">Demo campus · FAKE data<br />Random numbers, not a real campus</p>
         </aside>
 
         <div className="min-w-0">
@@ -130,7 +126,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
               <h1 className="text-lg font-semibold text-slate-900 dark:text-white">{current.label}</h1>
             </div>
             <div className="flex items-center gap-3">
-              {needsData && <span className="hidden sm:inline-flex items-center gap-2 text-xs muted">Weekly data is <Synthetic /></span>}
+              {needsData && <span className="hidden sm:inline-flex items-center gap-2 text-xs muted">Demo numbers are <Synthetic /></span>}
               {authConfigured && (session
                 ? (
                   <div className="flex items-center gap-2 text-xs">
@@ -147,12 +143,13 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
           </header>
 
           <main className="mx-auto max-w-7xl px-4 py-6 sm:px-8">
+            {needsData && <div className="mb-5 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900 ring-1 ring-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-900"><b>Demo with FAKE data.</b> Every number on this page is random and made up for illustration. It is not from any real campus.</div>}
             {needsData && error && <div className="card text-sm text-rose-600">{error}</div>}
             {needsData && !error && !data && <div className="muted text-sm">Loading…</div>}
             {needsData && data && <Page data={data} />}
             {!needsData && <Page opened={opened} onCloseOpened={() => setOpened(null)} onOpenAnalysis={openAnalysis} />}
           </main>
-          <footer className="muted px-4 pb-8 text-center text-xs sm:px-8">Carbonomics-AI · final-year project, KKWIEER Nashik · © 2026 Team Carbonomics, all rights reserved · <a className="underline" href="#privacy">Privacy</a> · <a className="underline" href="#terms">Terms</a> · figures labelled REAL come from the Energy team's monthly log; SYNTHETIC figures are not measurements.</footer>
+          <footer className="muted px-4 pb-8 text-center text-xs sm:px-8">Carbonomics-AI · final-year project, KKWIEER Nashik · © 2026 Team Carbonomics, all rights reserved · <a className="underline" href="#privacy">Privacy</a> · <a className="underline" href="#terms">Terms</a> · all numbers in this demo are FAKE, made up for illustration.</footer>
         </div>
       </div>
     </ThemeCtx.Provider>
