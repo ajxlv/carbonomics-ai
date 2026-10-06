@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
-import { FileText, FlaskConical, Loader2, Trash2 } from 'lucide-react'
+import { FileText, FlaskConical, Loader2, Target, Trash2 } from 'lucide-react'
 import { Badge, Callout, Card, Kpi, fmt } from '../ui.jsx'
 import { api } from '../api.js'
+import { PlanView } from './OptimizeCard.jsx'
 
 const when = (iso) => new Date(iso).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 
@@ -30,6 +31,19 @@ function Simulation({ run, onBack }) {
   )
 }
 
+function Optimization({ run, onBack }) {
+  return (
+    <div className="space-y-5">
+      <button onClick={onBack} className="muted text-sm hover:underline">← Back to history</button>
+      <Card title={run.title || 'Saved optimization plan'} subtitle={`Saved ${when(run.created_at)}. Based on the measure figures entered at the time.`} badge={<Badge tone="blue">YOUR INPUTS</Badge>}>
+        <PlanView r={run.result} />
+      </Card>
+    </div>
+  )
+}
+
+const KIND = { analysis: 'Analysis', simulation: 'Scenario', optimization: 'Optimization plan' }
+
 export default function HistoryPage({ onOpenAnalysis }) {
   const [runs, setRuns] = useState(null)
   const [error, setError] = useState('')
@@ -57,7 +71,7 @@ export default function HistoryPage({ onOpenAnalysis }) {
     try { await api(`/api/runs/${r.id}`, { method: 'DELETE' }); setRuns((rs) => rs.filter((x) => x.id !== r.id)) } catch (e) { setError(e.message) } finally { setBusyId(null) }
   }
 
-  if (sim) return <Simulation run={sim} onBack={() => setSim(null)} />
+  if (sim) return sim.kind === 'optimization' ? <Optimization run={sim} onBack={() => setSim(null)} /> : <Simulation run={sim} onBack={() => setSim(null)} />
 
   return (
     <div className="space-y-5">
@@ -73,17 +87,17 @@ export default function HistoryPage({ onOpenAnalysis }) {
           <ul className="divide-y divide-slate-100 dark:divide-slate-800">
             {runs.map((r) => {
               const isAnalysis = r.kind === 'analysis'
-              const name = r.title || r.input?.file_name || (isAnalysis ? 'Analysis' : 'Scenario')
-              const total = isAnalysis ? r.summary?.total_tco2e : r.summary?.scenario_total_tco2e
+              const name = r.title || r.input?.file_name || KIND[r.kind] || 'Run'
+              const total = isAnalysis ? r.summary?.total_tco2e : r.kind === 'optimization' ? r.summary?.tco2e_saved : r.summary?.scenario_total_tco2e
               return (
                 <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                   <div className="flex min-w-0 items-center gap-3">
-                    <span className="rounded-lg bg-brand-50 p-2 text-brand-600 dark:bg-slate-800 dark:text-brand-500">{isAnalysis ? <FileText size={18} /> : <FlaskConical size={18} />}</span>
+                    <span className="rounded-lg bg-brand-50 p-2 text-brand-600 dark:bg-slate-800 dark:text-brand-500">{isAnalysis ? <FileText size={18} /> : r.kind === 'optimization' ? <Target size={18} /> : <FlaskConical size={18} />}</span>
                     <div className="min-w-0">
                       <div className="truncate font-medium text-slate-900 dark:text-white">{name}</div>
                       <div className="muted text-xs">
-                        {isAnalysis ? 'Analysis' : 'Scenario'} · {when(r.created_at)}
-                        {total != null && <> · {fmt(total, 2)} tCO₂e{!isAnalysis && r.summary?.saved_pct != null && <> ({fmt(r.summary.saved_pct, 1)}% saved)</>}</>}
+                        {KIND[r.kind] || 'Run'} · {when(r.created_at)}
+                        {total != null && <> · {fmt(total, 2)} tCO₂e{r.kind === 'optimization' ? ` saved per year (${fmt(r.summary?.pct_of_baseline, 1)}%)` : !isAnalysis && r.summary?.saved_pct != null ? ` (${fmt(r.summary.saved_pct, 1)}% saved)` : ''}</>}
                         {isAnalysis && r.summary?.period_start && <> · {r.summary.period_start} to {r.summary.period_end}</>}
                       </div>
                     </div>

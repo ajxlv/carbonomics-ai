@@ -3,6 +3,7 @@ import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContai
 import { AlertTriangle, Check, FileUp, Loader2 } from 'lucide-react'
 import { Badge, COLORS, Callout, Card, Kpi, MODEL_LABEL, fmt, shortDate, useChartTheme } from '../ui.jsx'
 import { api } from '../api.js'
+import OptimizeCard from './OptimizeCard.jsx'
 
 const MODELS = ['naive_last_week', 'train_mean', 'random_forest', 'xgboost']
 const TARGET_LABEL = { electricity_kwh: 'Electricity (kWh)', diesel_litres: 'Generator diesel (L)' }
@@ -144,6 +145,7 @@ function Results({ r }) {
       </Card>
 
       {hasPeriods && <Scenario r={r} />}
+      {hasPeriods && <OptimizeCard r={r} />}
       {forecast?.targets && Object.values(forecast.targets).every((b) => b.backtest) && <Forecast forecast={forecast} t={t} />}
       <p className="muted text-xs">{r.disclaimer}</p>
     </div>
