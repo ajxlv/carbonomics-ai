@@ -1,0 +1,34 @@
+{
+  "responses_total": 918,
+  "responses_used": 868,
+  "excluded": {
+    "duplicate name (kept first)": 29,
+    "distance missing or not a number": 12,
+    "distance above 60 km": 9
+  },
+  "sample_tco2e": 90.302,
+  "population": 4873,
+  "scale": 5.614,
+  "estimated_tco2e_per_year": 506.96,
+  "sensitivity_tco2e": {
+    "Engineering (Master Data)": 577.08,
+    "All students (Master Data)": 898.13
+  },
+  "master_data_version_b_tco2e": 992.35,
+  "electric_two_wheeler_rows": 45,
+  "carpool_yes": 217,
+  "factors_kg_per_km": {
+    "Two-wheeler": 0.03743,
+    "Bus": 0.015161,
+    "Auto / Cab": 0.11779,
+    "Car": 0.17221,
+    "Bicycle": 0.0,
+    "Walking": 0.0
+  },
+  "weeks_per_year": 41,
+  "days_midpoints": {
+    "1–2 days": 1.5,
+    "3–4 days": 3.5,
+    "5–6 days": 5.5
+  }
+}
