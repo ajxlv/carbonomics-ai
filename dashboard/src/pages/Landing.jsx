@@ -63,14 +63,84 @@ function ProductMock() {
   )
 }
 
-function Feature({ icon: Icon, kicker, title, text, flip }) {
+// Decorative pictures for the feature cards. Shapes only: no real or invented numbers.
+function Visual({ kind }) {
+  const frame = 'relative min-h-56 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-teal-900/50 via-slate-900 to-black p-5'
+  const glow = <div className="anim-drift pointer-events-none absolute -left-6 top-4 h-32 w-32 rounded-full bg-teal-400/20 blur-3xl" />
+  if (kind === 'accounting') {
+    const rows = [['Electricity', 'Scope 2'], ['Generator diesel', 'Scope 1']]
+    return (
+      <div className={frame} aria-hidden="true">{glow}
+        <div className="relative flex h-full flex-col justify-center gap-2.5">
+          {rows.map(([a, b], i) => (
+            <div key={a} className="reveal-row rounded-xl border border-white/10 bg-black/40 px-3 py-2.5" style={{ animationDelay: `${i * 150}ms` }}>
+              <div className="flex items-center justify-between text-[11px] text-white/50"><span>{a}</span><span className="text-teal-300/80">{b}</span></div>
+              <div className="mt-2 flex items-center gap-1.5 text-xs">
+                <span className="rounded-md bg-white/10 px-2 py-1 text-white/80">activity</span><span className="text-white/40">×</span>
+                <span className="rounded-md bg-teal-400/15 px-2 py-1 text-teal-200">factor</span><span className="text-white/40">=</span>
+                <span className="rounded-md bg-emerald-400/20 px-2 py-1 text-emerald-200">emission</span>
+              </div>
+            </div>
+          ))}
+          <div className="flex gap-1.5 text-[10px] text-white/45">{['source', 'version', 'unit'].map((t) => <span key={t} className="rounded-full border border-white/15 px-2 py-0.5">{t}</span>)}</div>
+        </div>
+      </div>
+    )
+  }
+  if (kind === 'forecast') {
+    return (
+      <div className={frame} aria-hidden="true">{glow}
+        <svg viewBox="0 0 320 160" className="relative h-full w-full">
+          <defs><linearGradient id="fa" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#5eead4" stopOpacity=".35" /><stop offset="1" stopColor="#5eead4" stopOpacity="0" /></linearGradient></defs>
+          {[40, 80, 120].map((y) => <line key={y} x1="0" x2="320" y1={y} y2={y} stroke="#fff" strokeOpacity=".07" />)}
+          <path d="M0 110 L30 92 L60 100 L90 70 L120 84 L150 60 L180 66 L180 160 L0 160Z" fill="url(#fa)" />
+          <path d="M0 110 L30 92 L60 100 L90 70 L120 84 L150 60 L180 66" fill="none" stroke="#5eead4" strokeWidth="2.5" strokeLinejoin="round" />
+          <path d="M180 66 L215 50 L250 58 L285 38 L320 46 L320 86 L285 80 L250 92 L215 88 L180 78Z" fill="#5eead4" fillOpacity=".12" />
+          <path d="M180 66 L215 69 L250 75 L285 59 L320 66" fill="none" stroke="#5eead4" strokeWidth="2.5" strokeDasharray="5 5" className="line-draw" />
+          <path d="M180 66 L215 66 L250 66 L285 66 L320 66" fill="none" stroke="#fff" strokeOpacity=".4" strokeWidth="1.5" strokeDasharray="2 5" />
+          <line x1="180" x2="180" y1="14" y2="150" stroke="#fff" strokeOpacity=".25" strokeDasharray="3 4" />
+          <text x="188" y="24" fontSize="9" fill="#fff" fillOpacity=".5">forecast</text>
+          <text x="188" y="104" fontSize="9" fill="#fff" fillOpacity=".4">simple last-week guess</text>
+        </svg>
+      </div>
+    )
+  }
+  if (kind === 'change') {
+    return (
+      <div className={frame} aria-hidden="true">{glow}
+        <div className="relative flex h-full flex-col justify-center gap-4">
+          <div className="text-[11px] uppercase tracking-widest text-white/40">Change between two years</div>
+          <div className="relative h-24">
+            <div className="absolute left-1/2 top-0 h-full w-px bg-white/20" />
+            <div className="absolute left-1/2 top-2 flex h-8 items-center rounded-r-lg bg-gradient-to-r from-amber-500/70 to-amber-300/80 pl-2 text-[11px] font-medium text-black bar-grow-x" style={{ width: '38%' }}>Your use</div>
+            <div className="absolute right-1/2 top-14 flex h-8 items-center justify-end rounded-l-lg bg-gradient-to-l from-teal-600/80 to-teal-300/80 pr-2 text-[11px] font-medium text-black bar-grow-x-l" style={{ width: '30%' }}>Grid</div>
+          </div>
+          <div className="flex justify-between text-[10px] text-white/45"><span>← lowers emissions</span><span>raises emissions →</span></div>
+        </div>
+      </div>
+    )
+  }
+  const parts = [['Solar', 34, 'bg-amber-300/80'], ['Lighting', 22, 'bg-teal-300/80'], ['Pumps', 18, 'bg-emerald-300/80']]
+  return (
+    <div className={frame} aria-hidden="true">{glow}
+      <div className="relative flex h-full flex-col justify-center gap-4">
+        <div className="flex justify-between text-[11px] text-white/50"><span>Your budget</span><span className="text-teal-300/80">best mix</span></div>
+        <div className="flex h-5 overflow-hidden rounded-full bg-white/10">
+          {parts.map(([n, w, c], i) => <div key={n} className={`${c} bar-grow-x h-full border-r border-black/40`} style={{ width: `${w}%`, animationDelay: `${i * 200}ms` }} />)}
+        </div>
+        <div className="space-y-1.5">
+          {parts.map(([n, , c]) => <div key={n} className="flex items-center gap-2 text-xs text-white/70"><span className={`h-2.5 w-2.5 rounded-sm ${c}`} />{n}<span className="ml-auto text-teal-300/80">picked</span></div>)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Feature({ icon: Icon, kind, kicker, title, text, flip }) {
   return (
     <Reveal>
       <div className={`grid items-center gap-8 rounded-3xl border border-white/10 bg-white/[.03] p-6 sm:p-8 md:grid-cols-2 ${flip ? 'md:[&>*:first-child]:order-2' : ''}`}>
-        <div className="relative flex h-56 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-teal-900/50 via-slate-900 to-black">
-          <div className="anim-drift absolute -left-6 top-4 h-32 w-32 rounded-full bg-teal-400/20 blur-3xl" />
-          <Icon size={56} strokeWidth={1.1} className="anim-float relative text-teal-200" />
-        </div>
+        <Visual kind={kind} />
         <div>
           <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-teal-300/80"><Icon size={14} /> {kicker}</div>
           <h3 className="font-display mt-3 text-3xl text-white">{title}</h3>
@@ -148,10 +218,10 @@ export default function Landing() {
           <p className="mx-auto mt-3 max-w-xl text-white/50">From a raw spreadsheet to a plan you can hand over, in one place.</p>
         </Reveal>
         <div className="mt-12 space-y-6">
-          <Feature icon={ListChecks} kicker="Accounting" title="Every number has a source" text={FEATURES[0].text} />
-          <Feature icon={BarChart3} kicker="Forecasting" title="Forecasts that earn their place" text={FEATURES[1].text} flip />
-          <Feature icon={Scale} kicker="Why it changed" title="Your doing, or the grid's?" text="When emissions change between two years, we split the change into what you did (energy use) and what the grid did (a cleaner or dirtier factor), using documented CEA values." />
-          <Feature icon={Target} kicker="Optimization" title="The best plan for your budget" text={FEATURES[3].text} flip />
+          <Feature icon={ListChecks} kind="accounting" kicker="Accounting" title="Every number has a source" text={FEATURES[0].text} />
+          <Feature icon={BarChart3} kind="forecast" kicker="Forecasting" title="Forecasts that earn their place" text={FEATURES[1].text} flip />
+          <Feature icon={Scale} kind="change" kicker="Why it changed" title="Your doing, or the grid's?" text="When emissions change between two years, we split the change into what you did (energy use) and what the grid did (a cleaner or dirtier factor), using documented CEA values." />
+          <Feature icon={Target} kind="optim" kicker="Optimization" title="The best plan for your budget" text={FEATURES[3].text} flip />
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           {[FEATURES[2], FEATURES[4], FEATURES[5]].map(({ icon: Icon, title, text }, i) => (
