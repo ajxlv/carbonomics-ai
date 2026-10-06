@@ -281,6 +281,22 @@ The weekly dataset is SYNTHETIC: only the monthly totals are real. See
 
 ---
 
+## Upload API (CSV in, carbon and forecast out)
+
+A small FastAPI service analyses a user-uploaded CSV in memory (nothing is stored):
+
+```bash
+pip install -r requirements.txt
+uvicorn api.main:app --reload --port 8000     # from the repository root
+curl -F file=@data/real/real_monthly_2025.csv http://localhost:8000/api/analyze
+```
+
+Accepted: daily, weekly or monthly rows with a date column and electricity (kWh) and/or generator diesel (litres).
+It validates the file (no imputation), computes emission = activity x factor from the factor registry, and for
+weekly or daily data with at least 26 weeks it forecasts activity. A model is used only if it beats the naive
+last-week baseline by 5% or more on a time-ordered test split; otherwise the naive forecast is returned and the
+response says so. Monthly files get accounting only. Set `ALLOWED_ORIGINS` (comma-separated) for CORS.
+
 ## Future Scope
 
 Future versions of Carbonomics-AI will include:
