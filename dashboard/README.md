@@ -3,11 +3,16 @@
 Static React site (Vite, Tailwind, Recharts). It only reads `public/data/dashboard.json`, which the
 Python pipeline writes (`python scripts/run_pipeline.py`, step 7). No server or Python is needed to host it.
 
-Pages: Overview, Trends, Forecast, **Simulation** (what-if accounting, no ML), Emission factors, Data & QA.
+Pages: Overview, Trends, Forecast, **Simulation** (what-if accounting, no ML), **Upload your data**, Emission factors, Data & QA.
 Figures from the Energy team's monthly log are labelled REAL DATA; weekly values are labelled SYNTHETIC.
 The Simulation page runs the accounting formula (emission = activity × factor) in the browser — same as `src/simulation.py`.
 Run `node scripts/parity_check.js` (from repo root) to verify JS and Python results agree to 2 decimal places.
 
+
+The **Upload your data** page is the one exception to "no server": it sends the CSV to the Python API
+(`uvicorn api.main:app --port 8000` from the repo root; see the main README). Point it at a hosted API with
+`VITE_API_URL` at build time, or type the address in the page. The API must list the site in `ALLOWED_ORIGINS`.
+The rest of the dashboard still works as a static site without it.
 
 ## Run locally
 ```
