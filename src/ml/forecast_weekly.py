@@ -59,6 +59,15 @@ def time_split(n_rows: int, test_fraction: float = TEST_FRACTION):
     return k
 
 
+def new_model(name: str):
+    """Fresh, unfitted model with the project's fixed hyper-parameters."""
+    if name == "random_forest":
+        return RandomForestRegressor(n_estimators=200, random_state=SEED)
+    if name == "xgboost":
+        return XGBRegressor(n_estimators=200, learning_rate=0.05, max_depth=3, random_state=SEED)
+    raise ValueError(f"unknown model: {name}")
+
+
 def metrics(y_true, y_pred) -> dict:
     return {
         "MAE": float(mean_absolute_error(y_true, y_pred)),
@@ -81,11 +90,11 @@ def run_target(df: pd.DataFrame, target: str, models_out: dict = None):
     preds["naive_last_week"] = test["lag_1"].to_numpy()
     preds["train_mean"] = np.full(len(test), train[target].mean())
 
-    rf = RandomForestRegressor(n_estimators=200, random_state=SEED)
+    rf = new_model("random_forest")
     rf.fit(train[cols], train[target])
     preds["random_forest"] = rf.predict(test[cols])
 
-    xgb = XGBRegressor(n_estimators=200, learning_rate=0.05, max_depth=3, random_state=SEED)
+    xgb = new_model("xgboost")
     xgb.fit(train[cols], train[target])
     preds["xgboost"] = xgb.predict(test[cols])
 
