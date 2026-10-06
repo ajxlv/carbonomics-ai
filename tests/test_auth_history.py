@@ -287,3 +287,18 @@ def test_report_is_a_pdf_for_logged_in_users_only_and_includes_the_plan(db):
     r2 = client.post("/api/report", headers=bearer(), json={k: v for k, v in body.items() if k not in ("budget_inr", "measures")})
     assert len(pypdf.PdfReader(io.BytesIO(r2.content)).pages) == 5
     assert db.requests == []                                       # nothing is stored for a report
+
+
+def test_allowed_origin_with_trailing_slash_still_matches(monkeypatch):
+    import importlib
+
+    import api.main as main_mod
+
+    monkeypatch.setenv("ALLOWED_ORIGINS", "https://site.example/")
+    try:
+        mod = importlib.reload(main_mod)
+        r = TestClient(mod.app).get("/api/health", headers={"Origin": "https://site.example"})
+        assert r.headers.get("access-control-allow-origin") == "https://site.example"
+    finally:
+        monkeypatch.delenv("ALLOWED_ORIGINS", raising=False)
+        importlib.reload(main_mod)
