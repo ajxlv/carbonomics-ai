@@ -32,3 +32,16 @@ body { @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text
   .anim-float, .anim-float-slow, .anim-drift, .bar-grow, .text-shine { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
 }
+
+/* App motion: pages and cards rise in, buttons press, progress shimmers. Switched off for reduced motion. */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes shimmer-move { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+.rise { animation: rise .55s cubic-bezier(.2, .8, .2, 1) backwards; animation-delay: var(--d, 0ms); }
+.page-in { animation: rise .45s cubic-bezier(.2, .8, .2, 1) backwards; }
+.shimmer { background: linear-gradient(90deg, #0f766e 0%, #5eead4 45%, #0f766e 90%); background-size: 200% 100%; animation: shimmer-move 1.4s linear infinite; }
+button:not(:disabled), a.btn { transition: transform .15s ease, box-shadow .2s ease, background-color .2s ease; }
+button:not(:disabled):active { transform: scale(.97); }
+.card { transition: box-shadow .25s ease, transform .25s ease, border-color .25s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .rise, .page-in, .shimmer { animation: none; opacity: 1; transform: none; }
+}

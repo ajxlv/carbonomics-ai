@@ -35,8 +35,8 @@ export default function Overview({ data }) {
                 <YAxis stroke={t.axis} tickLine={false} axisLine={false} unit=" t" />
                 <Tooltip contentStyle={t.tip} formatter={(v) => `${fmt(v, 2)} tCO₂e`} cursor={{ fill: 'rgba(148,163,184,0.12)' }} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-                <Bar isAnimationActive={false} dataKey="Electricity" stackId="a" fill={COLORS.electricity} radius={[0, 0, 0, 0]} />
-                <Bar isAnimationActive={false} dataKey="Generator diesel" stackId="a" fill={COLORS.diesel} radius={[6, 6, 0, 0]} />
+                <Bar animationDuration={900} dataKey="Electricity" stackId="a" fill={COLORS.electricity} radius={[0, 0, 0, 0]} />
+                <Bar animationDuration={900} dataKey="Generator diesel" stackId="a" fill={COLORS.diesel} radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -46,7 +46,7 @@ export default function Overview({ data }) {
           <div className="h-52">
             <ResponsiveContainer>
               <PieChart>
-                <Pie isAnimationActive={false} data={donut} dataKey="value" innerRadius={55} outerRadius={85} paddingAngle={2} stroke="none">
+                <Pie animationDuration={900} data={donut} dataKey="value" innerRadius={55} outerRadius={85} paddingAngle={2} stroke="none">
                   {donut.map((d) => <Cell key={d.name} fill={d.color} />)}
                 </Pie>
                 <Tooltip contentStyle={t.tip} formatter={(v) => `${fmt(v, 1)} tCO₂e`} />

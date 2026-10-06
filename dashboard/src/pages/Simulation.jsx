@@ -354,8 +354,8 @@ export default function Simulation({ data }) {
                     cursor={{ fill: 'rgba(148,163,184,0.1)' }}
                   />
                   <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-                  <Bar isAnimationActive={false} dataKey="base_total" name="Baseline" fill="#94a3b8" radius={[4, 4, 0, 0]} />
-                  <Bar isAnimationActive={false} dataKey="scen_total" name="Scenario" fill="#0f766e" radius={[4, 4, 0, 0]} />
+                  <Bar animationDuration={900} dataKey="base_total" name="Baseline" fill="#94a3b8" radius={[4, 4, 0, 0]} />
+                  <Bar animationDuration={900} dataKey="scen_total" name="Scenario" fill="#0f766e" radius={[4, 4, 0, 0]} />
                   {!isZero && <ReferenceLine y={0} stroke={t.axis} />}
                 </BarChart>
               </ResponsiveContainer>
@@ -380,8 +380,8 @@ export default function Simulation({ data }) {
                     cursor={{ fill: 'rgba(148,163,184,0.1)' }}
                   />
                   <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-                  <Bar isAnimationActive={false} dataKey="scen_scope2" name="Scope 2 (electricity)" fill="#0f766e" stackId="a" radius={[0, 0, 0, 0]} />
-                  <Bar isAnimationActive={false} dataKey="scen_scope1" name="Scope 1 (generator diesel)" fill="#d97706" stackId="a" radius={[4, 4, 0, 0]} />
+                  <Bar animationDuration={900} dataKey="scen_scope2" name="Scope 2 (electricity)" fill="#0f766e" stackId="a" radius={[0, 0, 0, 0]} />
+                  <Bar animationDuration={900} dataKey="scen_scope1" name="Scope 1 (generator diesel)" fill="#d97706" stackId="a" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

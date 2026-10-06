@@ -154,7 +154,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
             </div>
           </header>
 
-          <main className="mx-auto max-w-7xl px-4 py-6 sm:px-8">
+          <main key={page} className="page-in mx-auto max-w-7xl px-4 py-6 sm:px-8">
             {needsData && <div className="mb-5 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900 ring-1 ring-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-900"><b>Demo with FAKE data.</b> Every number on this page is random and made up for illustration. It is not from any real campus.</div>}
             {needsData && error && <div className="card text-sm text-rose-600">{error}</div>}
             {needsData && !error && !data && <div className="muted text-sm">Loading…</div>}

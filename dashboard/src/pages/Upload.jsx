@@ -5,6 +5,7 @@ import { Badge, COLORS, Callout, Card, Kpi, MODEL_LABEL, fmt, shortDate, useChar
 import { api } from '../api.js'
 import { useAuth } from '../auth.js'
 import OptimizeCard from './OptimizeCard.jsx'
+import TrainingProgress from './TrainingProgress.jsx'
 
 const MODELS = ['naive_last_week', 'train_mean', 'random_forest', 'xgboost', 'ridge']
 const TARGET_LABEL = { electricity_kwh: 'Electricity (kWh)', diesel_litres: 'Generator diesel (L)' }
@@ -25,6 +26,7 @@ export default function Upload({ analysis, onResult }) {
   const [file, setFile] = useState(null)
   const [opts, setOpts] = useState({ title: '', date_col: '', electricity_col: '', diesel_col: '', future_weeks: 8 })
   const [busy, setBusy] = useState(false)
+  const [drag, setDrag] = useState(false)
   const [error, setError] = useState('')
   const run = async () => {
     setBusy(true); setError('')
@@ -43,8 +45,9 @@ export default function Upload({ analysis, onResult }) {
 
       <Card title="1. Choose a file" badge={<YourData />}>
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-slate-300 p-4 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/50">
-            <FileUp size={22} className="shrink-0 text-brand-600" />
+          <label onDragOver={(e) => { e.preventDefault(); setDrag(true) }} onDragLeave={() => setDrag(false)} onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files?.[0]; if (f) { setFile(f); setError('') } }}
+            className={`group flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed p-4 text-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-500 hover:bg-brand-50/60 dark:hover:bg-slate-800/50 ${drag ? 'scale-[1.02] border-brand-500 bg-brand-50 dark:bg-slate-800' : 'border-slate-300 dark:border-slate-700'}`}>
+            <FileUp size={22} className="shrink-0 text-brand-600 transition-transform duration-300 group-hover:-translate-y-1" />
             <span className="min-w-0 truncate">{file ? file.name : 'Click to choose a .csv or .xlsx file (max 5 MB)'}</span>
             <input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" onChange={(e) => { setFile(e.target.files?.[0] ?? null); setError('') }} />
           </label>
@@ -72,7 +75,8 @@ export default function Upload({ analysis, onResult }) {
       </Card>
 
       {error && <Callout title="Could not analyse this file"><div className="flex gap-2"><AlertTriangle size={18} className="mt-0.5 shrink-0" /><span>{error}</span></div></Callout>}
-      {analysis && <Done a={analysis} />}
+      <TrainingProgress busy={busy} analysis={analysis} />
+      {analysis && !busy && <Done a={analysis} />}
     </div>
   )
 }
@@ -90,7 +94,7 @@ const PAGE_LINKS = [['overview', 'Overview'], ['trends', 'Trends'], ['forecast',
 function Done({ a }) {
   const { input } = a.result
   return (
-    <Card title="Your file is analysed" badge={<YourData />}>
+    <Card title="Open the results" badge={<YourData />}>
       <SavedNote run={a.result.run} />
       <p className="muted mt-2 text-sm">
         {a.fileName ? `${a.fileName}: ` : ''}{fmt(input.rows)} {input.granularity_analysed} rows, {input.period_start} to {input.period_end}.
@@ -192,8 +196,8 @@ export function MyTrends({ a }) {
             <YAxis stroke={t.axis} tickLine={false} axisLine={false} tickFormatter={(v) => fmt(v)} width={64} />
             <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v, n) => [`${fmt(v, 1)} kg CO₂e`, n]} />
             <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-            <Bar isAnimationActive={false} dataKey="Scope 2 (electricity)" stackId="e" fill={COLORS.electricity} />
-            <Bar isAnimationActive={false} dataKey="Scope 1 (diesel)" stackId="e" fill={COLORS.diesel} />
+            <Bar animationDuration={900} dataKey="Scope 2 (electricity)" stackId="e" fill={COLORS.electricity} />
+            <Bar animationDuration={900} dataKey="Scope 1 (diesel)" stackId="e" fill={COLORS.diesel} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -253,11 +257,11 @@ function Forecast({ forecast, t }) {
                   <YAxis stroke={t.axis} tickLine={false} axisLine={false} tickFormatter={(v) => fmt(v)} width={64} domain={['auto', 'auto']} />
                   <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v, n) => [`${fmt(v, 1)} ${unit}`, n]} />
                   <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-                  <Line isAnimationActive={false} dataKey="actual" name="Actual" stroke={t.actual} strokeWidth={3} dot={{ r: 3 }} />
+                  <Line animationDuration={900} dataKey="actual" name="Actual" stroke={t.actual} strokeWidth={3} dot={{ r: 3 }} />
                   {MODELS.map((m) => (
-                    <Line isAnimationActive={false} key={m} dataKey={m} name={MODEL_LABEL[m]} stroke={COLORS.models[m]} strokeWidth={1.4} dot={false} strokeDasharray={m === 'train_mean' ? '4 4' : undefined} />
+                    <Line animationDuration={900} key={m} dataKey={m} name={MODEL_LABEL[m]} stroke={COLORS.models[m]} strokeWidth={1.4} dot={false} strokeDasharray={m === 'train_mean' ? '4 4' : undefined} />
                   ))}
-                  <Line isAnimationActive={false} dataKey="forecast" name="Forecast" stroke={COLORS.electricity} strokeWidth={3} strokeDasharray="6 4" dot={{ r: 3 }} />
+                  <Line animationDuration={900} dataKey="forecast" name="Forecast" stroke={COLORS.electricity} strokeWidth={3} strokeDasharray="6 4" dot={{ r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -424,8 +428,8 @@ function Scenario({ r }) {
                 <YAxis stroke={t.axis} tickLine={false} axisLine={false} tickFormatter={(v) => fmt(v, 1)} width={64} />
                 <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v, n) => [`${fmt(v, 2)} tCO₂e`, n]} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-                <Bar isAnimationActive={false} dataKey="Baseline" fill="#64748b" />
-                <Bar isAnimationActive={false} dataKey="Scenario" fill={COLORS.electricity} />
+                <Bar animationDuration={900} dataKey="Baseline" fill="#64748b" />
+                <Bar animationDuration={900} dataKey="Scenario" fill={COLORS.electricity} />
               </BarChart>
             </ResponsiveContainer>
           </div>

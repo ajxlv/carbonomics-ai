@@ -27,7 +27,7 @@ export default function Trends({ data }) {
               <BarChart data={d} margin={{ left: -10 }}>
                 <CartesianGrid stroke={t.grid} vertical={false} />{xAxis}{yAxis}
                 <Tooltip contentStyle={t.tip} formatter={(v) => `${fmt(v)} kWh`} cursor={{ fill: 'rgba(148,163,184,0.12)' }} />
-                <Bar isAnimationActive={false} dataKey="electricity_kwh" name="Electricity" fill={COLORS.electricity} radius={[6, 6, 0, 0]} />
+                <Bar animationDuration={900} dataKey="electricity_kwh" name="Electricity" fill={COLORS.electricity} radius={[6, 6, 0, 0]} />
               </BarChart>
             )}
           </Chart>
@@ -38,7 +38,7 @@ export default function Trends({ data }) {
               <BarChart data={d} margin={{ left: -10 }}>
                 <CartesianGrid stroke={t.grid} vertical={false} />{xAxis}{yAxis}
                 <Tooltip contentStyle={t.tip} formatter={(v) => `${fmt(v)} L`} cursor={{ fill: 'rgba(148,163,184,0.12)' }} />
-                <Bar isAnimationActive={false} dataKey="dg_diesel_litres" name="Diesel" fill={COLORS.diesel} radius={[6, 6, 0, 0]} />
+                <Bar animationDuration={900} dataKey="dg_diesel_litres" name="Diesel" fill={COLORS.diesel} radius={[6, 6, 0, 0]} />
               </BarChart>
             )}
           </Chart>
@@ -52,7 +52,7 @@ export default function Trends({ data }) {
               <BarChart data={d} margin={{ left: -10 }}>
                 <CartesianGrid stroke={t.grid} vertical={false} />{xAxis}{yAxis}
                 <Tooltip contentStyle={t.tip} formatter={(v, n, item) => [`${fmt(v)} kWh (avoids ${fmt(item.payload.avoided_tco2e, 2)} tCO₂e)`, 'Solar']} cursor={{ fill: 'rgba(148,163,184,0.12)' }} />
-                <Bar isAnimationActive={false} dataKey="solar_kwh" name="Solar" fill={COLORS.solar} radius={[6, 6, 0, 0]} />
+                <Bar animationDuration={900} dataKey="solar_kwh" name="Solar" fill={COLORS.solar} radius={[6, 6, 0, 0]} />
               </BarChart>
             )}
           </Chart>
@@ -71,7 +71,7 @@ export default function Trends({ data }) {
                 <defs><linearGradient id="ge" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={COLORS.electricity} stopOpacity={0.35} /><stop offset="100%" stopColor={COLORS.electricity} stopOpacity={0} /></linearGradient></defs>
                 <CartesianGrid stroke={t.grid} vertical={false} />{xAxis}{yAxis}
                 <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v) => `${fmt(v)} kWh`} />
-                <Area isAnimationActive={false} type="monotone" dataKey="electricity_kwh" name="Electricity" stroke={COLORS.electricity} strokeWidth={2} fill="url(#ge)" />
+                <Area animationDuration={900} type="monotone" dataKey="electricity_kwh" name="Electricity" stroke={COLORS.electricity} strokeWidth={2} fill="url(#ge)" />
               </AreaChart>
             )}
           </Chart>
@@ -82,7 +82,7 @@ export default function Trends({ data }) {
               <LineChart data={d} margin={{ left: -10 }}>
                 <CartesianGrid stroke={t.grid} vertical={false} />{xAxis}{yAxis}
                 <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v) => `${fmt(v, 1)} L`} />
-                <Line isAnimationActive={false} type="monotone" dataKey="diesel_litres" name="Diesel" stroke={COLORS.diesel} strokeWidth={2} dot={false} />
+                <Line animationDuration={900} type="monotone" dataKey="diesel_litres" name="Diesel" stroke={COLORS.diesel} strokeWidth={2} dot={false} />
               </LineChart>
             )}
           </Chart>
@@ -96,8 +96,8 @@ export default function Trends({ data }) {
               <CartesianGrid stroke={t.grid} vertical={false} />{xAxis}{yAxis}
               <Tooltip contentStyle={t.tip} labelFormatter={shortDate} formatter={(v) => `${fmt(v, 2)} tCO₂e`} />
               <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-              <Area isAnimationActive={false} type="monotone" stackId="1" dataKey="scope2_t" name="Scope 2 electricity" stroke={COLORS.electricity} fill={COLORS.electricity} fillOpacity={0.35} />
-              <Area isAnimationActive={false} type="monotone" stackId="1" dataKey="scope1_t" name="Scope 1 generator diesel" stroke={COLORS.diesel} fill={COLORS.diesel} fillOpacity={0.5} />
+              <Area animationDuration={900} type="monotone" stackId="1" dataKey="scope2_t" name="Scope 2 electricity" stroke={COLORS.electricity} fill={COLORS.electricity} fillOpacity={0.35} />
+              <Area animationDuration={900} type="monotone" stackId="1" dataKey="scope1_t" name="Scope 1 generator diesel" stroke={COLORS.diesel} fill={COLORS.diesel} fillOpacity={0.5} />
             </AreaChart>
           )}
         </Chart>
