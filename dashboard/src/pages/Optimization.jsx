@@ -675,7 +675,7 @@ export default function Optimization({ data }) {
               <ul className="mt-1 list-disc pl-4 space-y-1 text-xs leading-relaxed">
                 <li>Savings modelled as static annual averages — seasonal variation ignored.</li>
                 <li>Additive electricity savings are capped at the baseline total and per end-use (AC = 697,296 kWh, ESTIMATE from sheet 4_AC_Inventory).</li>
-                <li>Lighting end-use is TBD — no lighting inventory in Master Data. LED measures are excluded until data is provided.</li>
+                <li>Lighting end-use is TBD — no lighting inventory in this demo. LED measures are excluded until data is provided.</li>
                 <li>Cost and saving inputs must come from the owner (vendor quote / audit); nothing is invented.</li>
                 <li>MILP assumes linear scaling per unit. Non-linearities need additional modelling.</li>
                 <li>Payback not computed — electricity tariff and diesel price not yet provided.</li>

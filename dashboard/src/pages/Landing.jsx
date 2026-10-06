@@ -47,8 +47,8 @@ export default function Landing() {
           <a href="#login" className={outline}><LogIn size={16} /> Login</a>
         </div>
         <p className="muted mt-4 max-w-2xl text-xs leading-relaxed">
-          The demo is open to everyone. It shows KKWIEER's 2025 monthly electricity and diesel records and a weekly series that is
-          synthetic (generated to match those monthly totals) and labelled as such throughout. Uploading your own data, saving
+          The demo is open to everyone. It uses made-up random numbers for an imaginary campus, labelled FAKE throughout; no real
+          campus data is shown. Uploading your own data, saving
           history and everything else needs a login; accounts are created by the team.
         </p>
       </section>

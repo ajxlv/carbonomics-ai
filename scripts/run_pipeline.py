@@ -10,7 +10,7 @@ Master pipeline for Carbonomics-AI (weekly flow).
    derive the weekly emission forecast = predicted activity x factor
 5. Plots and QA report
 6. PostgreSQL upsert (skipped if credentials are not configured)
-7. Export dashboard/public/data/dashboard.json for the web dashboard
+7. Export outputs/dashboard_real.json (real data; the public demo uses fake data from make_demo_data.py)
 
 Usage (from anywhere):
     python scripts/run_pipeline.py

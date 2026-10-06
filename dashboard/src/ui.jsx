@@ -48,8 +48,8 @@ export function Badge({ tone = 'slate', children }) {
   return <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium ${tones[tone]}`}>{children}</span>
 }
 
-export const Synthetic = () => <Badge tone="amber">SYNTHETIC</Badge>
-export const Real = () => <Badge tone="green">REAL DATA</Badge>
+export const Synthetic = () => <Badge tone="amber">FAKE DATA</Badge>
+export const Real = () => <Badge tone="amber">FAKE DATA</Badge>
 
 export function Card({ title, subtitle, badge, children, className = '' }) {
   return (

@@ -21,7 +21,7 @@ export default function Trends({ data }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card title="Electricity purchased, monthly" subtitle="kWh, Energy team log" badge={<Real />}>
+        <Card title="Electricity purchased, monthly" subtitle="kWh, fake demo data" badge={<Real />}>
           <Chart data={monthly} xKey="label" xFmt={(v) => v}>
             {({ t, xAxis, yAxis, data: d }) => (
               <BarChart data={d} margin={{ left: -10 }}>
@@ -32,7 +32,7 @@ export default function Trends({ data }) {
             )}
           </Chart>
         </Card>
-        <Card title="Generator diesel, monthly" subtitle="Litres, Energy team log" badge={<Real />}>
+        <Card title="Generator diesel, monthly" subtitle="Litres, fake demo data" badge={<Real />}>
           <Chart data={monthly} xKey="label" xFmt={(v) => v}>
             {({ t, xAxis, yAxis, data: d }) => (
               <BarChart data={d} margin={{ left: -10 }}>
@@ -59,8 +59,8 @@ export default function Trends({ data }) {
         </Card>
       )}
 
-      <Callout title="Weekly charts below are SYNTHETIC">
-        Only the monthly totals are real. The weekly values spread each month over its days using assumed weekday and noise patterns, then sum to 52 full weeks from 1 Jan 2025 (31 Dec is left out).
+      <Callout title="Weekly charts below are generated from the fake monthly numbers">
+        The weekly values spread each month over its days using assumed weekday and noise patterns, then sum to 52 full weeks from 1 Jan 2025 (31 Dec is left out).
       </Callout>
 
       <div className="grid gap-6 lg:grid-cols-2">
