@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { BarChart3, FlaskConical, Gauge, History as HistoryIcon, Home, LineChart as LineIcon, LogOut, Lock, Menu, Moon, Sun, Target, Upload as UploadIcon, X } from 'lucide-react'
+import { BarChart3, FlaskConical, Scale, Gauge, History as HistoryIcon, Home, LineChart as LineIcon, LogOut, Lock, Menu, Moon, Sun, Target, Upload as UploadIcon, X } from 'lucide-react'
 import { Synthetic, ThemeCtx } from './ui.jsx'
 import Overview from './pages/Overview.jsx'
 import Trends from './pages/Trends.jsx'
 import Forecast from './pages/Forecast.jsx'
 import Simulation from './pages/Simulation.jsx'
 import Optimization from './pages/Optimization.jsx'
+import FactorChange from './pages/FactorChange.jsx'
 import Upload, { MyForecast, MyOptimization, MyOverview, MySimulation, MyTrends } from './pages/Upload.jsx'
 import HistoryPage from './pages/History.jsx'
 import Landing from './pages/Landing.jsx'
@@ -19,6 +20,7 @@ const PAGES = [
   { id: 'forecast', label: 'Forecast', icon: BarChart3, C: Forecast, demo: true },
   { id: 'simulation', label: 'Simulation', icon: FlaskConical, C: Simulation, demo: true },
   { id: 'optimization', label: 'Optimization', icon: Target, C: Optimization, demo: true },
+  { id: 'factorchange', label: 'Why it changed', icon: Scale, C: Overview, demo: true, mineOnly: true },
   { id: 'upload', label: 'Upload your data', icon: UploadIcon, C: Upload, locked: true, needsData: false },
   { id: 'history', label: 'History', icon: HistoryIcon, C: HistoryPage, locked: true, needsData: false },
 ]
@@ -58,6 +60,7 @@ export default function App() {
   const isDash = PAGES.some((p) => p.id === route)
   const locked = PAGES.find((p) => p.id === route)?.locked
 
+  useEffect(() => { if (PAGES.find((p) => p.id === route)?.mineOnly && !session) goto(loggedIn ? 'upload' : `login?next=${route}`) }, [route, session, loggedIn])
   useEffect(() => { if (locked && !loggedIn) goto(`login?next=${route}`) }, [locked, loggedIn, route])
   useEffect(() => { if (route === 'login' && session) goto(next) }, [route, session, next])
 
@@ -93,13 +96,13 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
     showResult({ ...run.result, run: { saved: true, id: run.id, error: null, title: run.title, opened: true } }, run.title || '')
     go('overview')
   }
-  const MINE = { overview: MyOverview, trends: MyTrends, forecast: MyForecast, simulation: MySimulation, optimization: MyOptimization }
+  const MINE = { overview: MyOverview, trends: MyTrends, forecast: MyForecast, simulation: MySimulation, optimization: MyOptimization, factorchange: FactorChange }
   const MyPage = mine ? MINE[current.id] : null
 
   // Logged-in users get the result pages only once they have a file analysed; visitors get the fake-data demo.
   const visiblePages = mine
     ? [PAGES.find((p) => p.id === 'upload'), ...(analysis ? PAGES.filter((p) => p.demo) : []), PAGES.find((p) => p.id === 'history')]
-    : PAGES
+    : PAGES.filter((p) => !p.mineOnly)
   const nav = (
     <nav className="flex flex-col gap-1">
       {visiblePages.map(({ id, label, icon: Icon, locked }) => (

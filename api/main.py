@@ -3,6 +3,8 @@ Carbonomics-AI web API.
 
 POST /api/analyze  - upload a CSV, get validation, carbon accounting and a forecast as JSON.
 POST /api/simulate - what-if scenario on the periods returned by /api/analyze.
+POST /api/factor-change - why emissions changed between two years: your energy use vs the grid factor.
+GET  /api/grid-factors - the documented grid-factor versions the user can pick from.
 POST /api/optimize - best measures within a budget, from the user's own cost inputs.
 POST /api/report   - the PDF report, rebuilt on the server from the periods (and plan inputs) of the user's analysis.
 GET  /api/runs, GET /api/runs/{id}, DELETE /api/runs/{id} - the logged-in user's saved history.
@@ -29,6 +31,8 @@ from pydantic import BaseModel, Field
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(os.path.join(ROOT, "src"))
 
+import emission_factors  # noqa: E402
+import factor_change  # noqa: E402
 import upload_analysis  # noqa: E402
 import upload_optimization  # noqa: E402
 from api import history  # noqa: E402
@@ -122,6 +126,33 @@ def simulate(req: SimulateRequest, user: User = Depends(current_user)) -> dict:
         result["run"] = _save(user, "simulation", req.title, {**result["inputs"], "periods": len(req.periods)},
                               result, result["totals"], parent=req.parent_run_id)
     return result
+
+
+class FactorChangeRequest(BaseModel):
+    periods: List[Period] = Field(max_length=upload_analysis.MAX_SIM_PERIODS)
+    year_a: Optional[int] = None
+    year_b: Optional[int] = None
+    fy_a: Optional[str] = Field(None, max_length=10)
+    fy_b: Optional[str] = Field(None, max_length=10)
+
+
+@app.get("/api/grid-factors")
+def grid_factors(user: User = Depends(current_user)) -> list:
+    return emission_factors.grid_factor_versions()
+
+
+@app.post("/api/factor-change")
+def factor_change_route(req: FactorChangeRequest, user: User = Depends(current_user)) -> dict:
+    """Split the emission change between two years into an energy-use part and a grid-factor part."""
+    periods = [p.model_dump() for p in req.periods]
+    try:
+        years = factor_change.years_available(periods)
+        if None in (req.year_a, req.year_b, req.fy_a, req.fy_b):
+            return {"years": years, "versions": emission_factors.grid_factor_versions()}
+        res = factor_change.compare(periods, req.year_a, req.year_b, req.fy_a, req.fy_b)
+    except factor_change.FactorChangeError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return {**res, "years": years}
 
 
 class MeasureIn(BaseModel):
