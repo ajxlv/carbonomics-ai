@@ -3,9 +3,11 @@ Carbonomics-AI web API.
 
 POST /api/analyze  - upload a CSV, get validation, carbon accounting and a forecast as JSON.
 POST /api/simulate - what-if scenario on the periods returned by /api/analyze.
-GET  /api/health   - liveness check.
+GET  /api/runs, GET /api/runs/{id}, DELETE /api/runs/{id} - the logged-in user's saved history.
+GET  /api/health   - liveness check (no login needed).
 
-Uploaded files are processed in memory and are never stored.
+Every /api route except health needs a login (Supabase token). The uploaded CSV itself is never stored;
+only the file name, the aggregated periods and the results are saved to the user's history.
 
 Run locally (from the repository root):
     uvicorn api.main:app --reload --port 8000
@@ -16,8 +18,9 @@ CORS: set ALLOWED_ORIGINS to a comma-separated list (default: the Vite dev serve
 import os
 import sys
 from typing import List, Optional
+from uuid import UUID
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -25,6 +28,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(os.path.join(ROOT, "src"))
 
 import upload_analysis  # noqa: E402
+from api import history  # noqa: E402
+from api.auth import User, current_user  # noqa: E402
 
 app = FastAPI(title="Carbonomics-AI API", version="0.1.0")
 
@@ -32,7 +37,7 @@ _origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in _origins.split(",") if o.strip()],
-    allow_methods=["POST", "GET"],
+    allow_methods=["POST", "GET", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -49,11 +54,13 @@ async def analyze(
     electricity_col: Optional[str] = Form(None),
     diesel_col: Optional[str] = Form(None),
     future_weeks: int = Form(upload_analysis.DEFAULT_FUTURE_WEEKS),
+    title: Optional[str] = Form(None),
+    user: User = Depends(current_user),
 ) -> dict:
     # read one byte more than the limit so an oversized file is detected without loading all of it
     raw = await file.read(upload_analysis.MAX_BYTES + 1)
     try:
-        return upload_analysis.analyze(
+        result = upload_analysis.analyze(
             raw,
             date_col=date_col or None,
             electricity_col=electricity_col or None,
@@ -62,6 +69,22 @@ async def analyze(
         )
     except upload_analysis.UploadError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+    result["run"] = _save(user, "analysis", title, {
+        "file_name": (file.filename or "upload.csv")[:200], "future_weeks": future_weeks, **result["input"],
+    }, result, {**result["accounting"]["totals"], "rows": result["input"]["rows"],
+                "period_start": result["input"]["period_start"], "period_end": result["input"]["period_end"]})
+    return result
+
+
+def _save(user: User, kind: str, title, input_: dict, result: dict, summary: dict, parent=None) -> dict:
+    """Save to the user's history. A failure to save never hides the analysis; the caller is told."""
+    if not history.enabled(user):
+        return {"saved": False, "id": None, "error": None}
+    try:
+        return {"saved": True, "error": None,
+                "id": history.save_run(user, kind, input_, result, summary, title=title, parent_run_id=parent)}
+    except history.HistoryError as exc:
+        return {"saved": False, "id": None, "error": str(exc)}
 
 
 class Period(BaseModel):
@@ -75,13 +98,16 @@ class SimulateRequest(BaseModel):
     electricity_change_pct: float = 0.0
     diesel_change_pct: float = 0.0
     solar_offset_kwh_per_period: float = 0.0
+    save: bool = False                      # only when the user presses "Save scenario"
+    title: Optional[str] = Field(None, max_length=200)
+    parent_run_id: Optional[UUID] = None    # the analysis run this scenario belongs to
 
 
 @app.post("/api/simulate")
-def simulate(req: SimulateRequest) -> dict:
-    """What-if scenario on the periods returned by /api/analyze. Stateless: nothing is stored."""
+def simulate(req: SimulateRequest, user: User = Depends(current_user)) -> dict:
+    """What-if scenario on the periods returned by /api/analyze. Saved to history only if save=true."""
     try:
-        return upload_analysis.simulate_upload(
+        result = upload_analysis.simulate_upload(
             [p.model_dump() for p in req.periods],
             electricity_change_pct=req.electricity_change_pct,
             diesel_change_pct=req.diesel_change_pct,
@@ -89,3 +115,37 @@ def simulate(req: SimulateRequest) -> dict:
         )
     except upload_analysis.UploadError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+    if req.save:
+        result["run"] = _save(user, "simulation", req.title, {**result["inputs"], "periods": len(req.periods)},
+                              result, result["totals"], parent=req.parent_run_id)
+    return result
+
+
+@app.get("/api/runs")
+def list_runs(limit: int = 50, user: User = Depends(current_user)) -> list:
+    try:
+        return history.list_runs(user, limit)
+    except history.HistoryError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+@app.get("/api/runs/{run_id}")
+def get_run(run_id: UUID, user: User = Depends(current_user)) -> dict:
+    try:
+        row = history.get_run(user, run_id)
+    except history.HistoryError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    if row is None:
+        raise HTTPException(status_code=404, detail="Run not found.")
+    return row
+
+
+@app.delete("/api/runs/{run_id}")
+def delete_run(run_id: UUID, user: User = Depends(current_user)) -> dict:
+    try:
+        deleted = history.delete_run(user, run_id)
+    except history.HistoryError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Run not found.")
+    return {"deleted": True}

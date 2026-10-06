@@ -17,6 +17,12 @@ EF_D = EMISSION_FACTORS["diesel"]["factor"]
 client = TestClient(app)
 
 
+@pytest.fixture(autouse=True)
+def _no_login(monkeypatch):
+    """These tests are about the analysis, not the login (see test_auth_history.py)."""
+    monkeypatch.setenv("AUTH_DISABLED", "1")
+
+
 def to_csv(df: pd.DataFrame) -> bytes:
     return df.to_csv(index=False).encode()
 
