@@ -7,7 +7,7 @@ saved scenario to the logged-in user's history. Users only ever see their own ru
 1. Create a Supabase project. In **Authentication**, switch **"Allow new users to sign up" off**, then create
    each account (Principal, Dean, ...) yourself. Confirm the project uses asymmetric JWT signing keys
    (the API verifies tokens with the project's public JWKS; HS256 shared-secret projects are not supported).
-2. In the SQL editor run `migrations/001_profiles_and_runs.sql` (safe to run again).
+2. In the SQL editor run `migrations/001_profiles_and_runs.sql`, then `migrations/002_optimization_runs.sql` (both safe to run again).
 3. Give each user a name and role (only an admin can, from the SQL editor):
    `update public.profiles set full_name = 'Dr. ...', role = 'principal' where user_id = '<id>';`
 4. Set these on the API host (never in the repo or the browser):

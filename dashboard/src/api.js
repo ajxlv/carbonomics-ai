@@ -21,6 +21,10 @@ export async function api(path, { method = 'GET', json, form, signal } = {}) {
     await signOut()
     throw new Error('Your session has ended. Please log in again.')
   }
-  if (!res.ok) throw new Error(typeof body.detail === 'string' ? body.detail : `Server error (HTTP ${res.status}).`)
+  if (!res.ok) {
+    if (typeof body.detail === 'string') throw new Error(body.detail)
+    if (res.status === 422) throw new Error('Some required fields are empty or not valid. Fill in the budget and, for every measure, its name, saving, cost per unit and most units.')
+    throw new Error(`Server error (HTTP ${res.status}).`)
+  }
   return body
 }

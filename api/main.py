@@ -3,6 +3,7 @@ Carbonomics-AI web API.
 
 POST /api/analyze  - upload a CSV, get validation, carbon accounting and a forecast as JSON.
 POST /api/simulate - what-if scenario on the periods returned by /api/analyze.
+POST /api/optimize - best measures within a budget, from the user's own cost inputs.
 GET  /api/runs, GET /api/runs/{id}, DELETE /api/runs/{id} - the logged-in user's saved history.
 GET  /api/health   - liveness check (no login needed).
 
@@ -28,6 +29,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(os.path.join(ROOT, "src"))
 
 import upload_analysis  # noqa: E402
+import upload_optimization  # noqa: E402
 from api import history  # noqa: E402
 from api.auth import User, current_user  # noqa: E402
 
@@ -118,6 +120,47 @@ def simulate(req: SimulateRequest, user: User = Depends(current_user)) -> dict:
     if req.save:
         result["run"] = _save(user, "simulation", req.title, {**result["inputs"], "periods": len(req.periods)},
                               result, result["totals"], parent=req.parent_run_id)
+    return result
+
+
+class MeasureIn(BaseModel):
+    label: str = Field(max_length=100)
+    acts_on: str = Field(max_length=20)
+    saving_type: str = Field(max_length=30)
+    saving_value: float
+    capex_inr: float                         # cost of ONE unit of the measure
+    max_units: int = Field(ge=1, le=upload_optimization.MAX_UNITS)
+    exclusive_group: Optional[str] = Field(None, max_length=40)
+    annual_saving_inr: Optional[float] = None  # optional, per unit, for payback
+
+
+class OptimizeRequest(BaseModel):
+    periods: List[Period] = Field(max_length=upload_analysis.MAX_SIM_PERIODS)
+    granularity: str = Field(max_length=10)  # "weekly" or "monthly" (input.granularity_analysed)
+    budget_inr: float
+    measures: List[MeasureIn] = Field(max_length=upload_optimization.MAX_MEASURES)
+    save: bool = False                       # only when the user presses "Save this plan"
+    title: Optional[str] = Field(None, max_length=200)
+    parent_run_id: Optional[UUID] = None
+
+
+@app.post("/api/optimize")
+def optimize(req: OptimizeRequest, user: User = Depends(current_user)) -> dict:
+    """Best measures within a budget, from the user's own measure figures. Saved only if save=true."""
+    try:
+        result = upload_optimization.optimize_upload(
+            [p.model_dump() for p in req.periods], req.granularity, req.budget_inr,
+            [m.model_dump() for m in req.measures],
+        )
+    except upload_analysis.UploadError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    if req.save:
+        summary = {"budget_inr": result["budget_inr"], "tco2e_saved": result["optimal"]["tco2e_saved"],
+                   "pct_of_baseline": result["optimal"]["pct_of_baseline"], "total_capex_inr": result["optimal"]["total_capex_inr"]}
+        result["run"] = _save(user, "optimization", req.title,
+                              {"budget_inr": req.budget_inr, "granularity": req.granularity,
+                               "measures": [m.model_dump() for m in req.measures], "periods": len(req.periods)},
+                              result, summary, parent=req.parent_run_id)
     return result
 
 

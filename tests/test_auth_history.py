@@ -115,7 +115,7 @@ def test_health_needs_no_login():
     assert client.get("/api/health").status_code == 200
 
 
-@pytest.mark.parametrize("path,method", [("/api/analyze", "post"), ("/api/simulate", "post"),
+@pytest.mark.parametrize("path,method", [("/api/analyze", "post"), ("/api/simulate", "post"), ("/api/optimize", "post"),
                                          ("/api/runs", "get"), (f"/api/runs/{uuid.uuid4()}", "get"),
                                          (f"/api/runs/{uuid.uuid4()}", "delete")])
 def test_every_data_route_needs_a_login(path, method):
@@ -251,3 +251,20 @@ def test_oversized_results_are_trimmed_before_saving():
     assert small["truncated"] is True and "periods" not in small["accounting"]
     assert small["accounting"]["totals"]["total_tco2e"] == 1
     assert history.shrink({"a": 1}) == {"a": 1}
+
+
+def test_optimization_plan_is_saved_only_on_request_as_its_own_kind(db):
+    h = bearer()
+    body = {"periods": [{"period_start": f"2025-{m:02d}-01", "electricity_kwh": 90000.0} for m in range(1, 13)],
+            "granularity": "monthly", "budget_inr": 4_000_000,
+            "measures": [{"label": "Solar", "acts_on": "electricity", "saving_type": "fixed_kwh_per_year",
+                          "saving_value": 140000, "capex_inr": 3_300_000, "max_units": 3}]}
+    n = len(db.requests)
+    r = client.post("/api/optimize", headers=h, json=body)
+    assert r.status_code == 200 and "run" not in r.json() and len(db.requests) == n
+    r = client.post("/api/optimize", headers=h, json={**body, "save": True, "title": "33 lakh solar"})
+    assert r.json()["run"]["saved"] is True
+    import json
+    saved = json.loads(db.requests[-1].content)
+    assert saved["kind"] == "optimization" and saved["title"] == "33 lakh solar"
+    assert saved["input"]["budget_inr"] == 4_000_000 and saved["summary"]["tco2e_saved"] > 0
