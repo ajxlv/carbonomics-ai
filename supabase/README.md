@@ -15,7 +15,9 @@ saved scenario to the logged-in user's history. Users only ever see their own ru
    - `SUPABASE_ANON_KEY` = the public anon / publishable key
    - `ALLOWED_ORIGINS` = the site address(es), comma separated
    The service-role key and the database password are not used and must not be set.
-5. Local development without Supabase: `AUTH_DISABLED=1 uvicorn api.main:app --port 8000`
+5. Set these on the website host (Vercel) before building; they are public values:
+   `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_API_URL` (the API's address). See `dashboard/.env.example`.
+6. Local development without Supabase: `AUTH_DISABLED=1 uvicorn api.main:app --port 8000`
    (no login check, no history). Never set this on a real server.
 
 ## Tests
