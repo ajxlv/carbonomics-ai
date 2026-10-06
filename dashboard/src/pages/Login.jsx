@@ -19,7 +19,7 @@ export default function Login({ next, onDone }) {
 
   return (
     <div className="dark relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-950 px-4 py-10 text-slate-300">
-      <Hills />
+      <Hills scene />
       <div className="rise relative z-10 w-full max-w-sm">
         <a href="#home" className="mb-6 inline-flex items-center gap-1.5 text-sm text-white/60 transition hover:text-white"><ArrowLeft size={15} /> Back to home</a>
         <div className="glass rounded-3xl p-6 shadow-2xl shadow-black/50">

@@ -190,7 +190,7 @@ export default function Landing() {
       </nav>
 
       <header className="relative isolate flex min-h-[92vh] flex-col items-center justify-center overflow-hidden px-4 pb-32 pt-32 text-center text-white">
-        <Hills />
+        <Hills scene />
         <div className="relative z-10 mx-auto max-w-4xl">
           <p className="glass mx-auto mb-7 inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs text-teal-100/90"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Campus carbon intelligence · KKWIEER Nashik</p>
           <h1 className="font-display text-5xl leading-[1.05] sm:text-7xl">Carbon accounting and forecasting for modern campuses</h1>
