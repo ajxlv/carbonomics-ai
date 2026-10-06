@@ -30,7 +30,7 @@ const toBody = (m) => {
   }
 }
 
-export default function OptimizeCard({ r }) {
+export default function OptimizeCard({ r, onPlan }) {
   const { accounting, input } = r
   const [budget, setBudget] = useState('')
   const [rows, setRows] = useState([blank()])
@@ -50,7 +50,11 @@ export default function OptimizeCard({ r }) {
 
   const run = async () => {
     setBusy(true); setError(''); setSaveState(null)
-    try { setRes(await api('/api/optimize', { method: 'POST', json: request() })) } catch (e) { setError(e.message); setRes(null) } finally { setBusy(false) }
+    try {
+      const req = request()
+      setRes(await api('/api/optimize', { method: 'POST', json: req }))
+      onPlan?.({ budget_inr: req.budget_inr, measures: req.measures })
+    } catch (e) { setError(e.message); setRes(null); onPlan?.(null) } finally { setBusy(false) }
   }
   const save = async () => {
     setSaveState('saving')

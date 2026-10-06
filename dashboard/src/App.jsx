@@ -14,11 +14,11 @@ import { Privacy, Terms } from './pages/Legal.jsx'
 import { authConfigured, signOut, useAuth } from './auth.js'
 
 const PAGES = [
-  { id: 'overview', label: 'Overview', icon: Gauge, C: Overview },
-  { id: 'trends', label: 'Trends', icon: LineIcon, C: Trends },
-  { id: 'forecast', label: 'Forecast', icon: BarChart3, C: Forecast },
-  { id: 'simulation', label: 'Simulation', icon: FlaskConical, C: Simulation },
-  { id: 'optimization', label: 'Optimization', icon: Target, C: Optimization },
+  { id: 'overview', label: 'Overview', icon: Gauge, C: Overview, demo: true },
+  { id: 'trends', label: 'Trends', icon: LineIcon, C: Trends, demo: true },
+  { id: 'forecast', label: 'Forecast', icon: BarChart3, C: Forecast, demo: true },
+  { id: 'simulation', label: 'Simulation', icon: FlaskConical, C: Simulation, demo: true },
+  { id: 'optimization', label: 'Optimization', icon: Target, C: Optimization, demo: true },
   { id: 'upload', label: 'Upload your data', icon: UploadIcon, C: Upload, locked: true, needsData: false },
   { id: 'history', label: 'History', icon: HistoryIcon, C: HistoryPage, locked: true, needsData: false },
 ]
@@ -56,16 +56,20 @@ export default function App() {
   // Without Supabase settings (local development) the locked pages stay open; the API still decides what it accepts.
   const loggedIn = Boolean(session) || !authConfigured
   const isDash = PAGES.some((p) => p.id === route)
+  const demoPage = PAGES.find((p) => p.id === route)?.demo
   const locked = PAGES.find((p) => p.id === route)?.locked
 
   useEffect(() => { if (locked && !loggedIn) goto(`login?next=${route}`) }, [locked, loggedIn, route])
   useEffect(() => { if (route === 'login' && session) goto(next) }, [route, session, next])
+  // Logged-in users work with their own data; the fake-data demo pages are only for visitors.
+  useEffect(() => { if (session && demoPage) goto('upload') }, [session, demoPage])
 
   if (route === 'login') return session ? null : <Login next={next} onDone={(n) => goto(n)} />
   if (route === 'privacy') return <Privacy />
   if (route === 'terms') return <Terms />
   if (!isDash) return <Landing />
   if (locked && !loggedIn) return null
+  if (session && demoPage) return null
   return <Dashboard page={route} dark={dark} setDark={setDark} session={session} profile={profile} loggedIn={loggedIn} />
 }
 
@@ -90,7 +94,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
 
   const nav = (
     <nav className="flex flex-col gap-1">
-      {PAGES.map(({ id, label, icon: Icon, locked }) => (
+      {PAGES.filter((p) => !(session && p.demo)).map(({ id, label, icon: Icon, locked }) => (
         <button key={id} onClick={() => go(id)}
           className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${current.id === id ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`}>
           <Icon size={18} /> <span className="flex-1 text-left">{label}</span>

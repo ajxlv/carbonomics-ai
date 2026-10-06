@@ -268,3 +268,22 @@ def test_optimization_plan_is_saved_only_on_request_as_its_own_kind(db):
     saved = json.loads(db.requests[-1].content)
     assert saved["kind"] == "optimization" and saved["title"] == "33 lakh solar"
     assert saved["input"]["budget_inr"] == 4_000_000 and saved["summary"]["tco2e_saved"] > 0
+
+
+def test_report_is_a_pdf_for_logged_in_users_only_and_includes_the_plan(db):
+    import io
+    pypdf = pytest.importorskip("pypdf")
+    periods = [{"period_start": f"2025-{m:02d}-01", "electricity_kwh": 90000.0, "diesel_litres": 100.0} for m in range(1, 13)]
+    body = {"periods": periods, "granularity": "monthly", "file_name": "college.xlsx", "prepared_for": "Dr. A. B. Name, Principal",
+            "budget_inr": 4_000_000,
+            "measures": [{"label": "Solar", "acts_on": "electricity", "saving_type": "fixed_kwh_per_year",
+                          "saving_value": 140000, "capex_inr": 3_300_000, "max_units": 3}]}
+    assert client.post("/api/report", json=body).status_code == 401
+    r = client.post("/api/report", headers=bearer(), json=body)
+    assert r.status_code == 200 and r.headers["content-type"] == "application/pdf"
+    pages = pypdf.PdfReader(io.BytesIO(r.content)).pages
+    text = "\n".join(p.extract_text() for p in pages)
+    assert len(pages) == 7 and "Recommended steps" in text and "Dr. A. B. Name" in text and "college.xlsx" in text
+    r2 = client.post("/api/report", headers=bearer(), json={k: v for k, v in body.items() if k not in ("budget_inr", "measures")})
+    assert len(pypdf.PdfReader(io.BytesIO(r2.content)).pages) == 5
+    assert db.requests == []                                       # nothing is stored for a report

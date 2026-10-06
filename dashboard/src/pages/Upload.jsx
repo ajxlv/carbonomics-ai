@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { AlertTriangle, Check, FileUp, Loader2 } from 'lucide-react'
+import { AlertTriangle, Check, Download, FileUp, Loader2 } from 'lucide-react'
 import { Badge, COLORS, Callout, Card, Kpi, MODEL_LABEL, fmt, shortDate, useChartTheme } from '../ui.jsx'
 import { api } from '../api.js'
+import { useAuth } from '../auth.js'
 import OptimizeCard from './OptimizeCard.jsx'
 
 const MODELS = ['naive_last_week', 'train_mean', 'random_forest', 'xgboost']
@@ -38,10 +39,10 @@ export default function Upload({ opened, onCloseOpened }) {
 
   return (
     <div className="space-y-6">
-      <Callout tone="blue" title="Analyse your own CSV">
+      <Callout tone="blue" title="Analyse your own data (CSV or Excel)">
         Upload daily, weekly or monthly rows with a date column and electricity (kWh) and/or generator diesel (litres).
         Emission is always activity x emission factor. The forecast predicts activity only, and a model is used only if it
-        beats the naive last-week guess. Your CSV file itself is processed in memory and is not stored; the results (totals and
+        beats the naive last-week guess. Your file itself is processed in memory and is not stored; the results (totals and
         per-period figures) are saved to your private history so you can open them later.
       </Callout>
 
@@ -49,8 +50,8 @@ export default function Upload({ opened, onCloseOpened }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-slate-300 p-4 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/50">
             <FileUp size={22} className="shrink-0 text-brand-600" />
-            <span className="min-w-0 truncate">{file ? file.name : 'Click to choose a .csv file (max 5 MB)'}</span>
-            <input type="file" accept=".csv,text/csv" className="sr-only" onChange={(e) => { setFile(e.target.files?.[0] ?? null); setResult(null); setError('') }} />
+            <span className="min-w-0 truncate">{file ? file.name : 'Click to choose a .csv or .xlsx file (max 5 MB)'}</span>
+            <input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" onChange={(e) => { setFile(e.target.files?.[0] ?? null); setResult(null); setError('') }} />
           </label>
           <label className="text-sm">
             <span className="muted mb-1 block text-xs">Weeks to forecast (1 to 26)</span>
@@ -76,7 +77,7 @@ export default function Upload({ opened, onCloseOpened }) {
       </Card>
 
       {error && <Callout title="Could not analyse this file"><div className="flex gap-2"><AlertTriangle size={18} className="mt-0.5 shrink-0" /><span>{error}</span></div></Callout>}
-      {result && <Results r={result} />}
+      {result && <Results r={result} fileName={file?.name} />}
     </div>
   )
 }
@@ -88,16 +89,42 @@ function SavedNote({ run }) {
   return null
 }
 
-function Results({ r }) {
+function Results({ r, fileName }) {
   const t = useChartTheme()
+  const { profile, session } = useAuth()
+  const [plan, setPlan] = useState(null)
+  const [pdfBusy, setPdfBusy] = useState(false)
+  const [pdfError, setPdfError] = useState('')
   const { input, accounting, factors_used: factors, forecast } = r
   const tot = accounting.totals
   const hasPeriods = Array.isArray(accounting.periods)
+  const download = async () => {
+    setPdfBusy(true); setPdfError('')
+    try {
+      const who = [profile?.full_name || session?.email, profile?.role && profile.role !== 'other' ? profile.role : ''].filter(Boolean).join(', ')
+      const file = await api('/api/report', { method: 'POST', blob: true, json: {
+        periods: accounting.periods.map((p) => ({ period_start: p.period_start, electricity_kwh: p.electricity_kwh, diesel_litres: p.diesel_litres })),
+        granularity: input.granularity_analysed, file_name: input.file_name || fileName || '', prepared_for: who, ...(plan ?? {}),
+      } })
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(file); a.download = 'carbon-footprint-report.pdf'; a.click()
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+    } catch (e) { setPdfError(e.message) } finally { setPdfBusy(false) }
+  }
   const bars = (accounting.periods ?? []).map((p) => ({ period: p.period_start, 'Scope 1 (diesel)': p.scope1_kg, 'Scope 2 (electricity)': p.scope2_kg }))
 
   return (
     <div className="space-y-6">
       <SavedNote run={r.run} />
+      {hasPeriods && (
+        <div className="flex flex-wrap items-center gap-3">
+          <button disabled={pdfBusy} onClick={download} className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-700 disabled:opacity-50">
+            {pdfBusy ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />} Download report (PDF)
+          </button>
+          <span className="muted text-xs">{plan ? 'Includes your optimization plan and recommended steps.' : 'Run the optimization below first to add the plan and recommended steps.'}</span>
+          {pdfError && <span className="text-xs text-rose-600">{pdfError}</span>}
+        </div>
+      )}
       {r.truncated && <Callout tone="blue" title="Summary only">This run was too large to store in full, so the per-period charts, scenario and forecast detail were not saved. Upload the file again to see them.</Callout>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi label="Total emission" value={fmt(tot.total_tco2e, 2)} unit="tCO₂e" sub={`${input.period_start} to ${input.period_end}`} badge={<YourData />} />
@@ -145,7 +172,7 @@ function Results({ r }) {
       </Card>
 
       {hasPeriods && <Scenario r={r} />}
-      {hasPeriods && <OptimizeCard r={r} />}
+      {hasPeriods && <OptimizeCard r={r} onPlan={setPlan} />}
       {forecast?.targets && Object.values(forecast.targets).every((b) => b.backtest) && <Forecast forecast={forecast} t={t} />}
       <p className="muted text-xs">{r.disclaimer}</p>
     </div>

@@ -4,7 +4,7 @@ import { getToken, signOut } from './auth.js'
 // the login token is sent to this address, so it must not be pointed anywhere else from the page.
 export const API = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '')
 
-export async function api(path, { method = 'GET', json, form, signal } = {}) {
+export async function api(path, { method = 'GET', json, form, signal, blob = false } = {}) {
   const headers = {}
   const token = await getToken()
   if (token) headers.Authorization = `Bearer ${token}`
@@ -16,6 +16,7 @@ export async function api(path, { method = 'GET', json, form, signal } = {}) {
     if (e.name === 'AbortError') throw e
     throw new Error('Could not reach the analysis server. If you run it yourself, start it from the repository root with: uvicorn api.main:app --port 8000')
   }
+  if (blob && res.ok) return res.blob()
   const body = await res.json().catch(() => ({}))
   if (res.status === 401) {
     await signOut()

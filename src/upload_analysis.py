@@ -67,10 +67,15 @@ def read_upload(raw: bytes) -> pd.DataFrame:
         raise UploadError("The file is empty.")
     if len(raw) > MAX_BYTES:
         raise UploadError(f"The file is larger than {MAX_BYTES // (1024 * 1024)} MB.")
+    if raw[:4] == b"\xd0\xcf\x11\xe0":
+        raise UploadError("This looks like an old Excel (.xls) file. Please save it as .xlsx or .csv and upload again.")
     try:
-        df = pd.read_csv(io.BytesIO(raw))
+        if raw[:2] == b"PK":                      # .xlsx is a zip file; the first sheet is read
+            df = pd.read_excel(io.BytesIO(raw), sheet_name=0, engine="openpyxl")
+        else:
+            df = pd.read_csv(io.BytesIO(raw))
     except Exception as exc:  # pandas raises several parser error types
-        raise UploadError(f"Could not read the file as CSV: {exc}") from exc
+        raise UploadError(f"Could not read the file as CSV or Excel (.xlsx): {exc}") from exc
     if len(df) > MAX_ROWS:
         raise UploadError(f"The file has more than {MAX_ROWS} rows.")
     if df.empty:
