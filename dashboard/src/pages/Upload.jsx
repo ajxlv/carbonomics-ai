@@ -6,7 +6,7 @@ import { api } from '../api.js'
 import { useAuth } from '../auth.js'
 import OptimizeCard from './OptimizeCard.jsx'
 
-const MODELS = ['naive_last_week', 'train_mean', 'random_forest', 'xgboost']
+const MODELS = ['naive_last_week', 'train_mean', 'random_forest', 'xgboost', 'ridge']
 const TARGET_LABEL = { electricity_kwh: 'Electricity (kWh)', diesel_litres: 'Generator diesel (L)' }
 const TARGET_UNIT = { electricity_kwh: 'kWh', diesel_litres: 'L' }
 const YourData = () => <Badge tone="blue">YOUR DATA</Badge>
@@ -279,6 +279,7 @@ function Forecast({ forecast, t }) {
               </table>
               <p className="muted mt-3 text-xs">{b.train_weeks} training weeks, {b.test_weeks} test weeks (time-ordered split, no shuffling).</p>
             </div>
+            {b.training && <TrainingLog tr={b.training} chosen={b.chosen_model} beats={b.beats_naive} />}
           </Card>
         )
       })}
@@ -303,6 +304,42 @@ function Forecast({ forecast, t }) {
         </div>
       </Card>
     </>
+  )
+}
+
+// What the training actually did, taken from the server's own log (settings tried, scores, seconds).
+function TrainingLog({ tr, chosen, beats }) {
+  return (
+    <div className="mt-5 rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h4 className="text-sm font-semibold">How the models were trained</h4>
+        <span className="muted text-xs">{fmt(tr.seconds, 2)} s in total</span>
+      </div>
+      <p className="muted mt-1 text-xs">
+        Each model is tuned with {tr.validation}; the test weeks are never used to pick settings. The model with the best
+        validation score is the one tried for the forecast, and it is used only if it also beats the naive guess on the test weeks.
+        {chosen === 'naive_last_week' || !beats ? ' Here none did, so the naive guess is used.' : ''}
+      </p>
+      <div className="mt-3 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead><tr className="muted border-b border-slate-200 text-left text-xs uppercase tracking-wide dark:border-slate-800">
+            <th className="py-2 pr-4">Model</th><th className="py-2 pr-4 text-right">Settings tried</th><th className="py-2 pr-4 text-right">Validation MAE</th><th className="py-2 pr-4 text-right">Test MAE</th><th className="py-2 text-right">Seconds</th>
+          </tr></thead>
+          <tbody>
+            {tr.models.map((m) => (
+              <tr key={m.model} className="border-b border-slate-100 last:border-0 dark:border-slate-800/60">
+                <td className="py-2 pr-4 font-medium">{m.label}</td>
+                <td className="py-2 pr-4 text-right tabular-nums">{m.settings_tried}</td>
+                <td className="py-2 pr-4 text-right tabular-nums">{fmt(m.validation_mae, 1)}</td>
+                <td className="py-2 pr-4 text-right tabular-nums">{fmt(m.test_mae, 1)}</td>
+                <td className="py-2 text-right tabular-nums">{fmt(m.seconds, 2)}</td>
+              </tr>
+            ))}
+            <tr><td className="muted py-2 pr-4 text-xs" colSpan={2}>Naive last week (baseline)</td><td className="muted py-2 pr-4 text-right text-xs tabular-nums">{fmt(tr.naive_validation_mae, 1)}</td><td colSpan={2} /></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
 

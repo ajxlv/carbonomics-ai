@@ -71,7 +71,7 @@ def test_weekly_forecast_is_gated_and_emission_is_derived():
     assert fc["status"] == "ok"
     for target, block in fc["targets"].items():
         assert len(block["future"]) == 6
-        assert block["chosen_model"] in {"naive_last_week", "random_forest", "xgboost"}
+        assert block["chosen_model"] in {"naive_last_week", "random_forest", "xgboost", "ridge"}
         assert block["beats_naive"] == (block["chosen_model"] != "naive_last_week")
         assert block["train_weeks"] + block["test_weeks"] == 52 - 4  # first 4 rows lack lags
         assert {m["model"] for m in block["metrics"]} >= {"naive_last_week", "train_mean"}

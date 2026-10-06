@@ -30,7 +30,7 @@ import pandas as pd
 from calculations import calculate_diesel_emissions, calculate_electricity_emissions
 from emission_factors import EMISSION_FACTORS
 from simulation import simulate
-from ml.forecast_weekly import make_features, metrics, new_model, run_target
+from ml.model_selection import MODELS as ML_MODELS, evaluate, fit_future
 
 MAX_BYTES = 5 * 1024 * 1024
 MAX_ROWS = 100_000
@@ -306,44 +306,25 @@ def _future_naive(last_value: float, n: int) -> np.ndarray:
     return np.full(n, last_value)
 
 
-def _future_model(df: pd.DataFrame, target: str, model_name: str, n: int) -> np.ndarray:
-    """Fit on all rows, then predict n weeks ahead recursively (each prediction feeds the next lags)."""
-    feats = make_features(df, target)
-    data = pd.concat([df[["week_start", target]], feats], axis=1).dropna()
-    cols = list(feats.columns)
-    model = new_model(model_name)
-    model.fit(data[cols], data[target])
-
-    ext = df[["week_start", target]].copy()
-    preds = []
-    for _ in range(n):
-        next_week = ext["week_start"].iloc[-1] + pd.Timedelta(days=7)
-        ext = pd.concat([ext, pd.DataFrame({"week_start": [next_week], target: [np.nan]})], ignore_index=True)
-        row = make_features(ext, target).iloc[[-1]][cols]
-        value = float(max(0.0, model.predict(row)[0]))
-        ext.loc[ext.index[-1], target] = value
-        preds.append(value)
-    return np.array(preds)
-
-
 def forecast_target(df: pd.DataFrame, target: str, future_weeks: int) -> dict:
-    metrics_df, pred_df = run_target(df[["week_start", target]], target)
-    by_model = {r["model"]: r for r in metrics_df.to_dict("records")}
+    ev = evaluate(df[["week_start", target]], target)
+    pred_df = ev["pred_df"]
+    by_model = {r["model"]: r for r in ev["metrics"]}
     naive_mae = by_model["naive_last_week"]["MAE"]
-    ml = {m: by_model[m]["MAE"] for m in ("random_forest", "xgboost")}
-    best_ml = min(ml, key=ml.get)
+    ml = {m: by_model[m]["MAE"] for m in ML_MODELS}
+    best_ml = ev["candidate"]            # lowest rolling-validation MAE; the test weeks only decide whether it is used
     beats_naive = ml[best_ml] < naive_mae and ml[best_ml] <= naive_mae * (1 - MIN_MAE_IMPROVEMENT)
 
     if beats_naive:
         chosen = best_ml
-        future = _future_model(df, target, best_ml, future_weeks)
-        message = (f"{best_ml} beat the naive last-week baseline by at least {MIN_MAE_IMPROVEMENT:.0%} on the "
-                   f"held-out weeks (MAE {ml[best_ml]:.1f} vs {naive_mae:.1f}); it is used for the forecast.")
+        future = fit_future(df, target, best_ml, ev["best_settings"][best_ml], future_weeks)
+        message = (f"{best_ml} had the best validation score of the {len(ML_MODELS)} models and beat the naive last-week baseline by at "
+                   f"least {MIN_MAE_IMPROVEMENT:.0%} on the held-out weeks (MAE {ml[best_ml]:.1f} vs {naive_mae:.1f}); it is used for the forecast.")
     else:
         chosen = "naive_last_week"
         future = _future_naive(float(df[target].iloc[-1]), future_weeks)
         message = (f"No model beat the naive last-week baseline by {MIN_MAE_IMPROVEMENT:.0%} or more on the held-out weeks "
-                   f"(best model MAE {ml[best_ml]:.1f} vs naive {naive_mae:.1f}), so the forecast repeats the last "
+                   f"(best model {best_ml}, MAE {ml[best_ml]:.1f} vs naive {naive_mae:.1f}), so the forecast repeats the last "
                    "observed week.")
 
     first_future = df["week_start"].iloc[-1] + pd.Timedelta(days=7)
@@ -356,7 +337,7 @@ def forecast_target(df: pd.DataFrame, target: str, future_weeks: int) -> dict:
     backtest = []
     for _, r in pred_df.iterrows():
         row = {"week_start": r["week_start"].strftime("%Y-%m-%d"), "actual": float(r[f"actual_{target}"])}
-        for m in ("naive_last_week", "train_mean", "random_forest", "xgboost"):
+        for m in ("naive_last_week", "train_mean", *ML_MODELS):
             row[m] = float(r[f"pred_{m}"])
         backtest.append(row)
 
@@ -370,6 +351,7 @@ def forecast_target(df: pd.DataFrame, target: str, future_weeks: int) -> dict:
         "beats_naive": bool(beats_naive),
         "chosen_model": chosen,
         "message": message,
+        "training": ev["training"],
         "warnings": warnings,
         "backtest": backtest,
         "future": [{"week_start": d.strftime("%Y-%m-%d"), "predicted": float(v)}

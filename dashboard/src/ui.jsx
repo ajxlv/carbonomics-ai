@@ -10,6 +10,7 @@ export const COLORS = {
     train_mean: '#a78bfa',
     random_forest: '#0ea5e9',
     xgboost: '#e11d48',
+    ridge: '#16a34a',
   },
 }
 
@@ -18,6 +19,7 @@ export const MODEL_LABEL = {
   train_mean: 'Training mean',
   random_forest: 'Random Forest',
   xgboost: 'XGBoost',
+  ridge: 'Ridge regression',
 }
 
 export const ThemeCtx = createContext({ dark: false })
