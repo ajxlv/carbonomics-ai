@@ -39,7 +39,7 @@ app = FastAPI(title="Carbonomics-AI API", version="0.1.0")
 _origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o.strip() for o in _origins.split(",") if o.strip()],
+    allow_origins=[o.strip().rstrip("/") for o in _origins.split(",") if o.strip()],  # browsers send no trailing "/"
     allow_methods=["POST", "GET", "DELETE"],
     allow_headers=["*"],
 )
