@@ -97,7 +97,7 @@ export default function Landing() {
       <nav className={`fixed inset-x-0 top-0 z-50 transition ${scrolled || menu ? 'bg-slate-950/85 backdrop-blur-lg' : ''}`}>
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-8">
           <a href="#home" className="flex items-center gap-2.5" onClick={() => setMenu(false)}>
-            <img src="./favicon.svg" alt="" className="h-9 w-9" />
+            <img src="./logo.svg" alt="Carbonomics-AI logo" className="h-9 w-9 rounded-lg" />
             <span className="font-semibold text-white">Carbonomics-AI</span>
           </a>
           <div className="hidden items-center gap-7 text-sm text-teal-50/90 md:flex">
@@ -236,6 +236,10 @@ export default function Landing() {
 
       <footer className="border-t border-slate-200 bg-white py-8 dark:border-slate-800 dark:bg-slate-900">
         <div className="mx-auto max-w-6xl space-y-2 px-4 text-xs leading-relaxed text-slate-500 sm:px-8 dark:text-slate-400">
+          <div className="mb-3 flex items-center gap-2.5">
+            <img src="./logo.svg" alt="Carbonomics-AI logo" className="h-10 w-10 rounded-lg" />
+            <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">Carbonomics-AI</span>
+          </div>
           <p>Carbonomics-AI is a project of the Department of AI &amp; DS, K. K. Wagh Institute of Engineering Education and Research (KKWIEER), Nashik, built by Team Carbonomics.</p>
           <p>© 2026 Team Carbonomics. All rights reserved. The content, design, data and code of this site may not be copied, reproduced, scraped or reused without written permission.</p>
           <p>Contact: <a className="underline" href={`mailto:${CONTACT}`}>{CONTACT}</a> · <a className="underline" href="#privacy">Privacy Policy</a> · <a className="underline" href="#terms">Terms of Use</a></p>
