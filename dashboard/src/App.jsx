@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BarChart3, FlaskConical, Gauge, LineChart as LineIcon, ListChecks, Menu, Moon, ShieldCheck, Sun, Target, X } from 'lucide-react'
+import { BarChart3, FlaskConical, Gauge, LineChart as LineIcon, ListChecks, Menu, Moon, ShieldCheck, Sun, Target, Upload as UploadIcon, X } from 'lucide-react'
 import { Synthetic, ThemeCtx } from './ui.jsx'
 import Overview from './pages/Overview.jsx'
 import Trends from './pages/Trends.jsx'
@@ -8,6 +8,7 @@ import Simulation from './pages/Simulation.jsx'
 import Optimization from './pages/Optimization.jsx'
 import Factors from './pages/Factors.jsx'
 import Quality from './pages/Quality.jsx'
+import Upload from './pages/Upload.jsx'
 
 const PAGES = [
   { id: 'overview', label: 'Overview', icon: Gauge, C: Overview },
@@ -15,6 +16,7 @@ const PAGES = [
   { id: 'forecast', label: 'Forecast', icon: BarChart3, C: Forecast },
   { id: 'simulation', label: 'Simulation', icon: FlaskConical, C: Simulation },
   { id: 'optimization', label: 'Optimization', icon: Target, C: Optimization },
+  { id: 'upload', label: 'Upload your data', icon: UploadIcon, C: Upload },
   { id: 'factors', label: 'Emission factors', icon: ListChecks, C: Factors },
   { id: 'quality', label: 'Data & QA', icon: ShieldCheck, C: Quality },
 ]
@@ -86,7 +88,7 @@ export default function App() {
               <h1 className="text-lg font-semibold text-slate-900 dark:text-white">{current.label}</h1>
             </div>
             <div className="flex items-center gap-3">
-              <span className="hidden sm:inline-flex items-center gap-2 text-xs muted">Weekly data is <Synthetic /></span>
+              {current.id !== 'upload' && <span className="hidden sm:inline-flex items-center gap-2 text-xs muted">Weekly data is <Synthetic /></span>}
               <button onClick={() => setDark(!dark)} aria-label="Toggle dark mode"
                 className="rounded-xl p-2 text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100 dark:text-slate-300 dark:ring-slate-800 dark:hover:bg-slate-800">
                 {dark ? <Sun size={18} /> : <Moon size={18} />}
