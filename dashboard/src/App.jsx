@@ -66,10 +66,15 @@ export default function App() {
 
   // Without Supabase settings (local development) the locked pages stay open; the API still decides what it accepts.
   const loggedIn = Boolean(session) || !authConfigured
-  const isDash = PAGES.some((p) => p.id === route)
-  const locked = PAGES.find((p) => p.id === route)?.locked
+  // '#demo/trends' always shows the fake-data demo, even for a logged-in user; plain '#trends' shows their own data.
+  const demo = route.startsWith('demo/')
+  const pageId = demo ? route.slice(5) : route
+  const demoOk = PAGES.some((p) => p.id === pageId && p.demo && !p.mineOnly)
+  const isDash = demo ? true : PAGES.some((p) => p.id === pageId)
+  const locked = demo ? false : PAGES.find((p) => p.id === pageId)?.locked
 
-  useEffect(() => { if (PAGES.find((p) => p.id === route)?.mineOnly && !session) goto(loggedIn ? 'upload' : `login?next=${route}`) }, [route, session, loggedIn])
+  useEffect(() => { if (demo && !demoOk) goto('demo/overview') }, [demo, demoOk])
+  useEffect(() => { if (!demo && PAGES.find((p) => p.id === pageId)?.mineOnly && !session) goto(loggedIn ? 'upload' : `login?next=${route}`) }, [demo, pageId, route, session, loggedIn])
   useEffect(() => { if (locked && !loggedIn) goto(`login?next=${route}`) }, [locked, loggedIn, route])
   useEffect(() => { if (route === 'login' && session) goto(next) }, [route, session, next])
 
@@ -78,16 +83,17 @@ export default function App() {
   if (route === 'terms') return <Terms />
   if (!isDash) return <Landing />
   if (locked && !loggedIn) return null
-  return <Dashboard page={route} dark={dark} setDark={setDark} session={session} profile={profile} loggedIn={loggedIn} />
+  if (demo && !demoOk) return null
+  return <Dashboard page={pageId} demo={demo} dark={dark} setDark={setDark} session={session} profile={profile} loggedIn={loggedIn} />
 }
 
-function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
+function Dashboard({ page, demo, dark, setDark, session, profile, loggedIn }) {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [analysis, setAnalysis] = useState(readSaved)   // { result, fileName } of the file the user analysed or opened from History
   const [plan, setPlan] = useState(null)           // optimization inputs, added to the PDF report
-  const mine = Boolean(session)                    // logged-in users see their own data, visitors see the fake demo
+  const mine = Boolean(session) && !demo                    // logged-in users see their own data, visitors see the fake demo
 
   useEffect(() => {
     fetch('./data/dashboard.json')
@@ -96,7 +102,11 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
       .catch((e) => setError(`Could not load data/dashboard.json (${e.message}). Run python scripts/run_pipeline.py first.`))
   }, [])
 
-  const go = (id) => { setOpen(false); location.hash = PAGES.find((p) => p.id === id)?.locked && !loggedIn ? `login?next=${id}` : id }
+  const go = (id) => {
+    setOpen(false)
+    const p = PAGES.find((x) => x.id === id)
+    location.hash = p?.locked && !loggedIn ? `login?next=${id}` : demo && p?.demo ? `demo/${id}` : id
+  }
   const current = PAGES.find((p) => p.id === page) ?? PAGES[0]
   const Page = current.C
   const needsData = current.needsData !== false && !mine
@@ -112,7 +122,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
   // Logged-in users get the result pages only once they have a file analysed; visitors get the fake-data demo.
   const visiblePages = mine
     ? [PAGES.find((p) => p.id === 'upload'), ...(analysis ? PAGES.filter((p) => p.demo) : []), PAGES.find((p) => p.id === 'history')]
-    : PAGES.filter((p) => !p.mineOnly)
+    : PAGES.filter((p) => !p.mineOnly && !(demo && session && p.locked))
   const nav = (
     <nav className="flex flex-col gap-1">
       {visiblePages.map(({ id, label, icon: Icon, locked }) => (
@@ -141,6 +151,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
           </div>
           {nav}
           <a href="#home" className="muted mt-4 flex items-center gap-3 px-3 py-2 text-sm hover:underline"><Home size={16} /> Home</a>
+          {demo && session && <a href="#upload" className="mt-2 flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-brand-600 hover:bg-slate-100 dark:text-brand-300 dark:hover:bg-slate-800"><UploadIcon size={16} /> Back to my data</a>}
           {!mine && <p className="muted mt-8 text-xs leading-relaxed">Demo campus · FAKE data<br />Random numbers, not a real campus</p>}
         </aside>
 

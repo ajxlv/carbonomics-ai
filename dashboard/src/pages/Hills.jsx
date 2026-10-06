@@ -5,11 +5,11 @@ const STARS = Array.from({ length: 46 }, (_, i) => ({
 }))
 
 // Rendered backdrop (hero-bg.webp): misty ridges, pine forest and a distant factory with chimneys at dusk.
-function Scene() {
+function Scene({ soft }) {
   return (
     <>
-      <img src="hero-bg.webp" alt="" width="1920" height="1080" fetchpriority="high" className="absolute inset-0 h-full w-full object-cover object-bottom opacity-80" />
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/20 to-slate-950" />
+      <img src="hero-bg.webp" alt="" width="1920" height="1080" fetchpriority="high" className={`absolute inset-0 h-full w-full object-cover opacity-80 ${soft ? 'object-[50%_64%]' : 'object-bottom'}`} />
+      <div className={`absolute inset-0 bg-gradient-to-b ${soft ? 'from-slate-950 via-slate-950/10 to-slate-950/80' : 'from-slate-950/70 via-slate-950/20 to-slate-950'}`} />
     </>
   )
 }
@@ -17,7 +17,7 @@ function Scene() {
 export default function Hills({ className = '', scene = false }) {
   return (
     <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
-      {scene ? <Scene /> : <>
+      {scene ? <Scene soft={scene === 'soft'} /> : <>
       <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 70% at 50% 100%, #0f3b36 0%, #0a1f1e 38%, #060708 75%)' }} />
       <div className="absolute left-1/2 top-[18%] h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-teal-400/15 blur-[110px]" />
       {STARS.map((s, i) => (

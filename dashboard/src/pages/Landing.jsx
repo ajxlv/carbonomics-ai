@@ -173,7 +173,7 @@ export default function Landing() {
           </a>
           <div className="hidden items-center gap-8 text-sm text-white/70 md:flex">
             {links.map(([id, l]) => <a key={id} href={`#${id}`} onClick={go(id)} className="transition hover:text-white">{l}</a>)}
-            <a href="#overview" className="transition hover:text-white">Demo</a>
+            <a href="#demo/overview" className="transition hover:text-white">Demo</a>
             <a href="#login" className="pill-white !py-2">Login</a>
           </div>
           <button className="rounded-lg p-2 text-white md:hidden" onClick={() => setMenu(!menu)} aria-label={menu ? 'Close menu' : 'Open menu'} aria-expanded={menu}>
@@ -183,7 +183,7 @@ export default function Landing() {
         {menu && (
           <div className="space-y-1 border-t border-white/10 px-4 pb-5 pt-3 md:hidden">
             {links.map(([id, l]) => <a key={id} href={`#${id}`} onClick={go(id)} className="block rounded-lg px-3 py-3 text-white/80 hover:bg-white/10">{l}</a>)}
-            <a href="#overview" className="block rounded-lg px-3 py-3 text-white/80 hover:bg-white/10">View Demo</a>
+            <a href="#demo/overview" className="block rounded-lg px-3 py-3 text-white/80 hover:bg-white/10">View Demo</a>
             <a href="#login" className="pill-white mt-2 w-full">Login</a>
           </div>
         )}
@@ -198,7 +198,7 @@ export default function Landing() {
             Turn electricity and diesel records into audit-style accounting, forecasts that earn their place, what-if scenarios and a budget-aware reduction plan. Every factor and assumption stays visible.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a href="#overview" className="pill-white"><Play size={16} /> View Demo</a>
+            <a href="#demo/overview" className="pill-white"><Play size={16} /> View Demo</a>
             <a href="#login" className="pill-ghost"><LogIn size={16} /> Login</a>
             <a href={MAILTO} className="pill-ghost"><Mail size={16} /> Request Demo</a>
           </div>
@@ -277,12 +277,12 @@ export default function Landing() {
       </section>
 
       <section className="relative isolate overflow-hidden py-24 text-center text-white">
-        <Hills />
+        <Hills scene="soft" />
         <Reveal className="relative z-10 mx-auto max-w-3xl px-4 sm:px-8">
           <h2 className="font-display text-4xl sm:text-5xl">See it with a demo campus</h2>
           <p className="mt-3 text-white/60">No sign-up. The demo uses fake numbers, so you can click through every chart safely.</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <a href="#overview" className="pill-white">Open the demo <ArrowRight size={16} /></a>
+            <a href="#demo/overview" className="pill-white">Open the demo <ArrowRight size={16} /></a>
             <a href="#login" className="pill-ghost"><LogIn size={16} /> Login</a>
           </div>
         </Reveal>
