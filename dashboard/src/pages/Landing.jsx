@@ -20,7 +20,7 @@ const STEPS = [
 ]
 
 const TEAM = [
-  { name: 'Sanket Chaudhari', role: 'Project Core Lead', tag: 'Architecture and delivery' },
+  { name: 'Sanket Chaudhari', role: 'Full-Stack Project Lead', tag: 'Architecture, ML, backend and web' },
   { name: 'Atharva Jadhav', role: 'Research Lead', tag: 'Methods and literature' },
   { name: 'Rahil Shah', role: 'Systems & Integration Lead', tag: 'Backend and pipeline' },
   { name: 'Purva Chopade', role: 'Data Analytics Lead', tag: 'Data and visualization' },
