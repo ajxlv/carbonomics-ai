@@ -20,10 +20,10 @@ const STEPS = [
 ]
 
 const TEAM = [
-  { name: 'Sanket Chaudhari', role: 'Architect, Developer & Project Lead', tag: 'Architecture, ML, backend and web' },
-  { name: 'Atharva Jadhav', role: 'Research Lead', tag: 'Methods and literature' },
-  { name: 'Rahil Shah', role: 'Systems & Integration Lead', tag: 'Backend and pipeline' },
-  { name: 'Purva Chopade', role: 'Data Analytics Lead', tag: 'Data and visualization' },
+  { name: 'Sanket Chaudhari', role: 'Chief Architect & Project Lead', tag: 'Architecture, ML, backend and web, end to end' },
+  { name: 'Atharva Jadhav', role: 'Chief Research Strategist', tag: 'Research design, literature and methodology' },
+  { name: 'Rahil Shah', role: 'Head of Testing & Quality Assurance', tag: 'Testing and validation of every module' },
+  { name: 'Purva Chopade', role: 'Head of Data Pipeline & Analytics', tag: 'Data pipeline, analytics and visualization' },
 ]
 
 const btn = 'inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition'
