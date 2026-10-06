@@ -12,6 +12,7 @@ import Upload from './pages/Upload.jsx'
 import HistoryPage from './pages/History.jsx'
 import Landing from './pages/Landing.jsx'
 import Login from './pages/Login.jsx'
+import { Privacy, Terms } from './pages/Legal.jsx'
 import { authConfigured, signOut, useAuth } from './auth.js'
 
 const PAGES = [
@@ -65,6 +66,8 @@ export default function App() {
   useEffect(() => { if (route === 'login' && session) goto(next) }, [route, session, next])
 
   if (route === 'login') return session ? null : <Login next={next} onDone={(n) => goto(n)} />
+  if (route === 'privacy') return <Privacy />
+  if (route === 'terms') return <Terms />
   if (!isDash) return <Landing />
   if (locked && !loggedIn) return null
   return <Dashboard page={route} dark={dark} setDark={setDark} session={session} profile={profile} loggedIn={loggedIn} />
@@ -149,7 +152,7 @@ function Dashboard({ page, dark, setDark, session, profile, loggedIn }) {
             {needsData && data && <Page data={data} />}
             {!needsData && <Page opened={opened} onCloseOpened={() => setOpened(null)} onOpenAnalysis={openAnalysis} />}
           </main>
-          <footer className="muted px-4 pb-8 text-center text-xs sm:px-8">Carbonomics-AI · final-year project, KKWIEER Nashik · © 2026 Team Carbonomics, all rights reserved · figures labelled REAL come from the Energy team's monthly log; SYNTHETIC figures are not measurements.</footer>
+          <footer className="muted px-4 pb-8 text-center text-xs sm:px-8">Carbonomics-AI · final-year project, KKWIEER Nashik · © 2026 Team Carbonomics, all rights reserved · <a className="underline" href="#privacy">Privacy</a> · <a className="underline" href="#terms">Terms</a> · figures labelled REAL come from the Energy team's monthly log; SYNTHETIC figures are not measurements.</footer>
         </div>
       </div>
     </ThemeCtx.Provider>
