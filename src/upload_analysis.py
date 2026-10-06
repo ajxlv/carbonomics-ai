@@ -20,6 +20,7 @@ Monthly files get carbon accounting only; the ML forecast needs weekly history.
 """
 
 import io
+import math
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -27,6 +28,7 @@ import pandas as pd
 
 from calculations import calculate_diesel_emissions, calculate_electricity_emissions
 from emission_factors import EMISSION_FACTORS
+from simulation import simulate
 from ml.forecast_weekly import make_features, metrics, new_model, run_target
 
 MAX_BYTES = 5 * 1024 * 1024
@@ -36,6 +38,7 @@ SMALL_TEST_WARNING_WEEKS = 8
 MIN_MAE_IMPROVEMENT = 0.05     # a model must cut MAE by at least 5% vs naive; a smaller win is noise
 DEFAULT_FUTURE_WEEKS = 8
 MAX_FUTURE_WEEKS = 26
+MAX_SIM_PERIODS = 5000
 
 ELECTRICITY = "electricity_kwh"
 DIESEL = "diesel_litres"
@@ -354,3 +357,64 @@ def analyze(raw: bytes, date_col=None, electricity_col=None, diesel_col=None,
     else:
         result["forecast"] = forecast(df, sources, future_weeks)
     return result
+
+
+# ── what-if simulation on the uploaded periods ───────────────────────────────
+def _finite_non_negative(value, label: str) -> float:
+    try:
+        v = float(value)
+    except (TypeError, ValueError) as exc:
+        raise UploadError(f"{label} must be a number.") from exc
+    if not math.isfinite(v) or v < 0:
+        raise UploadError(f"{label} must be a finite number that is not negative.")
+    return v
+
+
+def simulate_upload(periods: List[dict], electricity_change_pct: float = 0.0,
+                    diesel_change_pct: float = 0.0, solar_offset_kwh_per_period: float = 0.0) -> dict:
+    """
+    What-if scenario on the periods returned by analyze() (weeks or months).
+
+    Reuses simulation.simulate(): scenario activity = baseline x (1 + change %), minus the solar offset per
+    period (floored at 0), and emission = activity x factor. A source that is not in the file is left out
+    (treated as 0 and not simulated). Nothing is stored.
+    """
+    if not periods:
+        raise UploadError("No periods were given.")
+    if len(periods) > MAX_SIM_PERIODS:
+        raise UploadError(f"More than {MAX_SIM_PERIODS} periods were given.")
+    has_e = all(p.get(ELECTRICITY) is not None for p in periods)
+    has_d = all(p.get(DIESEL) is not None for p in periods)
+    if any(p.get(ELECTRICITY) is not None for p in periods) and not has_e:
+        raise UploadError("Electricity is given for some periods but not all.")
+    if any(p.get(DIESEL) is not None for p in periods) and not has_d:
+        raise UploadError("Diesel is given for some periods but not all.")
+    if not (has_e or has_d):
+        raise UploadError("Each period needs electricity_kwh and/or diesel_litres.")
+
+    rows = []
+    for i, p in enumerate(periods):
+        rows.append({
+            "month": str(p.get("period_start", i)),
+            "electricity_kwh": _finite_non_negative(p[ELECTRICITY], "electricity_kwh") if has_e else 0.0,
+            "dg_diesel_litres": _finite_non_negative(p[DIESEL], "diesel_litres") if has_d else 0.0,
+        })
+    solar = _finite_non_negative(solar_offset_kwh_per_period, "solar_offset_kwh_per_period")
+    try:
+        res = simulate(pd.DataFrame(rows), electricity_change_pct=float(electricity_change_pct),
+                       diesel_change_pct=float(diesel_change_pct), solar_offset_kwh_per_month=solar)
+    except ValueError as exc:
+        raise UploadError(str(exc)) from exc
+
+    sources = [t for t, ok in ((ELECTRICITY, has_e), (DIESEL, has_d)) if ok]
+    out_periods = [{"period_start": r["month"], **{k: v for k, v in r.items() if k != "month"}} for r in res["monthly"]]
+    return {
+        "sources_simulated": sources,
+        "periods": out_periods,
+        "totals": res["annual"],
+        "factors_used": factors_used(sources),
+        "inputs": {"electricity_change_pct": electricity_change_pct, "diesel_change_pct": diesel_change_pct,
+                   "solar_offset_kwh_per_period": solar},
+        "note": ("Scenario numbers are inputs you chose, not predictions of what a measure will achieve. "
+                 "Emission = activity x emission factor. Only the sources in your file are simulated."),
+    }
