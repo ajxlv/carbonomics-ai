@@ -4,9 +4,20 @@ const STARS = Array.from({ length: 46 }, (_, i) => ({
   x: (i * 53.7 + 11) % 100, y: (i * 29.3 + 7) % 52, r: 0.5 + (i % 4) * 0.25, d: (i % 9) * 0.5,
 }))
 
-export default function Hills({ className = '' }) {
+// Rendered backdrop (hero-bg.webp): misty ridges, pine forest and a distant factory with chimneys at dusk.
+function Scene({ soft }) {
+  return (
+    <>
+      <img src="hero-bg.webp" alt="" width="1920" height="1080" fetchpriority="high" className={`absolute inset-0 h-full w-full object-cover opacity-80 ${soft ? 'object-[50%_64%]' : 'object-bottom'}`} />
+      <div className={`absolute inset-0 bg-gradient-to-b ${soft ? 'from-slate-950 via-slate-950/10 to-slate-950/80' : 'from-slate-950/70 via-slate-950/20 to-slate-950'}`} />
+    </>
+  )
+}
+
+export default function Hills({ className = '', scene = false }) {
   return (
     <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
+      {scene ? <Scene soft={scene === 'soft'} /> : <>
       <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 70% at 50% 100%, #0f3b36 0%, #0a1f1e 38%, #060708 75%)' }} />
       <div className="absolute left-1/2 top-[18%] h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-teal-400/15 blur-[110px]" />
       {STARS.map((s, i) => (
@@ -24,6 +35,7 @@ export default function Hills({ className = '' }) {
         <defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0a2622" /><stop offset="1" stopColor="#060708" /></linearGradient></defs>
         <path d="M0 140 C 200 90 320 120 480 150 C 640 180 760 90 940 110 C 1060 124 1140 160 1200 140 L1200 300 L0 300Z" fill="url(#g3)" />
       </svg>
+      </>}
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 to-transparent" />
     </div>
   )
