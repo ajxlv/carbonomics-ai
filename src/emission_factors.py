@@ -196,6 +196,30 @@ def unverified_factors():
     return [name for name, spec in EMISSION_FACTORS.items() if not spec["verified"]]
 
 
+# ── Grid electricity factor by Indian fiscal year (vintages) ───────────────────
+# The grid gets cleaner (or dirtier) from year to year, so the same kWh gives a different emission in
+# different years. Values are the weighted-average emission factor of the Indian grid, the series that
+# CEA prints in Annexure-I of the CO2 Baseline Database User Guide V22.0 (Aug 2026). Each year was also
+# cross-checked against the edition that first published it. The 2021-22 value is left out on purpose:
+# V19.0 and V22.0 give it on two different bases (0.81 and 0.715) and that is not resolved yet.
+# Unit: tCO2/MWh, numerically the same as kg CO2e/kWh. Users never type these; they only pick a version.
+GRID_FACTOR_SOURCE = ("CEA, CO2 Baseline Database for the Indian Power Sector, User Guide V22.0 (Aug 2026), "
+                      "Annexure-I, weighted average emission factor (incl. RES and captive)")
+GRID_FACTOR_BY_FY = {
+    "2022-23": {"factor": 0.716, "first_published": "V19.0 / V20.0"},
+    "2023-24": {"factor": 0.727, "first_published": "V20.0, Dec 2024"},
+    "2024-25": {"factor": 0.710, "first_published": "V21.0, Nov 2025"},
+    "2025-26": {"factor": 0.675, "first_published": "V22.0, Aug 2026"},
+}
+GRID_FACTOR_UNIT = "kg CO2e/kWh"
+
+
+def grid_factor_versions():
+    """The documented grid-factor versions as a list, oldest first (for the UI dropdown and the API)."""
+    return [{"fy": fy, "factor": v["factor"], "unit": GRID_FACTOR_UNIT, "source": GRID_FACTOR_SOURCE,
+             "version": v["first_published"]} for fy, v in sorted(GRID_FACTOR_BY_FY.items())]
+
+
 # ── Campus footprint reference ─────────────────────────────────────────────────
 # Full KKWIEER footprint for reference / coverage notes.
 # Source: KKWIEER Carbon Footprint and Sustainability Report FY2025-26 (revised), Table 1.

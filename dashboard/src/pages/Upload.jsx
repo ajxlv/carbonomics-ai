@@ -88,7 +88,7 @@ export function SavedNote({ run }) {
   return null
 }
 
-const PAGE_LINKS = [['overview', 'Overview'], ['trends', 'Trends'], ['forecast', 'Forecast'], ['simulation', 'Simulation'], ['optimization', 'Optimization']]
+const PAGE_LINKS = [['overview', 'Overview'], ['trends', 'Trends'], ['forecast', 'Forecast'], ['simulation', 'Simulation'], ['optimization', 'Optimization'], ['factorchange', 'Why it changed']]
 
 // Shown on the Upload page after a run: a short receipt and links to the pages that hold the results.
 function Done({ a }) {
