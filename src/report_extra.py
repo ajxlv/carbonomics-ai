@@ -408,7 +408,8 @@ def draw_factor_page(c: canvas.Canvas, analysis: dict, page_no: int, change: Opt
 
 
 # ── Notes ─────────────────────────────────────────────────────────────────────
-def draw_notes_page(c: canvas.Canvas, analysis: dict, page_no: int, scope3: Optional[dict] = None) -> None:
+def draw_notes_page(c: canvas.Canvas, analysis: dict, page_no: int, scope3: Optional[dict] = None,
+                    inventory: Optional[dict] = None) -> None:
     _fonts()
     _page_header(c, page_no)
     inp = analysis["input"]
@@ -423,6 +424,8 @@ def draw_notes_page(c: canvas.Canvas, analysis: dict, page_no: int, scope3: Opti
     y = _table(c, y, ("Activity", "Factor", "Unit", "Version", "Source"), rows, (80, 40, 70, 90, WIDTH - 280), size=8.5)
     y = _h2(c, "Limits to keep in mind", y - 10)
     y = _bullets(c, [
+        ("The weekly pages count only electricity (Scope 2) and generator diesel (Scope 1), the two columns in the file. Other "
+         "sources appear only as yearly totals on the 'Full campus footprint' page, with no weekly breakdown or forecast.") if inventory else
         "Only electricity (Scope 2) and generator diesel (Scope 1) are in the file, so other sources (travel, waste, water) are not counted"
         + (" except student commuting, which comes from a survey estimate." if scope3 else "."),
         "A forecast is a pattern-based estimate, not a promise. When the models do not beat 'same as last week', that is what is shown.",
@@ -434,4 +437,9 @@ def draw_notes_page(c: canvas.Canvas, analysis: dict, page_no: int, scope3: Opti
         "Central Electricity Authority (CEA), CO₂ Baseline Database for the Indian Power Sector, User Guide (versions 19.0 to 22.0).",
         "IPCC 2006 Guidelines for National Greenhouse Gas Inventories (fuel emission factors).",
         "GHG Protocol Corporate Accounting and Reporting Standard (Scope 1, 2 and 3 definitions).",
-    ], y, 9.5)
+    ] + ([
+        "WRI, TERI, CII, India GHG Program (2015), road transport emission factors.",
+        "UK DEFRA greenhouse gas conversion factors (2024), diesel passenger vehicle.",
+        "IPCC 2019 Refinement to the 2006 Guidelines, domestic wastewater (Tier 1).",
+        "KKWIEER Carbon Footprint Master Data FY 2025-26, and the college survey carried out by the Young Indians team.",
+    ] if inventory else []), y, 9.5)

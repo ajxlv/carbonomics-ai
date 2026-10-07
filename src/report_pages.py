@@ -114,7 +114,8 @@ def _arc(c, cx, cy, r_out, r_in, a0, a1, color):
     c.drawPath(p, stroke=1, fill=1)
 
 
-def draw_glance_page(c: canvas.Canvas, analysis: dict, scope3: Optional[dict] = None, page_no: int = 3) -> None:
+def draw_glance_page(c: canvas.Canvas, analysis: dict, scope3: Optional[dict] = None, page_no: int = 3,
+                     inventory: Optional[dict] = None) -> None:
     """Page 3: the headline numbers and one donut."""
     _fonts()
     _page_header(c, page_no)
@@ -193,13 +194,16 @@ def draw_glance_page(c: canvas.Canvas, analysis: dict, scope3: Optional[dict] = 
                   f"The largest here is {biggest['what'].lower()} ({biggest['name']}).", y)
 
     notes = []
-    if not scope3:
+    if inventory:
+        notes.append("The weekly figures on this page cover generator diesel and electricity only. Scope 3 and the rest of "
+                     "Scope 1 (college buses, wastewater) are yearly totals on the 'Full campus footprint' page.")
+    elif not scope3:
         notes.append("Scope 3 is not included in this report because no data for it was provided.")
     else:
         notes.append(f"Scope 3 covers student commuting only. It is an estimate from a survey of "
                      f"{scope3['responses_used']:,} students, scaled to {scope3['population']:,} students. Other Scope 3 "
                      "sources (waste, business travel, field visits) are not part of this report.")
-    notes.append("Scope 1 and 2 come from the activity data in the uploaded file; nothing was estimated or filled in.")
+    notes.append("Scope 1 and 2 here come from the activity data in the uploaded file; nothing was estimated or filled in.")
     c.setFillColor(INK)
     c.setFont("BodyBold", 10)
     c.drawString(LEFT, y - 6, "Please note")
@@ -545,13 +549,16 @@ def _factor_text(analysis: dict) -> str:
 
 
 def build_full_report(path: str, analysis: dict, optimization: Optional[dict] = None, scope3: Optional[dict] = None,
-                      prepared_for: str = "", data_source: str = "", generated_on: str = "") -> str:
-    """Cover, About, At a glance, Method, Results, Trend, Sources, Forecast and Training (when forecast ran), What-if,
+                      prepared_for: str = "", data_source: str = "", generated_on: str = "",
+                      inventory: Optional[dict] = None) -> str:
+    """Cover, About, At a glance, Method, Results, the yearly campus footprint (when `inventory` is given), Trend, Sources, Forecast and Training (when forecast ran), What-if,
     Grid factor, plus Optimization and Recommended steps when a plan is given, then Data and limits."""
     from report_cover import CoverInfo, ReportDetails, draw_cover, draw_details_page
     inp = analysis["input"]
     sources = [k for k in ("electricity_kwh", "diesel_litres") if k in inp["columns_used"]]
     boundary = " and ".join({"electricity_kwh": "Scope 2 (purchased electricity)", "diesel_litres": "Scope 1 (generator diesel)"}[k] for k in sources[::-1])
+    if inventory:
+        boundary += "; yearly Scope 1, 2 and 3 totals on one page"
     info = CoverInfo(period=f"{inp['period_start']} to {inp['period_end']}", boundary=boundary)
     details = ReportDetails(generated_on=generated_on, prepared_for=prepared_for,
                             data_period=f"{inp['period_start']} to {inp['period_end']} ({inp['rows']} {inp['granularity_analysed']} rows)",
@@ -566,9 +573,19 @@ def build_full_report(path: str, analysis: dict, optimization: Optional[dict] = 
     import report_extra as rx
     n = 3
     for draw in (draw_glance_page, draw_method_page, draw_results_page):
-        draw(c, analysis, scope3, n)
+        if draw is draw_glance_page:
+            draw(c, analysis, scope3, n, inventory)
+        else:
+            draw(c, analysis, scope3, n)
         c.showPage()
         n += 1
+    if inventory:
+        import report_annual as ra
+        ra.draw_campus_page(c, inventory, n)
+        c.showPage()
+        ra.draw_campus_notes_page(c, inventory, n + 1)
+        c.showPage()
+        n += 2
     rx.draw_trend_page(c, analysis, n)
     c.showPage()
     rx.draw_sources_page(c, analysis, n + 1)
@@ -598,7 +615,7 @@ def build_full_report(path: str, analysis: dict, optimization: Optional[dict] = 
         draw_steps_page(c, optimization, n + 1)
         c.showPage()
         n += 2
-    rx.draw_notes_page(c, analysis, n, scope3)
+    rx.draw_notes_page(c, analysis, n, scope3, inventory)
     c.showPage()
     c.save()
     return path
