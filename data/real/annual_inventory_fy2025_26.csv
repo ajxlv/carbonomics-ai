@@ -1,0 +1,13 @@
+scope,source,activity_value,activity_unit,factor_key,tco2e,in_total,basis,note,master_data_sheet
+Scope 1,Generator diesel,4100,litres,diesel,11.85,yes,Energy team log,Jan-Dec 2025,3_Diesel_Generator
+Scope 1,College bus fleet,56000,litres,diesel_mobile,150.08,yes,Transport team records,7 buses x 25 L/day x 320 days,7_Bus_Fleet_Scope1
+Scope 1,Domestic wastewater (septic),,,,804.17,yes,Estimate,"IPCC 2019 Tier 1 for 9,456 people. Nitrogen per person (4.5 kg) is an assumption with no source",11_Wastewater
+Scope 1,Refrigerant leakage (R32),,,,,no,Data gap,Excluded: equipment capacity in litres is not refrigerant mass; actual recharge not measured,5_Refrigerant_Gap
+Scope 2,Purchased electricity,1059147,kWh,electricity,751.99,yes,Energy team log,Jan-Dec 2025,2_Electricity_Monthly
+Scope 3,Student commuting (Version A),,,,1896.90,yes,Survey,"909 valid responses, 7,400 survey-basis population; per-mode factors are DEFRA-based, not itemised",10_Commuting
+Scope 3,Solid waste,,,,59.50,yes,Estimate,"Midpoint of 56-63 tCO2e; waste is given only as ranges (760-845 kg/day), so it is not recomputed",13_Solid_Waste
+Scope 3,Local business travel,150000,km,diesel_vehicle,25.65,yes,Transport dept records,500 visits x 150 km round trip; the 150 km is an assumption agreed with the Dean's office,9_Business_Travel
+Scope 3,Organised field visits,1292600,passenger-km,bus_intracity,19.60,yes,College records,281 buses x 115 km x 40 passengers; distances and occupancy are institutional assumptions,8_FieldVisits_Scope3
+Scope 3,Student commuting (Version B),,,,992.35,alt,Survey,"907 valid responses scaled to the verified 8,633 students; for comparison, not in the total",10_Commuting
+Memo,Solar avoided emissions,,,,15.42,memo,Metered solar,Avoided emissions; not subtracted from the total,18_Scope_Summary
+Memo,Green-cover removals,,,,24.79,memo,Estimate,Carbon removed by trees and green cover; not subtracted from the total,18_Scope_Summary

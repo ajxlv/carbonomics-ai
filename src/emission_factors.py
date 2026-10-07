@@ -128,6 +128,48 @@ EMISSION_FACTORS = {
         "verified": False,
     },
 
+    # India GHG Program (WRI, TERI, CII) 2015 road-transport factors, Master Data sheet 17.
+    # Used for organised field visits (bus) and student commuting (all four).
+    "bus_intracity": {
+        "factor": 0.015161,
+        "scope": "Scope 3",
+        "unit": "passenger-km",
+        "output": "kg CO2e/passenger-km",
+        "source": "WRI India GHG Program 2015 (intracity bus)",
+        "version": "2015",
+        "verified": True,
+    },
+
+    "two_wheeler_india": {
+        "factor": 0.03743,
+        "scope": "Scope 3",
+        "unit": "vehicle-km",
+        "output": "kg CO2e/vehicle-km",
+        "source": "India GHG Program 2015 (mean of 6 class values)",
+        "version": "2015",
+        "verified": True,
+    },
+
+    "auto_cab_india": {
+        "factor": 0.11779,
+        "scope": "Scope 3",
+        "unit": "vehicle-km",
+        "output": "kg CO2e/vehicle-km",
+        "source": "India GHG Program 2015 (3-wheeler mean, used as auto/cab proxy)",
+        "version": "2015",
+        "verified": True,
+    },
+
+    "car_india": {
+        "factor": 0.17221,
+        "scope": "Scope 3",
+        "unit": "vehicle-km",
+        "output": "kg CO2e/vehicle-km",
+        "source": "India GHG Program 2015 (6-class mean, used as car proxy)",
+        "version": "2015",
+        "verified": True,
+    },
+
     "bicycle": {
         "factor": 0.0,
         "scope": "Scope 3",

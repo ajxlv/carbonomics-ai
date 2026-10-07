@@ -31,6 +31,7 @@ from pydantic import BaseModel, Field
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(os.path.join(ROOT, "src"))
 
+import annual_inventory  # noqa: E402
 import emission_factors  # noqa: E402
 import factor_change  # noqa: E402
 import upload_analysis  # noqa: E402
@@ -232,6 +233,7 @@ class ReportRequest(BaseModel):
     prepared_for: str = Field("", max_length=200)
     budget_inr: Optional[float] = None       # with measures: adds the Optimization and Recommended steps pages
     measures: List[MeasureIn] = Field(default_factory=list, max_length=upload_optimization.MAX_MEASURES)
+    include_campus_inventory: bool = True    # yearly Scope 1, 2 and 3 pages (KKWIEER master data), static
 
 
 @app.post("/api/report")
@@ -270,7 +272,8 @@ def report(req: ReportRequest, user: User = Depends(current_user)) -> Response:
     with tempfile.TemporaryDirectory() as tmp:
         path = os.path.join(tmp, "report.pdf")
         build_full_report(path, analysis, plan, None, prepared_for=req.prepared_for, data_source=req.file_name,
-                          generated_on=f"{today.day} {today.strftime('%B %Y')}")
+                          generated_on=f"{today.day} {today.strftime('%B %Y')}",
+                          inventory=annual_inventory.load_inventory() if req.include_campus_inventory else None)
         pdf = open(path, "rb").read()
     return Response(pdf, media_type="application/pdf", headers={"Content-Disposition": 'attachment; filename="carbon-footprint-report.pdf"'})
 
